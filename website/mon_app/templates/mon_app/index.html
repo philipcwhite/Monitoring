@@ -1,0 +1,30 @@
+{% extends 'mon_app/base.html' %}
+
+
+
+{% block content %}
+
+<br />
+<div id="index_content"></div>
+
+
+
+<br />
+
+<script>
+    function refresh() {
+        $.ajax({
+            url: '{% url 'mon_app:index_content' %}',
+            success: function(data) {
+                $('#index_content').html(data);
+            }
+        });
+        setTimeout(refresh, 60000);
+    }
+    
+    $(function(){
+        refresh();
+    });
+    </script>
+
+{% endblock content %}

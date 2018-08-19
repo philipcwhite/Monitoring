@@ -1,0 +1,23 @@
+{% extends 'mon_app/base.html' %}
+
+{% block content %}
+
+<h1>Devices</h1>
+<table style="width:100%;">
+  <tr>
+    <td colspan="2" style="padding-top:8px">
+      <div class="card-div">
+        <table style="width:100%;">  
+          {{systemstatus|safe}}
+        </table> 
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+<br />
+
+
+
+{% endblock content %}

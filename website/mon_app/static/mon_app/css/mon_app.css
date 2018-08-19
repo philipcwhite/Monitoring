@@ -1,0 +1,35 @@
+﻿
+html{max-width: 1200px;}
+body{margin:0px;padding:0px;height:100%;width:100%;}
+
+
+.nav-sidebar{height:100%;width:50px;color:#fff!important;background-color:#325D88;position:fixed!important;z-index:1;font-size:18px!important;}
+
+.nav-button1{border:none;display:block;padding:16px 16px;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;height:16px;transition: 0.5s;}
+.nav-button1:hover{color:#29ABE0!important;background-color:#eee!important;transition: 0.5s;}
+
+.nav-button2{border:none;display:block;padding:16px 16px;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;height:16px;transition: 0.5s;}
+.nav-button2:hover{color:#ffc107!important;background-color:#eee!important;transition: 0.5s;}
+
+.nav-button3{border:none;display:block;padding:16px 16px;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;height:16px;transition: 0.5s;}
+.nav-button3:hover{color:#80b139!important;background-color:#eee!important;transition: 0.5s;}
+
+.nav-button4{border:none;display:block;padding:16px 16px;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;height:16px;transition: 0.5s;}
+.nav-button4:hover{color:#F47C3C!important;background-color:#eee!important;transition: 0.5s;}
+
+.nav-button5{border:none;display:block;padding:16px 16px;overflow:hidden;text-decoration:none;color:inherit;background-color:inherit;text-align:center;cursor:pointer;height:16px;transition: 0.5s;}
+.nav-button5:hover{color:#d9534f!important;background-color:#eee!important;transition: 0.5s;}
+
+.search-div{float:right;font-size:12px;width:220px;padding-top:8px;}
+.search-font{color:#8E8C84;height:16px;width:16px;}
+.search-button{border-radius: 3px;color: #ffffff;font: 12px  "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;background:#93C54B;padding:3px 5px;text-decoration: none;font-weight:bold;border-style:none;transition: 0.5s;}
+.search-button:hover{background-color: #80b139;border-color: #79a736;transition: 0.5s;}
+
+.user-div{position:absolute;top:14px;left:74px;font-size:12px;}
+.user-font{color:#8E8C84;height:12px;width:12px;}
+
+.mon-container{padding-left:70px;padding-top:30px;padding-right:20px;font: 12px "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;}
+
+/* Colors based on Sandstone theme by Thomas Park https://bootswatch.com/ */
+
+.card-div{background-color:#fff;border:1px solid #dfd7ca;border-radius:3px;padding:4px;min-width:300px}
