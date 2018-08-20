@@ -76,7 +76,9 @@ class mon_index:
     def system_perf():
         name = socket.gethostname().lower()
         agentsystem = AgentSystem.objects.get(name=name)
-        
+        uptime_check = 600
+        currenttime = time.time()
+
         os = ""
         if 'Windows' in agentsystem.osname:
             os = 'Windows'
@@ -87,6 +89,7 @@ class mon_index:
         cpu_perc = agent_cpu_query.value
         agent_mem_query = AgentData.objects.filter(name = name, monitor = 'perf.memory.percent.used').order_by('-id')[0]
         mem_perc = agent_mem_query.value
+        agent_timestamp = AgentSystem.objects.filter(name = name)[0].timestamp
 
 
         html = """<table style="width:100%;height:138px"><tr><td style="width:50%;padding-left:25px;padding-top:25px;vertical-align: text-top">
@@ -97,15 +100,17 @@ class mon_index:
         OS: """ + os + """ (""" + agentsystem.osarchitecture + """) <br />
         </td><td style="width:50%;padding-left:10px;padding-top:25px;vertical-align: text-top"><b>Performance</b><br />"""
 
-        if cpu_perc >= 90:
-            html = html + """<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg> """ + str(cpu_perc)[:-3] + """% CPU<br />"""
+        if (agent_timestamp + uptime_check) >= currenttime:
+            if cpu_perc >= 90:
+                html = html + """<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg> """ + str(cpu_perc)[:-3] + """% CPU<br />"""
+            else:
+                html = html + """<svg width="10" height="10"><rect width="10" height="10" style="fill:#93C54B" /></svg> """ + str(cpu_perc)[:-3] + """% CPU<br />"""
+            if mem_perc >= 90:
+                html = html + """<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg> """ + str(mem_perc)[:-3] + """% Memory<br />"""
+            else:
+                html = html + """<svg width="10" height="10"><rect width="10" height="10" style="fill:#93C54B" /></svg> """ + str(mem_perc)[:-3] + """% Memory<br />"""
         else:
-            html = html + """<svg width="10" height="10"><rect width="10" height="10" style="fill:#93C54B" /></svg> """ + str(cpu_perc)[:-3] + """% CPU<br />"""
-        if mem_perc >= 90:
-            html = html + """<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg> """ + str(mem_perc)[:-3] + """% Memory<br />"""
-        else:
-            html = html + """<svg width="10" height="10"><rect width="10" height="10" style="fill:#93C54B" /></svg> """ + str(mem_perc)[:-3] + """% Memory<br />"""
-
+            html = html + "Agent Not Reporting"
         html = html + "</td></tr></table>"
 
         return html
