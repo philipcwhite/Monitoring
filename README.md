@@ -11,6 +11,8 @@ This repository currently contains the code for the monitoring server, collector
 
 ## Updates
 
+08/20/2018 - Cleaned up some code and added links to devices.  Device pages have not yet been written.  
+
 08/18/2018 - Today I uploaded my working project code.  The project is very early going and not especially useful at this point.  I just wanted to publish some of my progress so you can see how far this has come and where it's heading.
 
 08/17/2018 - This is currently a placeholder for a project that I've been working on for about 6 months.  I have been rewriting my .Net Monitoring Server in Python.  I will probably be adding some source code here in the coming weeks.  So far I have written a Windows Agent, a simple collector, and the base framework for the web server.  
