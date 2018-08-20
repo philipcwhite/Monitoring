@@ -3,7 +3,7 @@ Monitoring Server and Agents written in Python
 
 ## About
 
-This repository currently contains the code for the monitoring server, colector, and Windows agent.  It is a early beta at this point however some of the functionality is working.  The agent and collector currently work.  The agent collects WMI data and sends it via SSL to the collector which translates the data to the MySQL database.  The webserver is partially working.  The home page displays some agent data and graphs and refreshes content via AJAX.    
+This repository currently contains the code for the monitoring server, collector, and Windows agent.  It is a early beta at this point however some of the functionality is working.  The agent and collector currently work.  The agent collects WMI data and sends it via SSL to the collector which translates the data to the MySQL database.  The webserver is partially working.  The home page displays some agent data and graphs and refreshes content via AJAX.    
 
 ## Screenshots
 
