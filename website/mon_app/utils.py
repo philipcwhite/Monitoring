@@ -124,10 +124,10 @@ class mon_index:
             
             if (i.timestamp + uptime_check) >= currenttime:
                 icon = """<svg width="10" height="10"><rect width="10" height="10" style="fill:#93C54B" /></svg>"""
-                html = html + "<tr><td style='padding-left:20px'>" + icon + "</td><td style='padding-left:10px'>" + str(i.name) + "</td><td>IP Address: " + str(i.ipaddress) + "</td><td>Operating System: " + str(i.osname) + " (" + str(i.osarchitecture) + ")</td><td>" + date + "</td></tr>"
+                html = html + "<tr><td style='padding-left:20px'>" + icon + "</td><td style='padding-left:10px'><a href='device/" + str(i.name) + "'>" + str(i.name) + "</a></td><td>IP Address: " + str(i.ipaddress) + "</td><td>Operating System: " + str(i.osname) + " (" + str(i.osarchitecture) + ")</td><td>" + date + "</td></tr>"
             else:
                 icon =  """<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg>"""
-                html = html + "<tr><td style='padding-left:20px'>" + icon + "</td><td style='padding-left:10px'>" + str(i.name) + "</td><td>IP Address: " + str(i.ipaddress) + "</td><td>Operating System: " + str(i.osname) + " (" + str(i.osarchitecture) + ")</td><td>" + date + "</td></tr>"
+                html = html + "<tr><td style='padding-left:20px'>" + icon + "</td><td style='padding-left:10px'><a href='device/" + str(i.name) + "'>" + str(i.name) + "</a></td><td>IP Address: " + str(i.ipaddress) + "</td><td>Operating System: " + str(i.osname) + " (" + str(i.osarchitecture) + ")</td><td>" + date + "</td></tr>"
 
         return html
 

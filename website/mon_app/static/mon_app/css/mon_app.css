@@ -29,6 +29,11 @@ body{margin:0px;padding:0px;height:100%;width:100%;}
 .user-font{color:#8E8C84;height:12px;width:12px;}
 
 .mon-container{padding-left:70px;padding-top:30px;padding-right:20px;font: 12px "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;}
+.mon-container a:link {color:#000;text-decoration:none}
+.mon-container a:active{color:#000;text-decoration:none}
+.mon-container a:hover{color:#000;text-decoration:none}
+.mon-container a:visited {color:#000;text-decoration:none}
+
 
 /* Colors based on Sandstone theme by Thomas Park https://bootswatch.com/ */
 
