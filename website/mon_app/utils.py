@@ -162,13 +162,13 @@ class mon_device:
         time_string = ''
 
         
-        for i in processor_data:
+        for i in reversed(processor_data):
             processor_string +=  str(i.value) + ','
             time_string += '"' + str(timezone.make_aware(datetime.datetime.fromtimestamp(i.timestamp), timezone.utc)).replace(':00+00:00','') + '",'
         #time_string = time_string[-1]
         #processor_string = processor_string[-1]
 
-        for i in memory_data:
+        for i in reversed(memory_data):
             memory_string += str(i.value) + ','
         #memory_string = memory_string[-1]
 
