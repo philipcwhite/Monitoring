@@ -11,6 +11,8 @@ This repository currently contains the code for the monitoring server, collector
 
 ## Updates
 
+08/21/2018 - Worked on the device graphing.  Created a basic graph with chart.js.  Very eary progress.  
+
 08/20/2018 - Cleaned up some code and added links to devices.  Device pages have not yet been written.  
 
 08/18/2018 - Today I uploaded my working project code.  The project is very early going and not especially useful at this point.  I just wanted to publish some of my progress so you can see how far this has come and where it's heading.

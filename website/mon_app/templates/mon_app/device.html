@@ -5,7 +5,42 @@
 {% block content %}
 
 <br />
-<div ></div>
+<div class="card-div" style="padding-left: 20px;padding-right: 20px;padding-top: 10px;padding-bottom: 10px">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<!--<canvas id="line-chart" width="800" height="100"></canvas>
+<script>
+new Chart(document.getElementById('line-chart'), {
+  type: 'line',
+  data: {
+    labels: ["12:00","12:01","12:02","12:03","12:04","12:05","12:06","12:07","12:08","12:09"],
+    datasets: [{ 
+        data: [86,90,6,15,10,11,13,22,78,24],
+        label: 'CPU',
+        borderColor: '#29ABE0',
+        backgroundColor: 'rgba(41,171,224,.1)'
+      }, { 
+        data: [70,70,70,70,70,70,70,70,70,70],
+        label: 'Memory',
+        borderColor: '#ffc107',
+        backgroundColor: 'rgba(255,193,7,0.1)'
+      }
+    ]
+  },
+  options: {
+    title: {display: false, text: 'Performance'},
+    legend: {display: true, position: 'right'},
+    scales: { xAxes: [{ display: false, }],yAxes: [{ display: true, ticks: { min: 0, max: 100, stepSize: 25 } }] },
+    elements: { line: { tension: 0 }},
+    animation: {duration: 0}
+  }
+});
+</script>-->
+{{devicegraph|safe}}
+
+</div>
 
 
 

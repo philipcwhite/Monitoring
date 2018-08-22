@@ -154,6 +154,56 @@ class mon_device:
 
         return html
 
+    def device_graph(name):
+        processor_data = AgentData.objects.filter(name = name, monitor = 'perf.processor.percent.used').order_by('-id')[:60]
+        memory_data = AgentData.objects.filter(name = name, monitor = 'perf.memory.percent.used').order_by('-id')[:60]
+        processor_string = ''
+        memory_string = ''
+        time_string = ''
+
+        
+        for i in processor_data:
+            processor_string +=  str(i.value) + ','
+            time_string += '"' + str(timezone.make_aware(datetime.datetime.fromtimestamp(i.timestamp), timezone.utc)).replace(':00+00:00','') + '",'
+        #time_string = time_string[-1]
+        #processor_string = processor_string[-1]
+
+        for i in memory_data:
+            memory_string += str(i.value) + ','
+        #memory_string = memory_string[-1]
+
+        html = """<canvas id="line-chart" width="800" height="100"></canvas>
+        <script>
+        new Chart(document.getElementById('line-chart'), {
+        type: 'line',
+        data: {
+        labels: [""" + time_string + """],
+        datasets: [{ 
+        data: [""" + processor_string + """],
+        label: 'CPU',
+        borderColor: '#29ABE0',
+        backgroundColor: 'rgba(41,171,224,.1)'
+        }, { 
+        data: [""" + memory_string + """],
+        label: 'Memory',
+        borderColor: '#ffc107',
+        backgroundColor: 'rgba(255,193,7,0.1)'
+        }
+        ]
+        },
+        options: {
+        title: {display: false, text: 'Performance'},
+        legend: {display: true, position: 'right'},
+        scales: { xAxes: [{ display: false, }],yAxes: [{ display: true, ticks: { min: 0, max: 100, stepSize: 25 } }] },
+        elements: { line: { tension: 0 }},
+        animation: {duration: 0}
+        }
+        });
+        </script>"""
+
+        return html
+
+
 
 
 
