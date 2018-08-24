@@ -26,9 +26,11 @@ def devices(request):
 
 def device(request, device_name):
     devicegraph = mon_device.device_graph(device_name)
-    context = {'devicegraph':devicegraph}
+    devicename = device_name
+    context = {'devicegraph':devicegraph,'devicename':devicename}
     return render(request, 'mon_app/device.html', context)
 
 def device_content(request, device_name):
-    context = {'systemstatus':systemstatus}
+    devicegraph = mon_device.device_graph(device_name)
+    context = {'devicegraph':devicegraph}
     return render(request, 'mon_app/device_content.html', context)
