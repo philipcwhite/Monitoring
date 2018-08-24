@@ -11,6 +11,8 @@ This repository currently contains the code for the monitoring server, collector
 
 ## Updates
 
+08/23/2018 - I continued to work on device graphing today.  I also seperated out some code on the website (utils.py was split into two files).  I'm finding chart.js too limiting for what I'd like to do so I'm planning on going the custom route on the graphs.  Chart.js is amazing but I'm having a tough time getting it to match stylistically with my site.  Today I wrote the basic code to display the axis and polylines.  It's not perfect and needs some cleanup but it does match current time to recorded time so graphs are fairly accurately represented.  I'm going to try to add in tooltips to the SVG graph that I'm writing as well.  
+
 08/21/2018 - Worked on the device graphing.  Created a basic graph with chart.js.  Very eary progress.  
 
 08/20/2018 - Cleaned up some code and added links to devices.  Device pages have not yet been written.  

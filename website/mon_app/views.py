@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from .models import AgentData, AgentEvent, AgentSystem, AgentThreshold, GlobalThreshold, Subscription
 
-from .utils import mon_index, mon_device
+from .mon_device import mon_device
+from .mon_index import mon_index
 from django.template.loader import render_to_string
 # Create your views here.
 

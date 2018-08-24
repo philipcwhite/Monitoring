@@ -1,0 +1,39 @@
+
+{% block content %}
+
+<br />
+<table style="width:100%;">
+  <tr>
+    <td style="padding-right:4px">
+      <div class="card-div">
+        {{grapha|safe}}
+      </div>
+    </td>
+    <td style="padding-left:4px">
+      <div class="card-div">
+        {{graphb|safe}}
+      </div>
+    </td>
+    <td style="padding-left:4px">
+        <div class="card-div">
+          {{systemperf|safe}}
+        </div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3" style="padding-top:8px">
+      <div class="card-div">
+          <div style="padding-left:20px"><b>Host Availability</b></div>
+        <table style="width:100%;table-layout:fixed;"> 
+            <tr><th style='width:30px'></th><th style='width:140px;text-align:left'></th><th style='width:175px;text-align:left'></th><th style='text-align:left'></th><th style='text-align:left;width:190px'></th></tr>
+          {{systemstatus|safe}}
+        </table> 
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+<br />
+
+{% endblock content %}
