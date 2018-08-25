@@ -8,8 +8,14 @@ This repository currently contains the code for the monitoring server, collector
 ## Screenshots
 
 ![WebSite](https://raw.githubusercontent.com/philipcwhite/Monitoring2/master/images/home.png)
+Home View
+
+![WebSite](https://raw.githubusercontent.com/philipcwhite/Monitoring2/master/images/device.png)
+Device View
 
 ## Updates
+
+08/24/2018 - I made quite a few changes to the device page.  I now have graph tooltips working for IE, Edge, and Chrome.  I also added in some basic system information.  I haven't decided how I want to display filesystems, Network, and additional parameters yet.  
 
 08/23/2018 - I continued to work on device graphing today.  I also seperated out some code on the website (utils.py was split into two files).  I'm finding chart.js too limiting for what I'd like to do so I'm planning on going the custom route on the graphs.  Chart.js is amazing but I'm having a tough time getting it to match stylistically with my site.  Today I wrote the basic code to display the axis and polylines.  It's not perfect and needs some cleanup but it does match current time to recorded time so graphs are fairly accurately represented.  I'm going to try to add in tooltips to the SVG graph that I'm writing as well.  
 

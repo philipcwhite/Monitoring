@@ -96,7 +96,7 @@ class mon_index:
         <b>Monitoring Server</b><br />
         Name: """ + name + """<br />
         Processors: """ + str(agentsystem.processors + 1) + """<br />
-        Memory: """ + str(agentsystem.memory).replace('.00','') + """ MB <br />
+        Memory: """ + str(agentsystem.memory)[:-3] + """ MB <br />
         OS: """ + os + """ (""" + agentsystem.osarchitecture + """) <br />
         </td><td style="width:50%;padding-left:10px;padding-top:25px;vertical-align: text-top"><b>Performance</b><br />"""
 

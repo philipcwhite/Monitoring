@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import AgentData, AgentEvent, AgentSystem, AgentThreshold, GlobalThreshold, Subscription
 
-from .mon_device import mon_device
+from .mon_device import mon_device, mon_devices
 from .mon_index import mon_index
 from django.template.loader import render_to_string
 # Create your views here.
@@ -20,17 +20,17 @@ def index_content(request):
 
 # Devices
 def devices(request):
-    systemstatus = mon_device.system_status()
+    systemstatus = mon_devices.system_status()
     context = {'systemstatus':systemstatus}
     return render(request, 'mon_app/devices.html', context)
 
 def device(request, device_name):
-    devicegraph = mon_device.device_graph(device_name)
     devicename = device_name
-    context = {'devicegraph':devicegraph,'devicename':devicename}
+    context = {'devicename':devicename}
     return render(request, 'mon_app/device.html', context)
 
 def device_content(request, device_name):
+    devicesystem = mon_device.device_system(device_name)
     devicegraph = mon_device.device_graph(device_name)
-    context = {'devicegraph':devicegraph}
+    context = {'devicesystem':devicesystem,'devicegraph':devicegraph}
     return render(request, 'mon_app/device_content.html', context)
