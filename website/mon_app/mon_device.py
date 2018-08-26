@@ -157,7 +157,7 @@ class mon_devices:
             else:
                 icon =  """<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg>"""
 
-            html = html + "<tr><td>" + icon + "</td><td>" + str(i.name) + "</td><td>" + str(i.domain) + "</td><td>" + str(i.ipaddress) + "</td><td>" + str(i.osname) + "</td></tr>"
+            html = html + "<tr><td>" + icon + "</td><td><a href='/device/" + str(i.name) + "'>" + str(i.name) + "</td><td>" + str(i.domain) + "</td><td>" + str(i.ipaddress) + "</td><td>" + str(i.osname) + "</td></tr>"
 
         return html
 
