@@ -24,15 +24,15 @@ class mon_index:
         down_perc = (down / total) * 100
         total_perc = str(ok_perc) + ' ' + str(down_perc)
 
-        svg = """<table style="width:100%"><tr><td style="width:50%;text-align:center">
-<svg width="130" height="130" viewBox="0 0 42 42" class="donut">
-<circle class="donut-ring" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#d9534f" stroke-width="4"></circle>
-<circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#93C54B" stroke-width="4" stroke-dasharray='""" + total_perc +"""' stroke-dashoffset="25"></circle>
-</svg></td>
-<td style="width:50%"><b>Host Availability</b><br /><svg width="10" height="10"><rect width="10" height="10" style="fill:#93C54B" /></svg> """ + str(ok) + """ Hosts Up<br />
-<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg> """ + str(down) + """ Hosts Down</td></tr></table>"""
+        html = """<table style="width:100%"><tr><td style="width:50%;text-align:center">
+        <svg width="130" height="130" viewBox="0 0 42 42" class="donut">
+        <circle class="donut-ring" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#d9534f" stroke-width="4"></circle>
+        <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#93C54B" stroke-width="4" stroke-dasharray='""" + total_perc +"""' stroke-dashoffset="25"></circle>
+        </svg></td>
+        <td style="width:50%"><b>Host Availability</b><br /><svg width="10" height="10"><rect width="10" height="10" style="fill:#93C54B" /></svg> """ + str(ok) + """ Hosts Up<br />
+        <svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg> """ + str(down) + """ Hosts Down</td></tr></table>"""
 
-        return svg
+        return html
 
     def donut_alerts():
         info = 0
@@ -57,21 +57,21 @@ class mon_index:
         majr_points = str(majr_perc) + ' ' + str(100 - majr_perc)
         crit_points = str(crit_perc) + ' ' + str(100 - crit_perc)
 
-        svg = """<table style="width:100%"><tr><td style="width:50%;text-align:center">
-<svg width="130" height="130" viewBox="0 0 42 42" class="donut">
-<circle class="donut-ring" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#93C54B" stroke-width="4"></circle>
-<circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#29ABE0" stroke-width="4" stroke-dasharray='""" + info_points +"""' stroke-dashoffset="25"></circle>
-<circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#ffc107" stroke-width="4" stroke-dasharray='""" + warn_points +"""' stroke-dashoffset='""" + str(100 - info_perc + 25) + """'></circle>
-<circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#F47C3C" stroke-width="4" stroke-dasharray='""" + majr_points +"""' stroke-dashoffset='""" + str(100 - info_perc - warn_perc + 25) + """'></circle>
-<circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#d9534f" stroke-width="4" stroke-dasharray='""" + crit_points +"""' stroke-dashoffset='""" + str(100 - info_perc - warn_perc - majr_perc + 25) + """'></circle>
-</svg></td><td style="width:50%"><b>Open Events</b><br />
-<svg width="10" height="10"><rect width="10" height="10" style="fill:#29ABE0" /></svg> """ + str(info) + """ Information<br />
-<svg width="10" height="10"><rect width="10" height="10" style="fill:#ffc107" /></svg> """ + str(warn) + """ Warning<br />
-<svg width="10" height="10"><rect width="10" height="10" style="fill:#F47C3C" /></svg> """ + str(majr) + """ Major<br />
-<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg> """ + str(crit) + """ Critical
-</td></tr></table>"""
+        html = """<table style="width:100%"><tr><td style="width:50%;text-align:center">
+        <svg width="130" height="130" viewBox="0 0 42 42" class="donut">
+        <circle class="donut-ring" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#93C54B" stroke-width="4"></circle>
+        <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#29ABE0" stroke-width="4" stroke-dasharray='""" + info_points +"""' stroke-dashoffset="25"></circle>
+        <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#ffc107" stroke-width="4" stroke-dasharray='""" + warn_points +"""' stroke-dashoffset='""" + str(100 - info_perc + 25) + """'></circle>
+        <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#F47C3C" stroke-width="4" stroke-dasharray='""" + majr_points +"""' stroke-dashoffset='""" + str(100 - info_perc - warn_perc + 25) + """'></circle>
+        <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#d9534f" stroke-width="4" stroke-dasharray='""" + crit_points +"""' stroke-dashoffset='""" + str(100 - info_perc - warn_perc - majr_perc + 25) + """'></circle>
+        </svg></td><td style="width:50%"><b>Open Events</b><br />
+        <svg width="10" height="10"><rect width="10" height="10" style="fill:#29ABE0" /></svg> """ + str(info) + """ Information<br />
+        <svg width="10" height="10"><rect width="10" height="10" style="fill:#ffc107" /></svg> """ + str(warn) + """ Warning<br />
+        <svg width="10" height="10"><rect width="10" height="10" style="fill:#F47C3C" /></svg> """ + str(majr) + """ Major<br />
+        <svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg> """ + str(crit) + """ Critical
+        </td></tr></table>"""
 
-        return svg
+        return html
 
     def system_perf():
         name = socket.gethostname().lower()
@@ -120,20 +120,24 @@ class mon_index:
         agentsystem = AgentSystem.objects.all().order_by('name')
         uptime_check = 600
         currenttime = time.time()
+        os = ""
         html = ""
         icon = ""
 
         for i in agentsystem:
             dt = datetime.datetime.fromtimestamp(i.timestamp)
             date = 'Last Reported: ' + str(timezone.make_aware(dt, timezone.utc)).replace(':00+00:00','')
-            
+            if 'Windows' in i.osname:
+                os = 'Windows'
+            elif 'Linux' in i.osname:
+                os = 'Linux'
+
             if (i.timestamp + uptime_check) >= currenttime:
                 icon = """<svg width="10" height="10"><rect width="10" height="10" style="fill:#93C54B" /></svg>"""
-                html = html + "<tr><td style='padding-left:20px'>" + icon + "</td><td style='padding-left:10px'><a href='device/" + str(i.name) + "'>" + str(i.name) + "</a></td><td>IP Address: " + str(i.ipaddress) + "</td><td>Operating System: " + str(i.osname) + " (" + str(i.osarchitecture) + ")</td><td>" + date + "</td></tr>"
             else:
                 icon =  """<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg>"""
-                html = html + "<tr><td style='padding-left:20px'>" + icon + "</td><td style='padding-left:10px'><a href='device/" + str(i.name) + "'>" + str(i.name) + "</a></td><td>IP Address: " + str(i.ipaddress) + "</td><td>Operating System: " + str(i.osname) + " (" + str(i.osarchitecture) + ")</td><td>" + date + "</td></tr>"
+                
+            html = html + "<tr><td style='padding-left:20px'>" + icon + " &nbsp;<a href='device/" + str(i.name) + "'>" + str(i.name) + "</a></td><td>IP Address: " + str(i.ipaddress) + "</td><td>Domain: " + str(i.domain).lower() + "</td><td>Platform: " + os + " (" + str(i.osarchitecture) + ")</td><td>" + date + "</td></tr>"
+
 
         return html
-
-

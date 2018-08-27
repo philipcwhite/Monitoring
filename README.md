@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+08/27/2018 - I added a simple event view today.  Buttons do not work at this point.  I also cleaned up a lot of code and made some changes to the display.
+
 08/25/2018 - Lots of boring updates today.  I fixed some style elements, did some house cleaning on testing files, and I put placeholder pages in for events, reports, and configuration.  
 
 08/24/2018 - I made quite a few changes to the device page.  I now have graph tooltips working for IE, Edge, and Chrome.  I also added in some basic system information.  I haven't decided how I want to display filesystems, Network, and additional parameters yet.  

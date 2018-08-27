@@ -34,7 +34,10 @@ body{margin:0px;padding:0px;height:100%;width:100%;}
 .mon-container a:hover{color:#000;text-decoration:none}
 .mon-container a:visited {color:#000;text-decoration:none}
 
+.event-button{border-radius: 2px;color: #ffffff;font: 10px  "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;background:#d9534f;padding:3px 5px;text-decoration: none;font-weight:bold;border-style:none;transition: 0.5s;}
+.event-button:hover{background-color: #d23430;border-color: #c9302c;transition: 0.5s;}
+
 
 /* Colors based on Sandstone theme by Thomas Park https://bootswatch.com/ */
 
-.card-div{background-color:#fff;border:1px solid #dfd7ca;border-radius:3px;padding:4px;min-width:300px}
+.card-div{background-color:#fff;border:1px solid #dfd7ca;border-radius:3px;padding:4px;min-width:200px;}

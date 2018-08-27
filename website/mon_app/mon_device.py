@@ -1,8 +1,7 @@
 import time, datetime, socket
-from .models import AgentSystem, AgentEvent, AgentData
+from .models import AgentSystem, AgentData
 from django.conf import settings
 from django.utils import timezone
-
 
 class mon_device_graph:
     def __init__(self, time, pvalue, mvalue):

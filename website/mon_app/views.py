@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from .models import AgentData, AgentEvent, AgentSystem, AgentThreshold, GlobalThreshold, Subscription
-
 from .mon_device import mon_device, mon_devices
 from .mon_index import mon_index
-from django.template.loader import render_to_string
+from .mon_events import mon_events
+
+
 # Create your views here.
 
 # Index main
@@ -39,11 +40,13 @@ def events(request):
     return render(request, 'mon_app/events.html')
 
 def events_content(request):
-    return render(request, 'mon_app/events_content.html')
+    eventsummary = mon_events.event_summary()
+    eventlist = mon_events.event_list()
+    context = {'eventsummary':eventsummary,'eventlist':eventlist}
+    return render(request, 'mon_app/events_content.html',context)
 
 def reports(request):
     return render(request, 'mon_app/reports.html')
 
 def settings(request):
     return render(request, 'mon_app/settings.html')
-    
