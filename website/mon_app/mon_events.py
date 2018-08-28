@@ -47,19 +47,21 @@ class mon_events:
             elif i.severity == "Critical":
                 color = "#D9534F"
 
-
-
-
             html = html + """<tr><td style="text-align:left">""" + i.eventdate.strftime("%Y-%m-%d %H:%M:%S") + """</td>
             <td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" style="fill:""" + color + """" /></svg> """ + i.severity + """</td>
             <td><a href="/device/""" + i.name + """">""" + i.name + """</a></td>
             <td>""" + i.message + """</td>
-            <td style="text-align:right"><input type="button" class="event-button" value="Close Event" /></td>
+            <td style="text-align:right"><form><input type="button" onclick="window.location.href='/event_close/""" + str(i.id) + """'" class="event-button" value="Close Event" /></form></td>
             </tr>"""
 
             html = html + "</table"
 
         return html
+
+    def event_close(event_id):
+        agentevent = AgentEvent.objects.get(id = event_id)
+        agentevent.status = False
+        agentevent.save()
 
     
     

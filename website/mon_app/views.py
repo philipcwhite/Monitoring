@@ -45,6 +45,10 @@ def events_content(request):
     context = {'eventsummary':eventsummary,'eventlist':eventlist}
     return render(request, 'mon_app/events_content.html',context)
 
+def event_close(request, event_id):
+    eventclose = mon_events.event_close(event_id)
+    return render(request, 'mon_app/events.html')
+
 def reports(request):
     return render(request, 'mon_app/reports.html')
 

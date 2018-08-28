@@ -14,6 +14,7 @@ urlpatterns=[
     path('device_content/<str:device_name>', views.device_content, name='device_content'),
     path('events', views.events, name='events'),
     path('events_content', views.events_content, name='events_content'),
+    path('event_close/<int:event_id>', views.event_close, name='event_close'),
     path('reports', views.reports, name='reports'),
     path('settings', views.settings, name='settings'),
 ]   
