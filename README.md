@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+08/29/2018 - Cleaned up some CSS/HTML.
+
 08/27/2018 - Events can now be closed manually.
 
 08/27/2018 - I added a simple event view today.  Buttons do not work at this point.  I also cleaned up a lot of code and made some changes to the display.
