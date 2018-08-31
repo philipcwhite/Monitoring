@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+08/30/2018 - I modified the threshold models to include selectors for comparisons.  I also built forms for adding both agent and global thresholds.  These are still a bit rough but they are progressing.  I have not started the event engine yet.  
+
 08/29/2018 - Cleaned up some CSS/HTML.
 
 08/27/2018 - Events can now be closed manually.

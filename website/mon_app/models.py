@@ -64,18 +64,32 @@ class AgentThreshold(models.Model):
     MAJR = 'Major'
     WARN = 'Warning'
     INFO = 'Information'
-    severity_choices=(
+    severity_choices = (
         (CRIT, 'Critical'),
         (MAJR, 'Major'),
         (WARN, 'Warning'),
         (INFO, 'Information'),
+    )
+    GT = '>'
+    GTEQ = '>='
+    LT = '<'
+    LTEQ = '<='
+    EQ = '='
+    NEQ = '!='
+    compare_choices = (
+        (GT, '>'),
+        (GTEQ, '>='),
+        (LT, '<'),
+        (LTEQ, '<='),
+        (EQ, '='),
+        (NEQ, '!=')
     )
     id = models.AutoField(unique = True, primary_key = True)
     name = models.CharField(max_length = 100)
     monitor = models.CharField(max_length = 250)
     severity = models.CharField(max_length = 11, choices = severity_choices, default = INFO)
     threshold = models.PositiveIntegerField()
-    compare = models.CharField(max_length=2)
+    compare = models.CharField(max_length=2, choices = compare_choices, default = GT)
     timerange = models.PositiveIntegerField() 
     enabled = models.BooleanField(default = True)
     class Meta:
@@ -93,11 +107,25 @@ class GlobalThreshold(models.Model):
         (WARN, 'Warning'),
         (INFO, 'Information'),
     )
+    GT = '>'
+    GTEQ = '>='
+    LT = '<'
+    LTEQ = '<='
+    EQ = '='
+    NEQ = '!='
+    compare_choices = (
+        (GT, '>'),
+        (GTEQ, '>='),
+        (LT, '<'),
+        (LTEQ, '<='),
+        (EQ, '='),
+        (NEQ, '!=')
+    )
     id = models.AutoField(unique = True, primary_key = True)
     monitor = models.CharField(max_length = 250)
     severity = models.CharField(max_length = 11, choices = severity_choices, default = INFO)
     threshold = models.PositiveIntegerField()
-    compare = models.CharField(max_length=2)
+    compare = models.CharField(max_length=2, choices = compare_choices, default = GT)
     timerange = models.PositiveIntegerField() 
     enabled = models.BooleanField(default = True)
     class Meta:

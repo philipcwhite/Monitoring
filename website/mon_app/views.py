@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import AgentData, AgentEvent, AgentSystem, AgentThreshold, GlobalThreshold, Subscription
+from .forms import AgentThresholdForm, GlobalThresholdForm
 from .mon_device import mon_device, mon_devices
 from .mon_index import mon_index
 from .mon_events import mon_events
@@ -36,6 +37,7 @@ def device_content(request, device_name):
     context = {'devicesystem':devicesystem,'devicegraph':devicegraph}
     return render(request, 'mon_app/device_content.html', context)
 
+# Events
 def events(request):
     return render(request, 'mon_app/events.html')
 
@@ -49,8 +51,68 @@ def event_close(request, event_id):
     eventclose = mon_events.event_close(event_id)
     return render(request, 'mon_app/events.html')
 
+# Reports
 def reports(request):
     return render(request, 'mon_app/reports.html')
 
+# Settings
 def settings(request):
     return render(request, 'mon_app/settings.html')
+
+def settings_global_thresholds(request):
+    return render(request, 'mon_app/settings.html')
+
+def settings_global_threshold_add(request):
+    if request.method != 'POST':
+        form = GlobalThresholdForm()
+    else:
+        form = GlobalThresholdForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'mon_app/settings.html')
+    context = {'form': form}
+    return render(request, 'mon_app/settings_thresholds_add.html', context)
+
+def settings_global_threshold_edit(request, thresh_id):
+    globalthreshold = GlobalThreshold.objects.get(id=thresh_id)
+    if request.method != 'POST':
+        form = GlobalThresholdForm(instance=globalthreshold)
+    else:
+        form = GlobalThresholdForm(instance=globalthreshold, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'mon_app/settings.html')
+    context = {'form':form}
+    return render(request, 'mon_app/settings_thresholds_edit.html', context)
+
+def settings_global_threshold_delete(request):
+    return render(request, 'mon_app/settings.html')
+
+def settings_agent_thresholds(request, device_name):
+    return render(request, 'mon_app/settings.html')
+
+def settings_agent_threshold_add(request, device_name):
+    name = device_name
+    if request.method != 'POST':
+        form = AgentThresholdForm()
+    else:
+        form = AgentThresholdForm(data = request.POST)
+        if form.is_valid():
+            athresh = form.save(commit = False)
+            athresh.name = name
+            athresh.save()
+            return render(request, 'mon_app/settings.html')
+    context = {'name':name,'form': form}
+    return render(request, 'mon_app/settings_thresholds_add.html', context)
+
+def settings_agent_threshold_edit(request, thresh_id):
+    agentthreshold = AgentThreshold.objects.get(id=thresh_id)
+    if request.method != 'POST':
+        form = AgentThresholdForm(instance=agentthreshold)
+    else:
+        form = AgentThresholdForm(instance=agentthreshold, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'mon_app/settings.html')
+    context = {'form':form}
+    return render(request, 'mon_app/settings_thresholds_edit.html', context)

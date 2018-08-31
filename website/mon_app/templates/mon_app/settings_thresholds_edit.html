@@ -1,0 +1,26 @@
+{% extends 'mon_app/base.html' %}
+
+
+
+{% block content %}
+
+<br />
+<div>
+
+    <h2>Edit Threshold</h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="">Edit Threshold</button>
+    </form>
+
+
+</div>
+
+
+
+<br />
+
+
+
+{% endblock content %}
