@@ -28,8 +28,8 @@ body{margin:0px;padding:0px;height:100%;width:100%;font:12px "Segoe UI", "Helvet
 .mon-container a:hover{color:#000;text-decoration:none}
 .mon-container a:visited {color:#000;text-decoration:none}
 
-.event-button{border-radius:2px;color:#FFF;font-size:10px;background:#D9534F;padding:3px 5px;text-decoration: none;font-weight:bold;border-style:none;transition: 0.5s;}
-.event-button:hover{background-color:#D23430;border-color: #C9302C;transition: 0.5s;}
+.action-button{border-radius:2px;color:#FFF;font-size:10px;background:#D9534F;padding:3px 5px;text-decoration: none;font-weight:bold;border-style:none;transition: 0.5s;}
+.action-button:hover{background-color:#D23430;border-color: #C9302C;transition: 0.5s;}
 
 .card-div{background-color:#FFF;border:1px solid #DFD7CA;border-radius:3px;padding:4px;min-width:200px;}
 

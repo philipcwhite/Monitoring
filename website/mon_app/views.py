@@ -60,7 +60,9 @@ def settings(request):
     return render(request, 'mon_app/settings.html')
 
 def settings_global_thresholds(request):
-    return render(request, 'mon_app/settings.html')
+    thresholds = GlobalThreshold.objects.all().order_by('monitor').order_by('severity')
+    context = {'thresholds':thresholds}
+    return render(request, 'mon_app/settings_thresholds_global.html', context)
 
 def settings_global_threshold_add(request):
     if request.method != 'POST':
@@ -69,7 +71,7 @@ def settings_global_threshold_add(request):
         form = GlobalThresholdForm(request.POST)
         if form.is_valid():
             form.save()
-            return render(request, 'mon_app/settings.html')
+            return render(request, 'mon_app/settings_thresholds_global.html')
     context = {'form': form}
     return render(request, 'mon_app/settings_thresholds_add.html', context)
 
@@ -81,7 +83,7 @@ def settings_global_threshold_edit(request, thresh_id):
         form = GlobalThresholdForm(instance=globalthreshold, data=request.POST)
         if form.is_valid():
             form.save()
-            return render(request, 'mon_app/settings.html')
+            return render(request, 'mon_app/settings_thresholds_global.html')
     context = {'form':form}
     return render(request, 'mon_app/settings_thresholds_edit.html', context)
 

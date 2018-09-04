@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+09/03/2018 - I continued to work on the threshold settings pages.  Global thresholds are now linked off the settings page.  The website is probably 25% complete at this point.  Most of the design elements are defined and quite a few content pages have been written.  I have yet to tackle authentication and authorization.  
+
 08/30/2018 - I modified the threshold models to include selectors for comparisons.  I also built forms for adding both agent and global thresholds.  These are still a bit rough but they are progressing.  I have not started the event engine yet.  
 
 08/29/2018 - Cleaned up some CSS/HTML.

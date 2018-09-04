@@ -51,7 +51,7 @@ class mon_events:
             <td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" style="fill:""" + color + """" /></svg> """ + i.severity + """</td>
             <td><a href="/device/""" + i.name + """">""" + i.name + """</a></td>
             <td>""" + i.message + """</td>
-            <td style="text-align:right"><form><input type="button" onclick="window.location.href='/event_close/""" + str(i.id) + """'" class="event-button" value="Close Event" /></form></td>
+            <td style="text-align:right"><form><input type="button" onclick="window.location.href='/event_close/""" + str(i.id) + """'" class="action-button" value="Close Event" /></form></td>
             </tr>"""
 
             html = html + "</table"
