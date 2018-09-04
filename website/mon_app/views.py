@@ -76,11 +76,11 @@ def settings_global_threshold_add(request):
     return render(request, 'mon_app/settings_thresholds_add.html', context)
 
 def settings_global_threshold_edit(request, thresh_id):
-    globalthreshold = GlobalThreshold.objects.get(id=thresh_id)
+    globalthreshold = GlobalThreshold.objects.get(id = thresh_id)
     if request.method != 'POST':
-        form = GlobalThresholdForm(instance=globalthreshold)
+        form = GlobalThresholdForm(instance = globalthreshold)
     else:
-        form = GlobalThresholdForm(instance=globalthreshold, data=request.POST)
+        form = GlobalThresholdForm(instance = globalthreshold, data = request.POST)
         if form.is_valid():
             form.save()
             return render(request, 'mon_app/settings_thresholds_global.html')
@@ -91,7 +91,10 @@ def settings_global_threshold_delete(request):
     return render(request, 'mon_app/settings.html')
 
 def settings_agent_thresholds(request, device_name):
-    return render(request, 'mon_app/settings.html')
+    thresholds = AgentThreshold.objects.filter(name = device_name).order_by('monitor').order_by('severity')
+    devicename = device_name
+    context = {'thresholds':thresholds, 'devicename':devicename}
+    return render(request, 'mon_app/settings_thresholds_agent.html', context)
 
 def settings_agent_threshold_add(request, device_name):
     name = device_name
