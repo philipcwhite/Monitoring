@@ -1,4 +1,4 @@
-# Monitoring2 ver. 0.01b
+# Monitoring2 ver. 0.01a
 Monitoring Server and Agents written in Python
 
 ## About
@@ -14,6 +14,8 @@ Home View
 Device View
 
 ## Updates
+
+09/04/2018 - I started coding the event engine today.  I also changed the version from beta to alpha.  I still have quite a way to go before this is fully working.  Hopefully cx_freeze is updated for Python 3.7 by the time we have a release.  :)
 
 09/04/2018 - I updated the Agent level thresholds today.  This gives me enough info on the web side to begin coding the event engine.  
 
