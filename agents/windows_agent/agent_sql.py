@@ -24,8 +24,6 @@ class AgentSQL():
             c.execute(sql_create_agent_data)
             c.execute(sql_create_agent_events)
             c.execute(sql_create_agent_thresholds)
-        else:
-            print("Error! cannot create the database connection.")
         con.commit()
         con.close()
 
@@ -35,8 +33,6 @@ class AgentSQL():
         if con is not None:
             c = con.cursor()
             c.execute(sql_query)
-        else:
-            print("Error! cannot create the database connection.")
         con.commit()
         con.close()
 
@@ -46,8 +42,6 @@ class AgentSQL():
         if con is not None:
             c = con.cursor()
             c.execute(sql_query)
-        else:
-            print("Error! cannot create the database connection.")
         con.commit()
         con.close()
 
@@ -59,8 +53,6 @@ class AgentSQL():
             c = con.cursor()
             c.execute(sql_query)
             rows = c.fetchall()
-        else:
-            print("Error! cannot create the database connection.")
         con.commit()
         con.close()
         return rows
@@ -71,8 +63,6 @@ class AgentSQL():
         if con is not None:
             c = con.cursor()
             c.execute(sql_query)
-        else:
-            print("Error! cannot create the database connection.")
         con.commit()
         con.close()
 
@@ -86,8 +76,6 @@ class AgentSQL():
             rows = c.fetchall()
             for time, name, monitor, value in rows:
                 output = output + str(time) + ";" + name + ";" + monitor + ";" + str(value) + "\n"
-        else:
-            print("Error! cannot create the database connection.")
         con.commit()
         con.close()
         return output
@@ -99,8 +87,6 @@ class AgentSQL():
             c = con.cursor()
             c.execute(sql_query)
             rows = c.fetchall()
-        else:
-            print("Error! cannot create the database connection.")
         con.commit()
         con.close()
         return rows
@@ -111,8 +97,6 @@ class AgentSQL():
         if con is not None:
             c = con.cursor()
             c.execute(sql_query)
-        else:
-            print("Error! cannot create the database connection.")
         con.commit()
         con.close()
 
@@ -123,10 +107,25 @@ class AgentSQL():
         if con is not None:
             c = con.cursor()
             c.execute(sql_query)
-        else:
-            print("Error! cannot create the database connection.")
         con.commit()
         con.close()
 
+    async def insert_agent_events(time, name, message, status, severity):
+        sql_query = "INSERT INTO AgentEvents(time, name, message, status, severity) VALUES('" + str(time) + "','" + name + "','" + message + "','" + status +  "','" + severity + "')"
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+        con.commit()
+        con.close()
 
-
+    async def select_agent_events(message, severity):
+        sql_query = "SELECT * FROM AgentEvents WHERE message='" + message + "' AND severity = '" + severity + "'" 
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+            rows = c.fetchall()
+        con.commit()
+        con.close()
+        return rows
