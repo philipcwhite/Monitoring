@@ -3,7 +3,7 @@ from cx_Freeze import setup, Executable
 
 #python setup.py build
 
-build_exe_options = {"packages": ['asyncio','win32timezone'], "excludes": ["tkinter"]}
+build_exe_options = {"packages": ['asyncio','win32timezone','sqlite3','platform','socket','ssl','os','wmi'], "excludes": ["tkinter"]}
 
 setup(
     name = "Agent Service",

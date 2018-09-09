@@ -1,13 +1,15 @@
 import asyncio
 import socket
-import agent_wmi
-import agent_settings
+import agent_collect, agent_settings, agent_sql
 import ssl
 
 class agent_process():
+    async def data_cleanup():
+        await agent_sql.AgentSQL.delete_agent_data()
+        return None
 
     async def get_data():
-        message = await agent_wmi.AgentWMI.get_wmi()
+        message = await agent_collect.AgentCollect.get_data()
         return message
 
     async def send_data():
@@ -16,7 +18,6 @@ class agent_process():
         port = agent_settings.port
         agent_ssl = int(agent_settings.secure)
         sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        
         try:
             if agent_ssl == 1:
                 #context = ssl.create_default_context(ssl.Purpose.SERVER_AUTH, cafile='localhost.crt')
@@ -29,29 +30,27 @@ class agent_process():
                 byte=str(message).encode()
                 conn.send(byte)
                 data = conn.recv(1024).decode()
-                #print(data)
+                # Mark data as sent 
                 if data == 'Received':
-                    agent_settings.agent_list = []
-                #print(agent_settings.agent_list)
+                    await agent_sql.AgentSQL.update_agent_data()
                 conn.close()
             else:
                 sock.connect((host,port))
                 byte=str(message).encode()
                 sock.send(byte)
                 data = sock.recv(1024)
-                #print(data.decode())
+                if data == 'Received':
+                    await agent_sql.AgentSQL.update_agent_data() 
                 sock.close()
         except:
-            #print(agent_settings.agent_list)
             pass
 
-        
-        #data = s.recv(1024)
-        #print(data.decode())
-
+    async def run_process():
+        await agent_process.send_data()
+        await agent_process.data_cleanup()
 
     def create_loop():
         loop = asyncio.new_event_loop() 
-        loop.run_until_complete(agent_process.send_data())
+        loop.run_until_complete(agent_process.run_process())
         loop.close 
 
