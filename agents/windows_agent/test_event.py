@@ -1,4 +1,4 @@
-from agent_actions import agent_process
+from agent_actions import AgentProcess
 import time
 import datetime,socket
 import agent_settings
@@ -21,16 +21,16 @@ import agent_load
 
 
 
-#agent_load.load_config()
+agent_load.load_config()
 
 
 #print(agent_settings.config_path)
 #print(agent_settings.filename)
 
-agent_process.create_loop()
+AgentProcess.create_loop()
 
 time.sleep(5)
-agent_process.create_loop()
+AgentProcess.create_loop()
 
 #time.sleep(5)
-#agent_process.create_loop()
+#AgentProcess.create_loop()

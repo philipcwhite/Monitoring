@@ -4,19 +4,17 @@ import socket
 import pythoncom
 import platform
 import time
-import agent_settings,agent_sql
+import agent_settings, agent_sql
 
-class AgentCollect():
-    async def get_data():
+class AgentData():
+    def data_process():
         # Set time
         agent_time = str(time.time()).split('.')[0]
         # Initialize WMI
         pythoncom.CoInitialize()
         c = wmi.WMI()
         # Get Hostname
-        name = socket.gethostname().lower()
-        # Set Return string
-        output = ""
+        name = agent_settings.name
 
         # Configuration
         try:
@@ -26,19 +24,19 @@ class AgentCollect():
             ipaddress = socket.gethostbyname(socket.gethostname())
             domain = socket.getfqdn().split('.', 1)[1]
             processors = str(os.cpu_count())
-            await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.os.name', osplatform)
-            await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.os.architecture', osarchitecture)
-            await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.os.build', osbuild)
-            await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.ipaddress', ipaddress)
-            await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.domain', domain)
-            await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.processors', processors)
+            agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.os.name', osplatform)
+            agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.os.architecture', osarchitecture)
+            agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.os.build', osbuild)
+            agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.ipaddress', ipaddress)
+            agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.domain', domain)
+            agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.processors', processors)
         except:
             pass
 
         try:
             for i in c.Win32_ComputerSystem():
                 TotalMemory = round(int(i.TotalPhysicalMemory) / 1024 / 1024, 0)
-                await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.memory.total', str(TotalMemory))
+                agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.memory.total', str(TotalMemory))
         except:
             pass
             
@@ -50,8 +48,8 @@ class AgentCollect():
                 PercentFreeSpace = i.PercentFreeSpace
                 ActiveTime=100 - int(i.PercentIdleTime)
                 if len(Name) < 3:
-                    await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.filesystem.' + Name + '.percent.free', str(i.PercentFreeSpace))
-                    await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.filesystem.' + Name + '.percent.active', str(ActiveTime))
+                    agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.filesystem.' + Name + '.percent.free', str(i.PercentFreeSpace))
+                    agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.filesystem.' + Name + '.percent.active', str(ActiveTime))
         except:
             pass
 
@@ -62,7 +60,7 @@ class AgentCollect():
                 TotalMem = int(i.TotalVisibleMemorySize)
                 PercentMem = ((TotalMem-FreeMem)/TotalMem)*100
                 PercentMem = round(PercentMem,2)
-                await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.memory.percent.used', str(PercentMem))
+                agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.memory.percent.used', str(PercentMem))
         except:
             pass
 
@@ -75,29 +73,29 @@ class AgentCollect():
                 BytesSentPersec = BytesSentPersec + int(i.BytesSentPersec)
                 BytesReceivedPersec = BytesReceivedPersec
                 BytesSentPersec = BytesSentPersec
-                await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.network.bytes.received', str(BytesReceivedPersec))
-                await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.network.bytes.sent', str(BytesSentPersec))
+                agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.network.bytes.received', str(BytesReceivedPersec))
+                agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.network.bytes.sent', str(BytesSentPersec))
         except:
             pass
 
         # Pagefile
         try:
             for i in c.Win32_PerfFormattedData_PerfOS_PagingFile(Name = '_Total'):
-                await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.pagefile.percent.used', str(i.PercentUsage))
+                agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.pagefile.percent.used', str(i.PercentUsage))
         except:
             pass
 
         # Processor
         try:
             for i in c.Win32_PerfFormattedData_PerfOS_Processor(Name='_Total'):
-                await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.processor.percent.used', str(i.PercentProcessorTime))
+                agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.processor.percent.used', str(i.PercentProcessorTime))
         except:
             pass
 
         # Uptime
         try:
             for i in c.Win32_PerfFormattedData_PerfOS_System():
-                await agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.system.uptime.seconds', str(i.SystemUptime))
+                agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.system.uptime.seconds', str(i.SystemUptime))
         except:
             pass
        
@@ -112,19 +110,9 @@ class AgentCollect():
                             state = 1
                         else:
                             state = 0
-                        await agent_sql.AgentSQL.insert_agentdata(agent_time, name, sname, str(state))
+                        agent_sql.AgentSQL.insert_agentdata(agent_time, name, sname, str(state))
         except:
             pass
         
-        output = await agent_sql.AgentSQL.select_agent_data()
+        output = agent_sql.AgentSQL.select_agent_data()
         return output
-
-
-
-
-
-        
-
-
-
-

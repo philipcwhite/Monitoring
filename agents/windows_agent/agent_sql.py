@@ -13,7 +13,7 @@ class AgentSQL():
         time integer,name text,monitor text,value integer,sent integer);"""
  
         sql_create_agent_events = """CREATE TABLE IF NOT EXISTS AgentEvents (
-        time integer,name text,message text,status text,severity text);"""
+        time integer,name text,message text,status integer,severity text, sent integer);"""
 
         sql_create_agent_thresholds = """CREATE TABLE IF NOT EXISTS AgentThresholds (
         monitor text,severity text,threshold text, compare text,duration integer);"""
@@ -45,7 +45,7 @@ class AgentSQL():
         con.commit()
         con.close()
 
-    async def select_thresholds():
+    def select_thresholds():
         output = ""
         sql_query = "SELECT monitor, severity, threshold, compare, duration FROM AgentThresholds"
         con = AgentSQL.sql_con()
@@ -57,7 +57,7 @@ class AgentSQL():
         con.close()
         return rows
 
-    async def insert_agentdata(time, name, monitor, value):
+    def insert_agentdata(time, name, monitor, value):
         sql_query = "INSERT INTO AgentData(time, name, monitor, value, sent) VALUES(" + time + ",'" + name + "','" + monitor + "','" + value +  "',0)"
         con = AgentSQL.sql_con()
         if con is not None:
@@ -66,7 +66,7 @@ class AgentSQL():
         con.commit()
         con.close()
 
-    async def select_agent_data():
+    def select_agent_data():
         output = ""
         sql_query = "SELECT time, name, monitor, value FROM AgentData WHERE sent=0"
         con = AgentSQL.sql_con()
@@ -80,7 +80,7 @@ class AgentSQL():
         con.close()
         return output
     
-    async def select_agent_data_events(time, monitor):
+    def select_agent_data_events(time, monitor):
         sql_query = "SELECT value FROM AgentData WHERE monitor='" + monitor + "' AND time > " + str(time) 
         con = AgentSQL.sql_con()
         if con is not None:
@@ -91,7 +91,7 @@ class AgentSQL():
         con.close()
         return rows
 
-    async def update_agent_data():
+    def update_agent_data():
         sql_query = "UPDATE AgentData SET sent=1 WHERE sent=0"
         con = AgentSQL.sql_con()
         if con is not None:
@@ -100,7 +100,7 @@ class AgentSQL():
         con.commit()
         con.close()
 
-    async def delete_agent_data():
+    def delete_agent_data():
         agent_time = str(time.time()-7200).split('.')[0]
         sql_query = "DELETE FROM AgentData WHERE time<" + agent_time
         con = AgentSQL.sql_con()
@@ -110,8 +110,8 @@ class AgentSQL():
         con.commit()
         con.close()
 
-    async def insert_agent_events(time, name, message, status, severity):
-        sql_query = "INSERT INTO AgentEvents(time, name, message, status, severity) VALUES('" + str(time) + "','" + name + "','" + message + "','" + status +  "','" + severity + "')"
+    def insert_agent_events(time, name, message, severity):
+        sql_query = "INSERT INTO AgentEvents(time, name, message, status, severity, sent) VALUES('" + str(time) + "','" + name + "','" + message + "',1,'" + severity + "',0)"
         con = AgentSQL.sql_con()
         if con is not None:
             c = con.cursor()
@@ -119,13 +119,24 @@ class AgentSQL():
         con.commit()
         con.close()
 
-    async def select_agent_events(message, severity):
-        sql_query = "SELECT * FROM AgentEvents WHERE message='" + message + "' AND severity = '" + severity + "'" 
+    def select_agent_events(message, severity):
+        sql_query = "SELECT message FROM AgentEvents WHERE message='" + message + "' AND severity = '" + severity + "' AND status = 1" 
         con = AgentSQL.sql_con()
         if con is not None:
             c = con.cursor()
             c.execute(sql_query)
-            rows = c.fetchall()
+            message = c.fetchone()
         con.commit()
         con.close()
-        return rows
+        return message
+
+    def close_agent_events(message, severity):
+        sql_query = "UPDATE AgentData SET status=0, sent=0 WHERE message='" + message + "' AND severity = '" + severity 
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+            message = c.fetchone()
+        con.commit()
+        con.close()
+
