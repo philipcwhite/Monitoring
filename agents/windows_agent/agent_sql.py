@@ -101,7 +101,7 @@ class AgentSQL():
         con.close()
 
     def delete_agent_data():
-        agent_time = str(time.time()-7200).split('.')[0]
+        agent_time = str(time.time()-604800).split('.')[0]
         sql_query = "DELETE FROM AgentData WHERE time<" + agent_time
         con = AgentSQL.sql_con()
         if con is not None:
@@ -156,6 +156,16 @@ class AgentSQL():
 
     def update_agent_events():
         sql_query = "UPDATE AgentEvents SET sent=1 WHERE sent=0"
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+        con.commit()
+        con.close()
+
+    def delete_agent_events():
+        agent_time = str(time.time()-604800).split('.')[0]
+        sql_query = "DELETE FROM AgentEvents WHERE time<" + agent_time
         con = AgentSQL.sql_con()
         if con is not None:
             c = con.cursor()

@@ -6,11 +6,12 @@ import win32service
 import win32serviceutil
 import datetime
 # User classes
-from agent_actions import agent_process
-import agent_settings
-import agent_load
+"""from agent_actions import agent_process
+import agent_settings"""
+import agent_load, agent_actions
 
-""" pyinstaller -F --hidden-import=win32timezone agent_service.py """
+# PyInstaller: pyinstaller -F --hidden-import=win32timezone agent_service.py
+# Python: sc create AgentService binPath="C:\Python\python.exe C:\Progra~1\AgentService\agent_service.py" type=own error=ignore start=auto
 
 class AgentService(win32serviceutil.ServiceFramework):
     _svc_name_ = "AgentService"
@@ -31,7 +32,7 @@ class AgentService(win32serviceutil.ServiceFramework):
         while rc != win32event.WAIT_OBJECT_0:
             a = datetime.datetime.now().second
             if a == 0:
-                agent_process.create_loop()
+                agent_actions.AgentProcess.create_loop()
             rc = win32event.WaitForSingleObject(self.hWaitStop, 1000)
 
 if __name__ == '__main__':

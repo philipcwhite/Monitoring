@@ -27,9 +27,12 @@ def load_config():
         pass
 
     # Load thresholds    
-    agent_sql.AgentSQL.delete_thresholds()
-    f = open(agent_settings.thresh_path, "r")
-    fl = f.readlines()
-    for i in fl:
-        thresh = i.split(",")
-        agent_sql.AgentSQL.insert_thresholds(thresh[0], thresh[1], thresh[2], thresh[3], thresh[4])
+    try:
+        agent_sql.AgentSQL.delete_thresholds()
+        f = open(agent_settings.thresh_path, "r")
+        fl = f.readlines()
+        for i in fl:
+            thresh = i.split(",")
+            agent_sql.AgentSQL.insert_thresholds(thresh[0], thresh[1], thresh[2], thresh[3], thresh[4])
+    except:
+        pass

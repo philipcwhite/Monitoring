@@ -1,19 +1,10 @@
 import asyncio
 import socket
-import agent_data, agent_settings, agent_sql, agent_event
+import agent_settings, agent_sql, agent_data, agent_event
 import ssl
 
 class AgentProcess():
-    def data_cleanup():
-        agent_sql.AgentSQL.delete_agent_data()
-        return None
-
-    """def get_data():
-        message = agent_collect.AgentCollect.get_data()
-        return message"""
-
     async def send_data(message):
-        #message = agent_process.get_data()
         host = agent_settings.server
         port = agent_settings.port
         agent_ssl = int(agent_settings.secure)
@@ -52,7 +43,8 @@ class AgentProcess():
         event_message = agent_event.AgentEvent.event_process()
         message = send_message + event_message
         await AgentProcess.send_data(message)
-        AgentProcess.data_cleanup()
+        agent_sql.AgentSQL.delete_agent_data()
+        agent_sql.AgentSQL.delete_agent_events()
 
     def create_loop():
         loop = asyncio.new_event_loop() 

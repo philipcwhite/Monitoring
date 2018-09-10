@@ -1,7 +1,7 @@
 # Global variables
-# application_path = 'C:\\Program Files\\AgentService\\'
+application_path = 'C:\\Program Files\\AgentService\\'
 name = ""
-application_path = ""
+# application_path = ""
 config_file = "settings.cfg"
 thresh_file = "thresholds.cfg"
 config_path = None

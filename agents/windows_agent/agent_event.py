@@ -5,7 +5,6 @@ import asyncio
 class AgentEvent():
 
     def event_create(time, monitor, severity, threshold, compare, duration, status):
-        #if status == "open":
         name = agent_settings.name
         message = monitor.replace("perf.", "").replace(".", " ").capitalize()
         message = message + " " + compare + " " + str(threshold) + " for " + str(round(duration/60)) + " minutes"
@@ -21,7 +20,6 @@ class AgentEvent():
             #message is updated and queued
         else:
             pass
-        #print(message)
         
     def event_process():
         agent_time = int(round(time.time()))
@@ -35,12 +33,10 @@ class AgentEvent():
             compare = i[3]
             duration = i[4]
             time_window = agent_time - duration
-            #print(monitor, severity, threshold, compare, duration, time_window)
             agent_data = agent_sql.AgentSQL.select_agent_data_events(time_window, monitor)
             a_val = 0
             b_val = 0
             for i in agent_data:
-                #print(i[0])
                 value = i[0]
                 if compare == ">":
                     if value > threshold:
@@ -59,29 +55,16 @@ class AgentEvent():
                         a_val += 1
                         b_val += 1
                     else:
-                        b_val += 1
-            #print(a_val, b_val)    
+                        b_val += 1   
             if a_val == b_val and b_val != 0 :
-                #print(monitor + " Threshold True")
                 AgentEvent.event_create(agent_time, monitor, severity, threshold, compare, duration, 1)
             else:
-                #print(monitor + " Threshold False")
                 AgentEvent.event_create(agent_time, monitor, severity, threshold, compare, duration, 0)
 
         # Return events
         output = agent_sql.AgentSQL.select_open_agent_events()
         return output
 
-
-
-
-#AgentEvents.event_process()
-
-"""def create_loop():
-        loop = asyncio.new_event_loop() 
-        loop.run_until_complete(AgentEvents.event_process())
-        loop.close 
-create_loop()"""
 
 
 
