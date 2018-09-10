@@ -11,17 +11,17 @@ class AgentEvent():
         message = message + " " + compare + " " + str(threshold) + " for " + str(round(duration/60)) + " minutes"
             
         #check open messages
-        check_message = agent_sql.AgentSQL.select_agent_events(message, severity)
+        check_message = agent_sql.AgentSQL.select_agent_event(message, severity)
 
         if check_message is None and status == 1:
-            agent_sql.AgentSQL.insert_agent_events(time, name, message, severity)
+            agent_sql.AgentSQL.insert_agent_event(time, name, message, severity)
             #message is created and queued
         elif check_message == message and status == 0:
-            agent_sql.AgentSQL.close_agent_events(message, severity)
+            agent_sql.AgentSQL.close_agent_event(message, severity)
             #message is updated and queued
         else:
             pass
-        print(message)
+        #print(message)
         
     def event_process():
         agent_time = int(round(time.time()))
@@ -60,16 +60,16 @@ class AgentEvent():
                         b_val += 1
                     else:
                         b_val += 1
-            print(a_val, b_val)    
+            #print(a_val, b_val)    
             if a_val == b_val and b_val != 0 :
-                print(monitor + " Threshold True")
+                #print(monitor + " Threshold True")
                 AgentEvent.event_create(agent_time, monitor, severity, threshold, compare, duration, 1)
             else:
-                print(monitor + " Threshold False")
+                #print(monitor + " Threshold False")
                 AgentEvent.event_create(agent_time, monitor, severity, threshold, compare, duration, 0)
 
         # Return events
-        output = ""
+        output = agent_sql.AgentSQL.select_open_agent_events()
         return output
 
 

@@ -110,7 +110,7 @@ class AgentSQL():
         con.commit()
         con.close()
 
-    def insert_agent_events(time, name, message, severity):
+    def insert_agent_event(time, name, message, severity):
         sql_query = "INSERT INTO AgentEvents(time, name, message, status, severity, sent) VALUES('" + str(time) + "','" + name + "','" + message + "',1,'" + severity + "',0)"
         con = AgentSQL.sql_con()
         if con is not None:
@@ -119,7 +119,7 @@ class AgentSQL():
         con.commit()
         con.close()
 
-    def select_agent_events(message, severity):
+    def select_agent_event(message, severity):
         sql_query = "SELECT message FROM AgentEvents WHERE message='" + message + "' AND severity = '" + severity + "' AND status = 1" 
         con = AgentSQL.sql_con()
         if con is not None:
@@ -130,7 +130,7 @@ class AgentSQL():
         con.close()
         return message
 
-    def close_agent_events(message, severity):
+    def close_agent_event(message, severity):
         sql_query = "UPDATE AgentData SET status=0, sent=0 WHERE message='" + message + "' AND severity = '" + severity 
         con = AgentSQL.sql_con()
         if con is not None:
@@ -140,3 +140,25 @@ class AgentSQL():
         con.commit()
         con.close()
 
+    def select_open_agent_events():
+        output = ""
+        sql_query = "SELECT time, name, message, status, severity FROM AgentEvents WHERE status = 1 AND sent = 0" 
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+            rows = c.fetchall()
+            for time, name, message, status, severity in rows:
+                output = output + str(time) + ";" + name + ";" + message + ";" + str(status) + ";" + severity + "\n"
+        con.commit()
+        con.close()
+        return output
+
+    def update_agent_events():
+        sql_query = "UPDATE AgentEvents SET sent=1 WHERE sent=0"
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+        con.commit()
+        con.close()

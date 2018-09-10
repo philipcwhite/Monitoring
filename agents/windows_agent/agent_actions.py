@@ -32,7 +32,8 @@ class AgentProcess():
                 data = conn.recv(1024).decode()
                 # Mark data as sent 
                 if data == 'Received':
-                    await agent_sql.AgentSQL.update_agent_data()
+                    agent_sql.AgentSQL.update_agent_data()
+                    agent_sql.AgentSQL.update_agent_events()
                 conn.close()
             else:
                 sock.connect((host,port))
@@ -40,7 +41,8 @@ class AgentProcess():
                 sock.send(byte)
                 data = sock.recv(1024)
                 if data == 'Received':
-                    await agent_sql.AgentSQL.update_agent_data() 
+                    agent_sql.AgentSQL.update_agent_data() 
+                    agent_sql.AgentSQL.update_agent_events()
                 sock.close()
         except:
             pass
