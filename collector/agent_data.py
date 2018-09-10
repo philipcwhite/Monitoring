@@ -39,18 +39,28 @@ def parse_data(message):
     agent_system(timestamp, name, domain, ipaddress, osname, osbuild, osarchitecture, processors, memory)
 
     for i in message.splitlines():
-        if 'perf' in i:
+        if ';perf' in i:
             line = i.split(';')
             timestamp = line[0]
             name = line[1]
-            monitor = line [2]
+            monitor = line[2]
             value = float(line[3])
             agent_data(timestamp, name, monitor, value)
 
+    for i in message.splitlines():
+        if ';event;' in i:
+            line = i.split(';')
+            timestamp = line[0]
+            name = line[1]
+            message = line[3]
+            status = line[4]
+            severity = line[5]
+            if int(status) == 1:
+                agent_events_open(timestamp, name, message, status, severity)
+            elif int(status) == 0:
+                agent_events_close(name, message, severity)
+
         
-
-
-
 
 def agent_system(timestamp, name, domain, ipaddress, osname, osbuild, osarchitecture, processors, memory):
 
@@ -69,19 +79,13 @@ def agent_system(timestamp, name, domain, ipaddress, osname, osbuild, osarchitec
             result = cursor.fetchone()
             qname = ""
             
-            #print(result)
-            
             if not result is None:
                 qname = result['name']
-                #print(qname)
-
             if name == qname:
-                #print('Update complete')
                 sql = "UPDATE mon_app_agentsystem SET timestamp=%s, domain=%s, ipaddress=%s, osname=%s, osbuild=%s, osarchitecture=%s, processors=%s, memory=%s WHERE name=%s"
                 cursor.execute(sql, (timestamp, domain, ipaddress, osname, osbuild, osarchitecture, processors, memory, name))
                 connection.commit()
             else:
-                #print('Insert Complete')
                 sql = "INSERT INTO mon_app_agentsystem (timestamp, name, domain, ipaddress, osname, osbuild, osarchitecture, processors, memory) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                 cursor.execute(sql, (timestamp, name, domain, ipaddress, osname, osbuild, osarchitecture, processors, memory))
                 connection.commit()
@@ -100,10 +104,39 @@ def agent_data(timestamp, name, monitor, value):
 
     try:
         with connection.cursor() as cursor:
-            #print('Insert Complete')
             sql = "INSERT INTO mon_app_agentdata (timestamp, name, monitor, value) VALUES(%s,%s,%s,%s)"
             cursor.execute(sql, (timestamp, name, monitor, value))
             connection.commit()
  
+    finally:
+        connection.close()
+
+def agent_events_open(timestamp, name, message, status, severity):
+    connection = pymysql.connect(host='localhost',
+                                 user='django',
+                                 password='django',
+                                 db='monitoring',
+                                 charset='utf8mb4',
+                                 cursorclass=pymysql.cursors.DictCursor)
+    try:
+        with connection.cursor() as cursor:
+            sql = "INSERT INTO mon_app_agentevent (timestamp, name, message, status, severity) VALUES(%s,%s,%s,%s,%s)"
+            cursor.execute(sql, (timestamp, name, message, status, severity))
+            connection.commit()
+    finally:
+        connection.close()
+
+def agent_events_close(name, message, severity):
+    connection = pymysql.connect(host='localhost',
+                                 user='django',
+                                 password='django',
+                                 db='monitoring',
+                                 charset='utf8mb4',
+                                 cursorclass=pymysql.cursors.DictCursor)
+    try:
+        with connection.cursor() as cursor:
+            sql = "UPDATE mon_app_agentevent SET status=0 WHERE name=%s AND message=%s AND severity=%s AND status=1)"
+            cursor.execute(sql, (name, message, severity))
+            connection.commit()
     finally:
         connection.close()

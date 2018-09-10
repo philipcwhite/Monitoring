@@ -27,15 +27,16 @@ class AgentEvent(models.Model):
         (INFO, 'Information'),
     )
     id = models.BigAutoField(unique = True, primary_key = True)
-    eventdate = models.DateTimeField(auto_now_add = True)
+    timestamp = models.PositiveIntegerField()
     name = models.CharField(max_length = 100)
-    monitor = models.CharField(max_length = 250)
     message = models.CharField(max_length  = 250)
     status = models.BooleanField(default = True)
     severity = models.CharField(max_length = 11, choices = severity_choices, default = INFO)
-    threshold = models.PositiveIntegerField()
-    compare = models.CharField(max_length=2)
-    timerange = models.PositiveIntegerField() 
+    #monitor = models.CharField(max_length = 250)
+    #eventdate = models.DateTimeField(auto_now_add = True)
+    #threshold = models.PositiveIntegerField()
+    #compare = models.CharField(max_length=2)
+    #timerange = models.PositiveIntegerField() 
     class Meta:
         permissions = (('mon_admin','Monitoring Admin'),)
         verbose_name_plural = 'AgentEvents'

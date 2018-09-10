@@ -33,7 +33,7 @@ class mon_events:
 
     def event_list():
 
-        agentevents = AgentEvent.objects.filter(status = 1).order_by('-eventdate')
+        agentevents = AgentEvent.objects.filter(status = 1).order_by('-timestamp')
         html = """<table style="width:100%">"""
         color = "#CCCCCC"
 
@@ -46,8 +46,8 @@ class mon_events:
                 color = "#F47C3C"
             elif i.severity == "Critical":
                 color = "#D9534F"
-
-            html = html + """<tr><td style="text-align:left">""" + i.eventdate.strftime("%Y-%m-%d %H:%M:%S") + """</td>
+            #i.eventdate.strftime("%Y-%m-%d %H:%M:%S")
+            html = html + """<tr><td style="text-align:left">""" + str(i.timestamp) + """</td>
             <td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" style="fill:""" + color + """" /></svg> """ + i.severity + """</td>
             <td><a href="/device/""" + i.name + """">""" + i.name + """</a></td>
             <td>""" + i.message + """</td>

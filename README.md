@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+09/10/2018 - Agent has now been updated to create/send events to the server.  I still have a few bugs to track down and timestamp conversions to take care of but it is looking promising.  There will still be some server side event handling.  this will mostly be for agent up/down and cleaning old events.  There is still lots of code that needs to be cleaned up from the overhaul that I recently did.  
+
 09/08/2018 - We have a huge update with lots of broken code everywhere.  I decided to move the bulk of the event engine to the agents to save on processing power on the server.  This is about halfway there.  I also decided to move from an in-memory list to using sqlite.  If an agent goes down, it will maintain some level of state depending on how long it is down for.  Also the amount of data that can be stored before sending has now increased.  The agent itself should work at this point however the event module hasn't been tied in.  Monitoring thresholds are now configurable in the thresholds.cfg file.  I also started to migrate some of the code away from the WMI module.  I may use a more OS independent module in the future or figure how to write all of the performance code natively to avoid importing packages that are not part of the base python install.  I've spend far too many hours playing with pyinstaller, cx_freeze, etc, trying to make a nice deployable package.  
 
 09/04/2018 - I started coding the event engine today.  I also changed the version from beta to alpha.  I still have quite a way to go before this is fully working.  Hopefully cx_freeze is updated for Python 3.7 by the time we have a release.  :)

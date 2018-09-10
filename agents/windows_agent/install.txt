@@ -1,0 +1,11 @@
+Install Notes
+Application Installation directory: C:\Progra~1\AgentService\
+Must include: thresholds.cfg and settings.cfg
+
+For PyInstaller: 
+Compile: pyinstaller -F --hidden-import=win32timezone agent_service.py
+Install: C:\Progra~1\AgentService\agent_service.exe install
+
+For Python:  
+pip install wmi
+sc create AgentService binPath="C:\Python\python.exe C:\Progra~1\AgentService\agent_service.py" type=own error=ignore start=auto

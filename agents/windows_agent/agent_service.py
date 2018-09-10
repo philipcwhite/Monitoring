@@ -4,13 +4,6 @@
 #
 # You should have received a copy of the Apache 2 license with
 # this file. If not, please visit : https://github.com/philipcwhite/monitoring2
-#
-# Install Notes
-# For PyInstaller: 
-# pyinstaller -F --hidden-import=win32timezone agent_service.py
-# For Python:  
-# pip install wmi
-# sc create AgentService binPath="C:\Python\python.exe C:\Progra~1\AgentService\agent_service.py" type=own error=ignore start=auto
 
 import servicemanager
 import socket

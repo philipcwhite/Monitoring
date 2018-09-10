@@ -1,8 +1,6 @@
 # Global variables
-# Application path for PyInstaller/cx_freeze
+# Application path must be hardcoded
 application_path = 'C:\\Progra~1\\AgentService\\'
-# Application path running native Python
-# application_path = ""
 name = ""
 config_file = "settings.cfg"
 thresh_file = "thresholds.cfg"

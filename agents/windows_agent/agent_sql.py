@@ -145,7 +145,7 @@ class AgentSQL():
             c.execute(sql_query)
             rows = c.fetchall()
             for time, name, message, status, severity in rows:
-                output = output + str(time) + ";" + name + ";" + message + ";" + str(status) + ";" + severity + "\n"
+                output = output + str(time) + ";" + name + ";event;" + message + ";" + str(status) + ";" + severity + "\n"
         con.commit()
         con.close()
         return output
