@@ -1,7 +1,6 @@
 import agent_settings, agent_sql
 import wmi, os, pythoncom, socket
 
-
 def load_config():
     agent_settings.name = socket.gethostname().lower()
     agent_sql.AgentSQL.create_tables()

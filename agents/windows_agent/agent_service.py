@@ -1,3 +1,17 @@
+# Copyright (C) 2018 Phil White - All Rights Reserved
+# You may use, distribute and modify this code under the
+# terms of the Apache 2 license.
+#
+# You should have received a copy of the Apache 2 license with
+# this file. If not, please visit : https://github.com/philipcwhite/monitoring2
+#
+# Install Notes
+# For PyInstaller: 
+# pyinstaller -F --hidden-import=win32timezone agent_service.py
+# For Python:  
+# pip install wmi
+# sc create AgentService binPath="C:\Python\python.exe C:\Progra~1\AgentService\agent_service.py" type=own error=ignore start=auto
+
 import servicemanager
 import socket
 import sys
@@ -6,12 +20,7 @@ import win32service
 import win32serviceutil
 import datetime
 # User classes
-"""from agent_actions import agent_process
-import agent_settings"""
 import agent_load, agent_actions
-
-# PyInstaller: pyinstaller -F --hidden-import=win32timezone agent_service.py
-# Python: sc create AgentService binPath="C:\Python\python.exe C:\Progra~1\AgentService\agent_service.py" type=own error=ignore start=auto
 
 class AgentService(win32serviceutil.ServiceFramework):
     _svc_name_ = "AgentService"

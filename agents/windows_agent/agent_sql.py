@@ -1,7 +1,6 @@
 import sqlite3, time
 import agent_settings
 
-
 class AgentSQL():
     def sql_con():
         database = agent_settings.application_path + "agent_sqlite.db"
@@ -10,14 +9,11 @@ class AgentSQL():
 
     def create_tables():
         sql_create_agent_data = """CREATE TABLE IF NOT EXISTS AgentData (
-        time integer,name text,monitor text,value integer,sent integer);"""
- 
+        time integer,name text,monitor text,value integer,sent integer);""" 
         sql_create_agent_events = """CREATE TABLE IF NOT EXISTS AgentEvents (
         time integer,name text,message text,status integer,severity text, sent integer);"""
-
         sql_create_agent_thresholds = """CREATE TABLE IF NOT EXISTS AgentThresholds (
         monitor text,severity text,threshold text, compare text,duration integer);"""
-
         con = AgentSQL.sql_con()
         if con is not None:
             c = con.cursor()

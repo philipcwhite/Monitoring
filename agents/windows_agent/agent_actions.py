@@ -1,7 +1,5 @@
-import asyncio
-import socket
+import asyncio, socket, ssl
 import agent_settings, agent_sql, agent_data, agent_event
-import ssl
 
 class AgentProcess():
     async def send_data(message):
