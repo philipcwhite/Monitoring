@@ -38,6 +38,8 @@ class mon_events:
         color = "#CCCCCC"
 
         for i in agentevents:
+            dt = datetime.datetime.fromtimestamp(i.timestamp)
+            date = str(timezone.make_aware(dt, timezone.utc)).replace(':00+00:00','')
             if i.severity == "Information":
                 color = "#29ABE0"
             elif i.severity == "Warning":
@@ -47,7 +49,7 @@ class mon_events:
             elif i.severity == "Critical":
                 color = "#D9534F"
             #i.eventdate.strftime("%Y-%m-%d %H:%M:%S")
-            html = html + """<tr><td style="text-align:left">""" + str(i.timestamp) + """</td>
+            html = html + """<tr><td style="text-align:left">""" + date + """</td>
             <td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" style="fill:""" + color + """" /></svg> """ + i.severity + """</td>
             <td><a href="/device/""" + i.name + """">""" + i.name + """</a></td>
             <td>""" + i.message + """</td>
