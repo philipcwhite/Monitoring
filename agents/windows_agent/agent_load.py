@@ -1,12 +1,14 @@
 import agent_settings, agent_sql
-import wmi, os, pythoncom, socket
+import os, socket
 
 def load_config():
-    agent_settings.name = socket.gethostname().lower()
-    agent_sql.AgentSQL.create_tables()
-    agent_settings.config_path = os.path.join(agent_settings.application_path, agent_settings.config_file)
-    agent_settings.thresh_path = os.path.join(agent_settings.application_path, agent_settings.thresh_file)
-
+    try:
+        agent_settings.name = socket.gethostname().lower()
+        agent_sql.AgentSQL.create_tables()
+        agent_settings.config_path = os.path.join(agent_settings.application_path, agent_settings.config_file)
+        agent_settings.thresh_path = os.path.join(agent_settings.application_path, agent_settings.thresh_file)
+    except:
+        pass
     # Load configuration
     try:
         f = open(agent_settings.config_path, "r")
@@ -24,7 +26,6 @@ def load_config():
                 agent_settings.services = i[9:].split(',')
     except:
         pass
-
     # Load thresholds    
     try:
         agent_sql.AgentSQL.delete_thresholds()

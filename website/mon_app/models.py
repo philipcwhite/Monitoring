@@ -16,10 +16,10 @@ class AgentData(models.Model):
         return self.name
 
 class AgentEvent(models.Model):
-    CRIT = 'Critical'
-    MAJR = 'Major'
-    WARN = 'Warning'
-    INFO = 'Information'
+    CRIT = '1'
+    MAJR = '2'
+    WARN = '3'
+    INFO = '4'
     severity_choices=(
         (CRIT, 'Critical'),
         (MAJR, 'Major'),
@@ -29,6 +29,7 @@ class AgentEvent(models.Model):
     id = models.BigAutoField(unique = True, primary_key = True)
     timestamp = models.PositiveIntegerField()
     name = models.CharField(max_length = 100)
+    monitor = models.CharField(max_length  = 250)
     message = models.CharField(max_length  = 250)
     status = models.BooleanField(default = True)
     severity = models.CharField(max_length = 11, choices = severity_choices, default = INFO)
@@ -59,79 +60,6 @@ class AgentSystem(models.Model):
         verbose_name_plural = 'AgentSystem'
     def __str__(self):
         return self.name
-
-class AgentThreshold(models.Model):
-    CRIT = 'Critical'
-    MAJR = 'Major'
-    WARN = 'Warning'
-    INFO = 'Information'
-    severity_choices = (
-        (CRIT, 'Critical'),
-        (MAJR, 'Major'),
-        (WARN, 'Warning'),
-        (INFO, 'Information'),
-    )
-    GT = '>'
-    GTEQ = '>='
-    LT = '<'
-    LTEQ = '<='
-    EQ = '='
-    NEQ = '!='
-    compare_choices = (
-        (GT, '>'),
-        (GTEQ, '>='),
-        (LT, '<'),
-        (LTEQ, '<='),
-        (EQ, '='),
-        (NEQ, '!=')
-    )
-    id = models.AutoField(unique = True, primary_key = True)
-    name = models.CharField(max_length = 100)
-    monitor = models.CharField(max_length = 250)
-    severity = models.CharField(max_length = 11, choices = severity_choices, default = INFO)
-    threshold = models.PositiveIntegerField()
-    compare = models.CharField(max_length=2, choices = compare_choices, default = GT)
-    timerange = models.PositiveIntegerField() 
-    enabled = models.BooleanField(default = True)
-    class Meta:
-        permissions = (('mon_admin','Monitoring Admin'),)
-        verbose_name_plural = 'AgentThresholds'
-
-class GlobalThreshold(models.Model):
-    CRIT = 'Critical'
-    MAJR = 'Major'
-    WARN = 'Warning'
-    INFO = 'Information'
-    severity_choices=(
-        (CRIT, 'Critical'),
-        (MAJR, 'Major'),
-        (WARN, 'Warning'),
-        (INFO, 'Information'),
-    )
-    GT = '>'
-    GTEQ = '>='
-    LT = '<'
-    LTEQ = '<='
-    EQ = '='
-    NEQ = '!='
-    compare_choices = (
-        (GT, '>'),
-        (GTEQ, '>='),
-        (LT, '<'),
-        (LTEQ, '<='),
-        (EQ, '='),
-        (NEQ, '!=')
-    )
-    id = models.AutoField(unique = True, primary_key = True)
-    monitor = models.CharField(max_length = 250)
-    severity = models.CharField(max_length = 11, choices = severity_choices, default = INFO)
-    threshold = models.PositiveIntegerField()
-    compare = models.CharField(max_length=2, choices = compare_choices, default = GT)
-    timerange = models.PositiveIntegerField() 
-    enabled = models.BooleanField(default = True)
-    class Meta:
-        permissions = (('mon_admin','Monitoring Admin'),)
-        verbose_name_plural = 'GlobalThresholds'
 
 class Subscription(models.Model):
     id = models.AutoField(unique = True, primary_key = True)

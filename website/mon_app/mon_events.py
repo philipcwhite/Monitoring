@@ -13,10 +13,10 @@ class mon_events:
         majr = 0
         crit = 0
 
-        info = AgentEvent.objects.filter(status = 1, severity='Information').count()
-        warn = AgentEvent.objects.filter(status = 1, severity='Warning').count()
-        majr = AgentEvent.objects.filter(status = 1, severity='Major').count()
-        crit = AgentEvent.objects.filter(status = 1, severity='Critical').count()
+        info = AgentEvent.objects.filter(status = 1, severity='4').count()
+        warn = AgentEvent.objects.filter(status = 1, severity='3').count()
+        majr = AgentEvent.objects.filter(status = 1, severity='2').count()
+        crit = AgentEvent.objects.filter(status = 1, severity='1').count()
 
         total = info + warn + majr + crit
 
@@ -40,17 +40,22 @@ class mon_events:
         for i in agentevents:
             dt = datetime.datetime.fromtimestamp(i.timestamp)
             date = str(timezone.make_aware(dt, timezone.utc)).replace(':00+00:00','')
-            if i.severity == "Information":
+            sev_text = ""
+            if i.severity == "4":
                 color = "#29ABE0"
-            elif i.severity == "Warning":
+                sev_text = "Information"
+            elif i.severity == "3":
                 color = "#FFC107"
-            elif i.severity == "Major":
+                sev_text = "Warning"
+            elif i.severity == "2":
                 color = "#F47C3C"
-            elif i.severity == "Critical":
+                sev_text = "Major"
+            elif i.severity == "1":
                 color = "#D9534F"
+                sev_text = "Critical"
             #i.eventdate.strftime("%Y-%m-%d %H:%M:%S")
             html = html + """<tr><td style="text-align:left">""" + date + """</td>
-            <td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" style="fill:""" + color + """" /></svg> """ + i.severity + """</td>
+            <td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" style="fill:""" + color + """" /></svg> """ + sev_text + """</td>
             <td><a href="/device/""" + i.name + """">""" + i.name + """</a></td>
             <td>""" + i.message + """</td>
             <td style="text-align:right"><form><input type="button" onclick="window.location.href='/event_close/""" + str(i.id) + """'" class="action-button" value="Close Event" /></form></td>

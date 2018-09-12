@@ -1,5 +1,5 @@
 import os
-import agent_sql
+import agent_settings, agent_sql
 
 class AgentWindows():
     def data_windows(agent_time, name):
@@ -11,16 +11,6 @@ class AgentWindows():
             result = result.replace("\n","").replace("TotalPhysicalMemory=","")
             result = round(int(result)  / 1024 / 1024, 0)
             agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'conf.memory.total', str(result))
-        except:
-            pass
-
-        # CPU Util
-        try:
-            process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_Processor where name="_Total" get PercentProcessorTime /value')
-            result = process.read()
-            process.close()
-            result = result.replace("\n","").replace("PercentProcessorTime=","")
-            agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.processor.percent.used', str(result))
         except:
             pass
 
@@ -58,51 +48,68 @@ class AgentWindows():
         except:
             pass
 
-
-
-
-"""        # Network
-        try:    
-            BytesReceivedPersec = 0
-            BytesSentPersec = 0
-            for i in c.Win32_PerfFormattedData_Tcpip_NetworkInterface():
-                BytesReceivedPersec = BytesReceivedPersec + int(i.BytesReceivedPersec)
-                BytesSentPersec = BytesSentPersec + int(i.BytesSentPersec)
-                BytesReceivedPersec = BytesReceivedPersec
-                BytesSentPersec = BytesSentPersec
-                agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.network.bytes.received', str(BytesReceivedPersec))
-                agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.network.bytes.sent', str(BytesSentPersec))
+        # Network
+        try:
+            nw_br = 0
+            nw_bs = 0
+            process = os.popen('wmic path Win32_PerfFormattedData_Tcpip_NetworkInterface get BytesReceivedPersec,BytesSentPersec /format:csv')
+            result = process.read()
+            process.close()
+            result = result.replace("\n\n","\n")
+            result_list = list(filter(None, result.split("\n")))
+            for i in result_list:
+                if not 'BytesReceivedPersec' in i:
+                    nw_list = i.split(",")
+                    nw_br = nw_br + int(nw_list[1])
+                    nw_bs = nw_bs + int(nw_list[2])
+            agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.network.bytes.received', str(nw_br))
+            agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.network.bytes.sent', str(nw_bs))
         except:
             pass
 
         # Pagefile
         try:
-            for i in c.Win32_PerfFormattedData_PerfOS_PagingFile(Name = '_Total'):
-                agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.pagefile.percent.used', str(i.PercentUsage))
+            process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_PagingFile where name="_Total" get PercentUsage /value')
+            result = process.read()
+            process.close()
+            result = result.replace("\n","").replace("PercentUsage=","")
+            agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.pagefile.percent.used', str(result))
+        except:
+            pass
+
+        # Processor Util
+        try:
+            process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_Processor where name="_Total" get PercentProcessorTime /value')
+            result = process.read()
+            process.close()
+            result = result.replace("\n","").replace("PercentProcessorTime=","")
+            agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.processor.percent.used', str(result))
         except:
             pass
 
         # Uptime
         try:
-            for i in c.Win32_PerfFormattedData_PerfOS_System():
-                agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.system.uptime.seconds', str(i.SystemUptime))
+            process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_System get SystemUptime /value')
+            result = process.read()
+            process.close()
+            result = result.replace("\n","").replace("SystemUpTime=","")
+            agent_sql.AgentSQL.insert_agentdata(agent_time, name, 'perf.system.uptime.seconds', str(result))
         except:
             pass
-       
+
         # Service Monitoring
         try:
             if agent_settings.services:
                 for service in agent_settings.services:
-                    for i in c.Win32_Service(Name = service):
-                        sname = 'perf.service.' + service.replace(' ','').lower() + '.state'
-                        state = i.State
-                        if state == 'Running':
-                            state = 1
-                        else:
-                            state = 0
-                        agent_sql.AgentSQL.insert_agentdata(agent_time, name, sname, str(state))
+                    process = os.popen('wmic path Win32_Service where name="' + service + '" get State /value')
+                    result = process.read()
+                    process.close()
+                    result = result.replace("\n","").replace("State=","")
+                    sname = 'perf.service.' + service.replace(' ','').lower() + '.state'
+                    if result == 'Running':
+                        result = 1
+                    else:
+                        result = 0
+                    agent_sql.AgentSQL.insert_agentdata(agent_time, name, sname, str(result))
         except:
             pass
-        
-        output = agent_sql.AgentSQL.select_agent_data()
-        return output"""

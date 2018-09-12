@@ -40,10 +40,10 @@ class mon_index:
         majr = 0
         crit = 0
 
-        info = AgentEvent.objects.filter(status = 1, severity='Information').count()
-        warn = AgentEvent.objects.filter(status = 1, severity='Warning').count()
-        majr = AgentEvent.objects.filter(status = 1, severity='Major').count()
-        crit = AgentEvent.objects.filter(status = 1, severity='Critical').count()
+        info = AgentEvent.objects.filter(status = 1, severity='4').count()
+        warn = AgentEvent.objects.filter(status = 1, severity='3').count()
+        majr = AgentEvent.objects.filter(status = 1, severity='2').count()
+        crit = AgentEvent.objects.filter(status = 1, severity='1').count()
 
         total = info + warn + majr + crit
         if total == 0:

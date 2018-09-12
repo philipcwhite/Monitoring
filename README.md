@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+09/12/2018 - I rewrote much of the agent event code over the past two days.  The Agent now generates and sends events to the collector.  Events also update severity rather than generating new events for each level hit.  The WMI code is now finally gone.  I missed some code on the last clean up.  I also removed a ton of the server side thresholding code.  Some of this will be added back for agent alerts, however most of it is gone for good.  I made a ton of progress on the agent so I'll probably be focusing more time on the server in the coming days.
+
 09/10/2018 - I removed all of the WMI codefrom the agent.  The agent is now using WMIC.  I still have a few monitors to recreate in WMIC and a lot of testing to do.  This removes all dependencies outside the standard Python library.  While the WMI module was great to use, it made deploying the agent a bit harder.  I also moved the OS specific code to a seperate Python file so that much of the existing code can be reuseable if/when I decide to make a Linux agent.  On the server side I have some work to do on correctly processing events.  IE closing based on severity.  
 
 09/10/2018 - Agent has now been updated to create/send events to the server.  I still have a few bugs to track down and timestamp conversions to take care of but it is looking promising.  There will still be some server side event handling.  this will mostly be for agent up/down and cleaning old events.  There is still lots of code that needs to be cleaned up from the overhaul that I recently did.  

@@ -39,7 +39,7 @@ def parse_data(message):
     agent_system(timestamp, name, domain, ipaddress, osname, osbuild, osarchitecture, processors, memory)
 
     for i in message.splitlines():
-        if ';perf' in i:
+        if ';perf' in i and i.count(";") == 3:
             line = i.split(';')
             timestamp = line[0]
             name = line[1]
@@ -52,13 +52,14 @@ def parse_data(message):
             line = i.split(';')
             timestamp = line[0]
             name = line[1]
-            message = line[3]
-            status = line[4]
-            severity = line[5]
+            monitor = line[3]
+            message = line[4]
+            status = line[5]
+            severity = line[6]
             if int(status) == 1:
-                agent_events_open(timestamp, name, message, status, severity)
+                agent_events_open(timestamp, name, monitor, message, status, severity)
             elif int(status) == 0:
-                agent_events_close(name, message, severity)
+                agent_events_close(name, monitor, severity)
 
         
 
@@ -111,7 +112,7 @@ def agent_data(timestamp, name, monitor, value):
     finally:
         connection.close()
 
-def agent_events_open(timestamp, name, message, status, severity):
+def agent_events_open(timestamp, name, monitor, message, status, severity):
     connection = pymysql.connect(host='localhost',
                                  user='django',
                                  password='django',
@@ -120,13 +121,13 @@ def agent_events_open(timestamp, name, message, status, severity):
                                  cursorclass=pymysql.cursors.DictCursor)
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO mon_app_agentevent (timestamp, name, message, status, severity) VALUES(%s,%s,%s,%s,%s)"
-            cursor.execute(sql, (timestamp, name, message, status, severity))
+            sql = "INSERT INTO mon_app_agentevent (timestamp, name, monitor, message, status, severity) VALUES(%s,%s,%s,%s,%s,%s)"
+            cursor.execute(sql, (timestamp, name, monitor, message, status, severity))
             connection.commit()
     finally:
         connection.close()
 
-def agent_events_close(name, message, severity):
+def agent_events_close(name, monitor, severity):
     connection = pymysql.connect(host='localhost',
                                  user='django',
                                  password='django',
@@ -135,8 +136,8 @@ def agent_events_close(name, message, severity):
                                  cursorclass=pymysql.cursors.DictCursor)
     try:
         with connection.cursor() as cursor:
-            sql = "UPDATE mon_app_agentevent SET status=0 WHERE name=%s AND message=%s AND severity=%s AND status=1)"
-            cursor.execute(sql, (name, message, severity))
+            sql = "UPDATE mon_app_agentevent SET status=0 WHERE name=%s AND monitor=%s AND severity=%s AND status=1"
+            cursor.execute(sql, (name, monitor, severity))
             connection.commit()
     finally:
         connection.close()

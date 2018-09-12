@@ -1,4 +1,4 @@
-import asyncio, socket, ssl
+import asyncio, socket, ssl, time
 import agent_settings, agent_sql, agent_data, agent_event
 
 class AgentProcess():
@@ -37,8 +37,9 @@ class AgentProcess():
             pass
 
     async def run_process():
-        send_message = agent_data.AgentData.data_process()
-        event_message = agent_event.AgentEvent.event_process()
+        agent_time = str(time.time()).split('.')[0]
+        send_message = agent_data.AgentData.data_process(agent_time)
+        event_message = agent_event.AgentEvent.event_process(agent_time)
         message = send_message + event_message
         await AgentProcess.send_data(message)
         agent_sql.AgentSQL.delete_agent_data()

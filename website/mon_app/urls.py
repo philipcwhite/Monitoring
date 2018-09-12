@@ -16,13 +16,7 @@ urlpatterns=[
     path('events_content', views.events_content, name='events_content'),
     path('event_close/<int:event_id>', views.event_close, name='event_close'),
     path('reports', views.reports, name='reports'),
-    path('settings', views.settings, name='settings'),
-    path('settings/thresholds/global', views.settings_global_thresholds, name='settings_global_thresholds'),
-    path('settings/thresholds/global/add', views.settings_global_threshold_add, name='settings_global_threshold_add'),
-    path('settings/thresholds/global/edit/<int:thresh_id>', views.settings_global_threshold_edit, name='settings_global_threshold_edit'),
-    path('settings/thresholds/agent/<str:device_name>', views.settings_agent_thresholds, name='settings_agent_thresholds'),
-    path('settings/thresholds/agent/<str:device_name>/add', views.settings_agent_threshold_add, name='settings_agent_threshold_add'),
-    path('settings/thresholds/agent/edit/<int:thresh_id>', views.settings_agent_threshold_edit, name='settings_agent_threshold_edit'),
+    path('settings', views.settings, name='settings'),    
 ]   
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

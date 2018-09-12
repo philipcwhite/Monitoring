@@ -1,16 +1,9 @@
-import os
-import socket
-import platform
-import time
+import os, platform, socket
 import agent_settings, agent_sql, agent_windows
 
 class AgentData():
-    def data_process():
-        # Set time
-        agent_time = str(time.time()).split('.')[0]
-        # Get Hostname
+    def data_process(agent_time):
         name = agent_settings.name
-        # Configuration
         try:
             osplatform = platform.system()
             osarchitecture = platform.architecture()[0]
