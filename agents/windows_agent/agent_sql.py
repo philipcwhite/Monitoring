@@ -214,8 +214,7 @@ class AgentSQL():
 
     def delete_agent_events():
         try:
-            agent_time = str(time.time()-604800).split('.')[0]
-            sql_query = r"DELETE FROM AgentEvents WHERE time<" + agent_time
+            sql_query = r"DELETE FROM AgentEvents WHERE status=0 AND sent=1"
             con = AgentSQL.sql_con()
             if con is not None:
                 c = con.cursor()

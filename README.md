@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+09/13/2018 - Fixed minor agent bug removing old events.
+
 09/12/2018 - I enabled user authentication.  Still very early with no authorization.  
 
 09/12/2018 - I rewrote much of the agent event code over the past two days.  The Agent now generates and sends events to the collector.  Events also update severity rather than generating new events for each level hit.  The WMI code is now finally gone.  I missed some code on the last clean up.  I also removed a ton of the server side thresholding code.  Some of this will be added back for agent alerts, however most of it is gone for good.  I made a ton of progress on the agent so I'll probably be focusing more time on the server in the coming days.
