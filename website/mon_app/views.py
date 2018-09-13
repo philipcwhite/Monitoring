@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import AgentData, AgentEvent, AgentSystem, Subscription
 from .mon_device import mon_device, mon_devices
 from .mon_index import mon_index
@@ -57,4 +60,21 @@ def reports(request):
 # Settings
 def settings(request):
     return render(request, 'mon_app/settings.html')
+
+# Media_App Registration
+
+def register(request):
+    if request.method == 'POST':
+        form=UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username=form.cleaned_data['username']
+            password=form.cleaned_data['password1']
+            user=authenticate(username=username, password=password)
+            login(request, user)
+            return redirect('/')
+    else:
+        form=UserCreationForm()
+    return render(request, 'registration/register.html', {'form':form})
+
 

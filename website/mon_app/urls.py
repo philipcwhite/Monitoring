@@ -1,4 +1,4 @@
-#from django.contrib.auth import views as auth_views
+from django.contrib.auth import views as auth_views
 from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
@@ -16,7 +16,11 @@ urlpatterns=[
     path('events_content', views.events_content, name='events_content'),
     path('event_close/<int:event_id>', views.event_close, name='event_close'),
     path('reports', views.reports, name='reports'),
-    path('settings', views.settings, name='settings'),    
+    path('settings', views.settings, name='settings'), 
+    #User Management
+    path('register/', views.register, name='register'),
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(), {'next_page': '/'}, name='logout'),   
 ]   
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
