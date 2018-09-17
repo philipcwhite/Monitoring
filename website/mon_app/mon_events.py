@@ -21,7 +21,7 @@ class mon_events:
         total = info + warn + majr + crit
 
         html = """<table style="width:100%;text-align:center"><tr>
-        <td style="text-align:left"><b>Open Events</b></td>
+        <td style="text-align:left; padding-left:10px">Open Events</td>
         <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#CCCCCC" /></svg>&nbsp; """ + str(total) + """&nbsp;  Total</td>
         <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#29ABE0" /></svg>&nbsp;  """ + str(info) + """&nbsp;  Information</td>
         <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#FFC107" /></svg>&nbsp;  """ + str(warn) + """&nbsp;  Warning</td>
@@ -54,11 +54,11 @@ class mon_events:
                 color = "#D9534F"
                 sev_text = "Critical"
             #i.eventdate.strftime("%Y-%m-%d %H:%M:%S")
-            html = html + """<tr><td style="text-align:left">""" + date + """</td>
+            html = html + """<tr><td style="text-align:left;padding-left:10px">""" + date + """</td>
             <td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" style="fill:""" + color + """" /></svg> """ + sev_text + """</td>
             <td><a href="/device/""" + i.name + """">""" + i.name + """</a></td>
             <td>""" + i.message + """</td>
-            <td style="text-align:right"><form><input type="button" onclick="window.location.href='/event_close/""" + str(i.id) + """'" class="action-button" value="Close Event" /></form></td>
+            <td style="text-align:right;padding-right:10px"><form><input type="button" onclick="window.location.href='/event_close/""" + str(i.id) + """'" class="action-button" value="Close Event" /></form></td>
             </tr>"""
 
             html = html + "</table"

@@ -8,11 +8,11 @@
 
 {% block content %}
 
-<h1>Devices</h1>
 <table style="width:100%;">
   <tr>
-    <td colspan="2" style="padding-top:8px">
+    <td>
       <div class="card-div">
+          <div class="card-header">Devices</div>
         <table style="width:100%;">  
           {{systemstatus|safe}}
         </table> 
@@ -20,10 +20,6 @@
     </td>
   </tr>
 </table>
-
-
-<br />
-
 
 
 {% endblock content %}

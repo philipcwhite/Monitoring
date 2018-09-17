@@ -23,7 +23,7 @@ body{margin:0px;padding:0px;height:100%;width:100%;font:12px "Segoe UI", "Helvet
 .user-font{color:#8E8C84;height:12px;width:12px;}
 .bread-font{color:#8E8C84;height:14px;width:14px;}
 
-.mon-container{padding-left:70px;padding-top:40px;padding-right:20px}
+.mon-container{padding-left:70px;padding-top:50px;padding-right:20px}
 .mon-container a:link {color:#8E8C84;;text-decoration:none}
 .mon-container a:active{color:#8E8C84;;text-decoration:none}
 .mon-container a:hover{color:#8E8C84;;text-decoration:none}

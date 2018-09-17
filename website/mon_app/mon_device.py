@@ -13,8 +13,6 @@ class mon_device:
     
     def device_system(name):
         agentsystem = AgentSystem.objects.get(name=name)
-        #uptime_check = 600
-        #currenttime = time.time()
 
         html="""<table style="width:100%"><tr>
         <td><b>Name:</b> """ + agentsystem.name + """</td>
@@ -88,72 +86,41 @@ class mon_device:
                 pass
         html_fs += """</div></div></td></tr>"""
 
-
-
-
-
-        """agent_cpu_query = AgentData.objects.filter(name = name, monitor = 'perf.processor.percent.used').order_by('-id')[0]
-        cpu_perc = round(agent_cpu_query.value, 0)
-        agent_mem_query = AgentData.objects.filter(name = name, monitor = 'perf.memory.percent.used').order_by('-id')[0]
-        mem_perc = round(agent_mem_query.value, 0)
-        agent_pagefile_query = AgentData.objects.filter(name = name, monitor = 'perf.pagefile.percent.used').order_by('-id')[0]
-        pagefile_perc = round(agent_pagefile_query.value, 0)
-        agent_uptime_query = AgentData.objects.filter(name = name, monitor = 'perf.system.uptime.seconds').order_by('-id')[0]
-        uptime_days = round(agent_uptime_query.value / 60 / 60 / 24, 0) """
-        """agent_net_br_query = AgentData.objects.filter(name = name, monitor = 'perf.network.bytes.received').order_by('-id')[0]
-        net_br = round(agent_net_br_query.value, 0)
-        agent_net_bs_query = AgentData.objects.filter(name = name, monitor = 'perf.network.bytes.sent').order_by('-id')[0]
-        net_bs = round(agent_net_bs_query.value, 0)"""
-
         html = r"""<tr>
             <td style="padding-right:4px;text-align:center">
-                <div class="card-div" style="height:70px">
-                    <div class="card-header">Processor (% used)</div>
-                  <div style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px">""" + str(cpu_perc) + """</div>
-                </div>
-            </td>
+            <div class="card-div" style="height:70px">
+            <div class="card-header">Processor (% used)</div>
+            <div style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px">""" + str(cpu_perc) + """</div>
+            </div></td>
             <td style="padding-left:4px;padding-right:4px;text-align:center">
-                <div class="card-div" style="height:70px">
-                    <div class="card-header">Memory (% used)</div>
-                    <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px">""" + str(mem_perc) + """</span>
-                </div>
-              </td>
-              <td style="padding-left:4px;padding-right:4px;text-align:center">
-                  <div class="card-div" style="height:70px">
-                      <div class="card-header">Pagefile (% used)</div>
-                   <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px">""" + str(pagefile_perc) + """</span>
-                  </div>
-                </td>
-              <td style="padding-left:4px;text-align:center">
-                <div class="card-div" style="height:70px">
-                    <div class="card-header">Uptime (days)</div>
-                    <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px">""" + str(uptime_days) + """</span>
-                </div>
-              </td></tr></table>
+            <div class="card-div" style="height:70px">
+            <div class="card-header">Memory (% used)</div>
+            <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px">""" + str(mem_perc) + """</span>
+            </div></td>
+            <td style="padding-left:4px;padding-right:4px;text-align:center">
+            <div class="card-div" style="height:70px">
+            <div class="card-header">Pagefile (% used)</div>
+            <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px">""" + str(pagefile_perc) + """</span>
+            </div></td>
+            <td style="padding-left:4px;text-align:center">
+            <div class="card-div" style="height:70px">
+            <div class="card-header">Uptime (days)</div>
+            <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px">""" + str(uptime_days) + """</span>
+            </div></td></tr></table>
             <table style="width:100%">  
-            <tr>
-                <td  style="padding-bottom:4px;text-align:left">
-                <div class="card-div">
-                <div class="card-header">Network Monitors</div>
-                <div style="padding-left: 10px">
-                <table style="width:100%"><tr>
-                <td>Network Total Traffic</td>
-                <td>Bytes Sent: """ + str(net_bs) + """</td>
-                <td>Bytes Received: """ + str(net_br) + """</td>
-                </tr></table>
-                </div></div>
-                </td>
-            </tr>"""
-
+            <tr><td style="padding-bottom:4px;text-align:left">
+            <div class="card-div">
+            <div class="card-header">Network Monitors</div>
+            <div style="padding-left: 10px">
+            <table style="width:100%"><tr>
+            <td>Network Total Traffic</td>
+            <td>Bytes Sent: """ + str(net_bs) + """</td>
+            <td>Bytes Received: """ + str(net_br) + """</td>
+            </tr></table></div></div>
+            </td></tr>"""
         html += html_fs
 
-        
-
-
         return html
-
-
-
 
     def device_graph(name):
         processor_data = AgentData.objects.filter(name = name, monitor = 'perf.processor.percent.used').order_by('-id')[:60]
@@ -218,7 +185,6 @@ class mon_device:
         """ + memory_polyline + processor_polyline + """
 		</svg>"""
 
-
         return html
 
 
@@ -236,16 +202,6 @@ class mon_devices:
             else:
                 icon =  """<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg>"""
 
-            html = html + "<tr><td>" + icon + "</td><td><a href='/device/" + str(i.name) + "'>" + str(i.name) + "</td><td>" + str(i.domain) + "</td><td>" + str(i.ipaddress) + "</td><td>" + str(i.osname) + "</td></tr>"
+            html = html + """<tr><td style="padding-left:10px">""" + icon + "</td><td><a href='/device/" + str(i.name) + "'>" + str(i.name) + "</td><td>" + str(i.domain) + "</td><td>" + str(i.ipaddress) + "</td><td>" + str(i.osname) + "</td></tr>"
 
         return html
-
-
-
-
-
-
-
-
-
-
