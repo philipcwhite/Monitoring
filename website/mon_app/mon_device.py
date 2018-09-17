@@ -78,9 +78,9 @@ class mon_device:
                 elif agentsystem.osname == 'Linux':
                     fs_name = "Linux Filesystem: " + i             
                 html_fs += """<table style="width:100%"><tr>
-                        <td>""" + fs_name + """ drive</td>
-                        <td>Free Space: """ + fs_free + """</td>
-                        <td>Filesystem Activity: """ + fs_active + """</td>
+                        <td style="width:33%">""" + fs_name + """ drive</td>
+                        <td style="width:33%">Free Space: """ + fs_free + """</td>
+                        <td style="width:33%">Filesystem Activity: """ + fs_active + """</td>
                         </tr></table>"""
             except:
                 pass
@@ -113,9 +113,9 @@ class mon_device:
             <div class="card-header">Network Monitors</div>
             <div style="padding-left: 10px">
             <table style="width:100%"><tr>
-            <td>Network Total Traffic</td>
-            <td>Bytes Sent: """ + str(net_bs) + """</td>
-            <td>Bytes Received: """ + str(net_br) + """</td>
+            <td style="width:33%">Network Total Traffic</td>
+            <td style="width:33%">Bytes Sent: """ + str(net_bs) + """</td>
+            <td style="width:33%">Bytes Received: """ + str(net_br) + """</td>
             </tr></table></div></div>
             </td></tr>"""
         html += html_fs
@@ -167,16 +167,14 @@ class mon_device:
         
             
         html =  """<svg xmlns="http://www.w3.org/2000/svg" style="color:#8E8C84;" height=120 width=990>
-	    <rect x=20 y=10 width=835 height=1 fill=#ddd />
-        <rect x=20 y=35 width=835 height=1 fill=#ddd />
-        <rect x=20 y=60 width=835 height=1 fill=#ddd />
-        <rect x=20 y=85 width=835 height=1 fill=#ddd />
-        <rect x=20 y=110 width=835 height=1 fill=#ddd />
+	    <rect x=22 y=10 width=835 height=1 fill=#ddd />
+        <rect x=25 y=35 width=835 height=1 fill=#ddd />
+        <rect x=22 y=60 width=835 height=1 fill=#ddd />
+        <rect x=25 y=85 width=835 height=1 fill=#ddd />
+        <rect x=22 y=110 width=835 height=1 fill=#ddd />
         <rect x=25 y=10 width=1 height=100 fill=#ddd />
         <text x="0" y="15" fill="#8E8C84">100</text>
-        <text x="5" y="40" fill="#8E8C84">75</text>
         <text x="5" y="65" fill="#8E8C84">50</text>
-        <text x="5" y="90" fill="#8E8C84">25</text>
         <text x="10" y="115" fill="#8E8C84">0</text>
         <rect x=885 y=40 width="10" height="10" style="fill:#29ABE0" />
         <rect x=885 y=60 width="10" height="10" style="fill:#ffc107" />
