@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+09/17/2018 - Added search functionality.  Search now returns matching hostnames.  Also added in login_required.  
+
 09/17/2018 - Cleaned up some code.  Finished web templates for Events and Devices.
 
 09/17/2018 - Massive update.  I probably added a few bugs during this.  Some old features may temporarily be missing but will be added back (graphing).  I updated much of the design/theme of the site.  Many of these upgrades are to improve performance and improve useability.  

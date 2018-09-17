@@ -17,6 +17,7 @@ urlpatterns=[
     path('event_close/<int:event_id>', views.event_close, name='event_close'),
     path('reports', views.reports, name='reports'),
     path('settings', views.settings, name='settings'), 
+    path('search', views.search, name='search'), 
     #User Management
     path('register/', views.register, name='register'),
     path('login/', auth_views.LoginView.as_view(), name='login'),

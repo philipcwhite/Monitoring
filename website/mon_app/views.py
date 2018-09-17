@@ -11,9 +11,11 @@ from .mon_events import mon_events
 # Create your views here.
 
 # Index main
+@login_required
 def index(request):
     return render(request, 'mon_app/index.html')
 
+@login_required
 def index_content(request):
     grapha = mon_index.donut_avail()
     graphb = mon_index.donut_alerts()
@@ -23,16 +25,19 @@ def index_content(request):
     return render(request, 'mon_app/index_content.html', context)
 
 # Devices
+@login_required
 def devices(request):
     systemstatus = mon_devices.system_status()
     context = {'systemstatus':systemstatus}
     return render(request, 'mon_app/devices.html', context)
 
+@login_required
 def device(request, device_name):
     devicename = device_name
     context = {'devicename':devicename}
     return render(request, 'mon_app/device.html', context)
 
+@login_required
 def device_content(request, device_name):
     devicesystem = mon_device.device_system(device_name)
     devicedata = mon_device.device_data(device_name)
@@ -40,29 +45,46 @@ def device_content(request, device_name):
     return render(request, 'mon_app/device_content.html', context)
 
 # Events
+@login_required
 def events(request):
     return render(request, 'mon_app/events.html')
 
+@login_required
 def events_content(request):
     eventsummary = mon_events.event_summary()
     eventlist = mon_events.event_list()
     context = {'eventsummary':eventsummary,'eventlist':eventlist}
     return render(request, 'mon_app/events_content.html',context)
 
+@login_required
 def event_close(request, event_id):
     eventclose = mon_events.event_close(event_id)
     return render(request, 'mon_app/events.html')
 
 # Reports
+@login_required
 def reports(request):
     return render(request, 'mon_app/reports.html')
 
 # Settings
+@login_required
 def settings(request):
     return render(request, 'mon_app/settings.html')
 
-# Media_App Registration
+# Search
+@login_required
+def search(request):
+    query_string = ''
+    found_entries = None
+    if ('q' in request.GET) and request.GET['q'].strip():
+        query_string = request.GET['q']
+        agents = AgentSystem.objects.filter(name__contains=query_string)
+        return render(request, 'mon_app/search.html', { 'query_string': query_string, 'agents': agents })
+    else:
+        return render(request, 'mon_app/search.html', { 'query_string': 'Null' })
 
+
+# Media_App Registration
 def register(request):
     if request.method == 'POST':
         form=UserCreationForm(request.POST)
