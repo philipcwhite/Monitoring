@@ -1,0 +1,79 @@
+{% extends 'mon_app/base.html' %}
+
+
+{% block content %}
+
+<h1>white00</h1>
+
+<table style="width:100%;">
+    <tr>
+      <td style="padding-right:4px;text-align:center">
+        <div class="card-div" style="height:100px">
+          <span style="font-size:50px;font-weight:bold;color:#29ABE0">35</span><br />
+          <span style="font-size:15px;font-weight:bold;color:#8E8C84">processor (%)</span> 
+        </div>
+      </td>
+      <td style="padding-left:4px;padding-right:4px;text-align:center">
+        <div class="card-div" style="height:100px">
+          <span style="font-size:50px;font-weight:bold;color:#29ABE0">75</span><br />
+          <span style="font-size:15px;font-weight:bold;color:#8E8C84">memory (%)</span>
+        </div>
+      </td>
+      <td style="padding-left:4px;padding-right:4px;text-align:center">
+        <div class="card-div" style="height:100px">
+          <span style="font-size:50px;font-weight:bold;color:#29ABE0">14</span><br />
+          <span style="font-size:15px;font-weight:bold;color:#8E8C84">pagefile (%)</span>
+        </div>
+      </td>
+      <td style="padding-left:4px;text-align:center">
+          <div class="card-div" style="height:100px">
+            <span style="font-size:50px;font-weight:bold;color:#29ABE0">30</span><br /> 
+            <span style="font-size:15px;font-weight:bold;color:#8E8C84">uptime (days)</span>
+          </div>
+      </td>
+    </tr>
+</table>
+
+
+<table style="width:100%;padding-top:4px">  
+        <tr>
+            <td style="padding-right:4px;text-align:center">
+            <div class="card-div">
+            <span>windows logical disk c </span> 
+            </div>
+            </td>
+            <td style="padding-right:4px;text-align:center">
+            <div class="card-div">
+            <span>disk free </span><span style="font-weight:bold;color:#29ABE0">12%</span> 
+            </div>
+            </td>
+            <td style="text-align:center">
+            <div class="card-div">
+            <span>disk activity </span><span style="font-weight:bold;color:#29ABE0">12%</span>
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+<table style="width:100%;padding-top:4px">  
+        <tr>
+            <td style="padding-right:4px;text-align:center">
+            <div class="card-div">
+            <span>network </span> 
+            </div>
+            </td>
+            <td style="padding-right:4px;text-align:center">
+            <div class="card-div">
+            <span>bytes sent </span><span style="font-weight:bold;color:#29ABE0">10</span> 
+            </div>
+            </td>
+            <td style="text-align:center">
+            <div class="card-div">
+            <span>bytes received </span><span style="font-weight:bold;color:#29ABE0">0</span>
+            </div>
+        </td>
+    </tr>
+</table>
+
+  {% endblock content %}

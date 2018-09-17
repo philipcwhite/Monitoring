@@ -1,6 +1,6 @@
 ﻿
 html{max-width: 1200px;}
-body{margin:0px;padding:0px;height:100%;width:100%;font:12px "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;}
+body{margin:0px;padding:0px;height:100%;width:100%;font:12px "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;color:#8E8C84;}
 
 .nav-sidebar{height:100%;width:50px;color:#fff!important;background-color:#325D88;position:fixed!important;z-index:1;font-size:18px!important;text-align:center;}
 .nav-button1{border:none;display:block;padding:16px 16px;color:inherit;cursor:pointer;height:16px;transition:0.5s;}
@@ -19,19 +19,23 @@ body{margin:0px;padding:0px;height:100%;width:100%;font:12px "Segoe UI", "Helvet
 .search-button{border-radius:3px;color:#FFF;font-size:11px;background:#93C54B;padding:5px 5px;text-decoration:none;font-weight:bold;border-style:none;transition: 0.5s;}
 .search-button:hover{background-color: #80b139;border-color: #79A736;transition: 0.5s;}
 
-.user-div{position:absolute;top:14px;left:74px;font-size:12px;}
+.user-div{position:absolute;top:14px;left:74px;font-size:12px;padding-bottom: 4px;display: flex;align-items:center;}
 .user-font{color:#8E8C84;height:12px;width:12px;}
+.bread-font{color:#8E8C84;height:14px;width:14px;}
 
-.mon-container{padding-left:70px;padding-top:30px;padding-right:20px}
-.mon-container a:link {color:#000;text-decoration:none}
-.mon-container a:active{color:#000;text-decoration:none}
-.mon-container a:hover{color:#000;text-decoration:none}
-.mon-container a:visited {color:#000;text-decoration:none}
+.mon-container{padding-left:70px;padding-top:40px;padding-right:20px}
+.mon-container a:link {color:#8E8C84;;text-decoration:none}
+.mon-container a:active{color:#8E8C84;;text-decoration:none}
+.mon-container a:hover{color:#8E8C84;;text-decoration:none}
+.mon-container a:visited {color:#8E8C84;;text-decoration:none}
 
 .action-button{border-radius:2px;color:#FFF;font-size:10px;background:#D9534F;padding:3px 5px;text-decoration: none;font-weight:bold;border-style:none;transition: 0.5s;}
 .action-button:hover{background-color:#D23430;border-color: #C9302C;transition: 0.5s;}
 
-.card-div{background-color:#FFF;border:1px solid #DFD7CA;border-radius:3px;padding:4px;min-width:200px;}
+.card-div{background-color:#FFF;border:1px solid #DFD7CA;border-radius:3px;min-width:100px;}
 
+.card-header {padding:2px 2px 2px 8px;margin-bottom: 0;background-color:#F8F5F0;border-bottom: 1px solid rgba(223, 215, 202, 0.75);font-weight: bold;}
+
+.tooltip-trigger{color:#8E8C84;}
 
 /* Colors based on Sandstone theme by Thomas Park https://bootswatch.com/ */

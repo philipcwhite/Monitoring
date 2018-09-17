@@ -2,24 +2,27 @@
         <tr>
           <td style="padding-right:4px">
             <div class="card-div">
+                <div class="card-header">Host Availability</div>
               {{grapha|safe}}
             </div>
           </td>
           <td style="padding-left:4px;padding-right:4px">
             <div class="card-div">
+                <div class="card-header">Open Events</div>
               {{graphb|safe}}
             </div>
           </td>
           <td style="padding-left:4px">
               <div class="card-div">
+                  <div class="card-header">Monitoring Server</div>
                 {{systemperf|safe}}
               </div>
           </td>
         </tr>
         <tr>
           <td colspan="3" style="padding-top:8px">
-            <div class="card-div" id="test">
-             <div style="padding-left:20px"><b>Host Availability</b></div>
+            <div class="card-div">
+                <div class="card-header">Host Summary</div>
               <table style="width:100%;table-layout:fixed;"> 
                 {{systemstatus|safe}}
               </table> 

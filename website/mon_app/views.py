@@ -35,8 +35,8 @@ def device(request, device_name):
 
 def device_content(request, device_name):
     devicesystem = mon_device.device_system(device_name)
-    devicegraph = mon_device.device_graph(device_name)
-    context = {'devicesystem':devicesystem,'devicegraph':devicegraph}
+    devicedata = mon_device.device_data(device_name)
+    context = {'devicesystem':devicesystem,'devicedata':devicedata}
     return render(request, 'mon_app/device_content.html', context)
 
 # Events

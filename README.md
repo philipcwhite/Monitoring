@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+09/17/2018 - Massive update.  I probably added a few bugs during this.  Some old features may temporarily be missing but will be added back (graphing).  I updated much of the design/theme of the site.  Many of these upgrades are to improve performance and improve useability.  
+
 09/13/2018 - Fixed minor agent bug removing old events.
 
 09/12/2018 - I enabled user authentication.  Still very early with no authorization.  

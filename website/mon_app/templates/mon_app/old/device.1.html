@@ -1,0 +1,29 @@
+{% extends 'mon_app/base.html' %}
+
+
+
+{% block content %}
+
+
+<div id="device_content"></div>
+
+
+<br />
+
+<script>
+  function refresh() {
+      $.ajax({
+          url: '/device_content/' + '{{devicename}}',
+          success: function(data) {
+              $('#device_content').html(data);
+          }
+      });
+      setTimeout(refresh, 60000);
+  }
+  
+  $(function(){
+      refresh();
+  });
+  </script>
+
+{% endblock content %}
