@@ -80,7 +80,7 @@ class mon_device:
                 elif agentsystem.osname == 'Linux':
                     fs_name = "Linux Filesystem: " + i             
                 html_fs += """<table style="width:100%"><tr>
-                        <td>Windows """ + fs_name + """ drive</td>
+                        <td>""" + fs_name + """ drive</td>
                         <td>Free Space: """ + fs_free + """</td>
                         <td>Filesystem Activity: """ + fs_active + """</td>
                         </tr></table>"""
