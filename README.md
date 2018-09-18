@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+09/17/2018 - Lots of updates today.  I updated the collector.  It now will run as a Windows service with configuration files.  
+
 09/17/2018 - Added search functionality.  Search now returns matching hostnames.  Also added in login_required.  
 
 09/17/2018 - Cleaned up some code.  Finished web templates for Events and Devices.

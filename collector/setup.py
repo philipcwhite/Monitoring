@@ -10,4 +10,4 @@ setup(
     version = "0.1",
     description = "A Windows service for Monitoring",
     options = {"build_exe": build_exe_options},
-    executables = [Executable("echo_server.py", base = "Win32GUI")])
+    executables = [Executable("collect_service.py", base = "Win32GUI")])

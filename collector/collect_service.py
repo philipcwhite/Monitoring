@@ -13,11 +13,11 @@ import win32service
 import win32serviceutil
 import datetime
 # User classes
-import agent_load, agent_actions
+import collect_load, collect_server
 
-class AgentService(win32serviceutil.ServiceFramework):
-    _svc_name_ = "AgentService"
-    _svc_display_name_ = "Agent Service"
+class CollectService(win32serviceutil.ServiceFramework):
+    _svc_name_ = "CollectService"
+    _svc_display_name_ = "Collect Service"
 
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
@@ -29,20 +29,20 @@ class AgentService(win32serviceutil.ServiceFramework):
         win32event.SetEvent(self.hWaitStop)
 
     def SvcDoRun(self):
-        agent_load.load_config()
+        collect_load.load_config()
         rc = None
         while rc != win32event.WAIT_OBJECT_0:
             a = datetime.datetime.now().second
             if a == 0:
-                agent_actions.AgentProcess.create_loop()
+                collect_server.CollectServer.connection_loop()
             rc = win32event.WaitForSingleObject(self.hWaitStop, 1000)
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         servicemanager.Initialize()
-        servicemanager.PrepareToHostSingle(AgentService)
+        servicemanager.PrepareToHostSingle(CollectService)
         servicemanager.StartServiceCtrlDispatcher()
     else:
-        win32serviceutil.HandleCommandLine(AgentService)
+        win32serviceutil.HandleCommandLine(CollectService)
 
 
