@@ -3,6 +3,7 @@ import collect_settings
 
 def load_config():
     try:
+        collect_settings.running = 1 
         f = open(collect_settings.application_path + collect_settings.config_file, "r")
         fl = f.readlines()
         for i in fl:

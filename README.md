@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+09/20/2018 - I fixed the collector service so that it now can stop via windows services.  I still need to fix the config file for this and clean up some code.  I removed asyncio from the agent as it wasn't improving performance dramtically and it just made for having more requirements.  I will add it back if it improves performance.
+
 09/17/2018 - Lots of updates today.  I updated the collector.  It now will run as a Windows service with configuration files.  
 
 09/17/2018 - Added search functionality.  Search now returns matching hostnames.  Also added in login_required.  
