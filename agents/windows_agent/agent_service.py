@@ -34,7 +34,7 @@ class AgentService(win32serviceutil.ServiceFramework):
         while rc != win32event.WAIT_OBJECT_0:
             a = datetime.datetime.now().second
             if a == 0:
-                agent_actions.AgentProcess.create_loop()
+                agent_actions.AgentProcess.run_process()
             rc = win32event.WaitForSingleObject(self.hWaitStop, 1000)
 
 if __name__ == '__main__':

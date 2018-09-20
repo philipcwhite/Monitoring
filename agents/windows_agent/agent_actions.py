@@ -1,10 +1,8 @@
-import asyncio, socket, ssl, time
+import socket, ssl, time
 import agent_settings, agent_sql, agent_data, agent_event
 
 class AgentProcess():
-    async def send_data(message):
-        host = agent_settings.server
-        port = agent_settings.port
+    def send_data(message):
         agent_ssl = int(agent_settings.secure)
         sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         try:
@@ -14,12 +12,11 @@ class AgentProcess():
                 context.options |= ssl.PROTOCOL_TLSv1_2
                 context.check_hostname = False
                 context.verify_mode = ssl.CERT_NONE
-                conn = context.wrap_socket(sock, server_hostname=host)
-                conn.connect((host,port))
+                conn = context.wrap_socket(sock, server_hostname = agent_settings.server)
+                conn.connect((agent_settings.server,agent_settings.port))
                 byte=str(message).encode()
                 conn.send(byte)
                 data = conn.recv(1024).decode()
-                # Mark data as sent 
                 if data == 'Received':
                     agent_sql.AgentSQL.update_agent_data()
                     agent_sql.AgentSQL.update_agent_events()
@@ -36,19 +33,16 @@ class AgentProcess():
         except:
             pass
 
-    async def run_process():
+    def run_process():
         agent_time = str(time.time()).split('.')[0]
         send_message = agent_data.AgentData.data_process(agent_time)
         event_message = agent_event.AgentEvent.event_process(agent_time)
         message = send_message + event_message
-        await AgentProcess.send_data(message)
+        AgentProcess.send_data(message)
         agent_sql.AgentSQL.delete_agent_data()
         agent_sql.AgentSQL.delete_agent_events()
 
-    def create_loop():
-        loop = asyncio.new_event_loop() 
-        loop.run_until_complete(AgentProcess.run_process())
-        loop.close 
+
 
 
 
