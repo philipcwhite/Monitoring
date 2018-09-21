@@ -87,7 +87,7 @@ class mon_index:
 
         html = """<table style="width:100%;height:105px"><tr><td style="width:50%;padding-left:25px;vertical-align:top;padding-top:10px">
         Name: """ + name + """<br />
-        Processors: """ + str(agentsystem.processors + 1) + """<br />
+        Processors: """ + str(agentsystem.processors) + """<br />
         Memory: """ + str(agentsystem.memory)[:-3] + """ MB <br />
         Platform: """ + os + """ (""" + agentsystem.osarchitecture + """) <br />
         </td><td style="width:50%;padding-left:10px;vertical-align:top;padding-top:10px">"""

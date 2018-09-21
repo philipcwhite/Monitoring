@@ -8,10 +8,18 @@ def load_config():
         fl = f.readlines()
         for i in fl:
             if 'server:' in i:
-                collect_settings.server = i[7:]
+                collect_settings.server = i[7:].replace("\n","")
             if 'port:' in i:
-                collect_settings.port = int(i[5:])
+                collect_settings.port = int(i[5:]).replace("\n","")
             if 'secure:' in i:
-                collect_settings.secure = i[7:]
+                collect_settings.secure = i[7:].replace("\n","")
+            if 'dbhost:' in i:
+                collect_settings.dbhost = i[7:].replace("\n","")
+            if 'dbuser:' in i:
+                collect_settings.dbuser = i[7:].replace("\n","")
+            if 'dbpassword:' in i:
+                collect_settings.dbpassword = i[11:].replace("\n","")
+            if 'database:' in i:
+                collect_settings.database = i[9:].replace("\n","")
     except:
         pass

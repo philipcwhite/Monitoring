@@ -4,10 +4,10 @@ from django.conf import settings
 from django.utils import timezone
 
 class mon_device_graph:
-    def __init__(self, time, pvalue, mvalue):
+    def __init__(self, time, dvalue):
         self.time=time
-        self.pvalue=pvalue
-        self.mvalue=mvalue
+        self.dvalue=dvalue
+
 
 class mon_device:
     
@@ -20,7 +20,7 @@ class mon_device:
         <td><b>Domain:</b> """ + agentsystem.domain.lower() + """</td>
         <td><b>Platform:</b> """ + agentsystem.osname + " (" + agentsystem.osarchitecture + """)</td>
         <td><b>Build:</b> """ + str(agentsystem.osbuild) + """</td>
-        <td><b>Processors:</b> """ + str(agentsystem.processors + 1) + """</td>
+        <td><b>Processors:</b> """ + str(agentsystem.processors) + """</td>
         <td><b>Memory:</b> """ + str(agentsystem.memory)[:-3] + """ MB</td>
         </tr></table>"""
 
@@ -48,7 +48,7 @@ class mon_device:
             if i.monitor == 'perf.pagefile.percent.used':
                 pagefile_perc = round(i.value, 0)
             if i.monitor == 'perf.system.uptime.seconds':
-                uptime_days = round(i.value / 60 / 60 / 24, 0)
+                uptime_days = round(i.value / 86400, 0)
             if i.monitor == 'perf.network.bytes.received':
                 net_br = round(i.value, 0)
             if i.monitor == 'perf.network.bytes.sent':
@@ -90,22 +90,22 @@ class mon_device:
             <td style="padding-right:4px;text-align:center">
             <div class="card-div" style="height:70px">
             <div class="card-header">Processor (% used)</div>
-            <div style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px">""" + str(cpu_perc) + """</div>
+            <div style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px"><a href="/device/""" + name + """/graph/perf.processor.percent.used">""" + str(cpu_perc) + """</a></div>
             </div></td>
             <td style="padding-left:4px;padding-right:4px;text-align:center">
             <div class="card-div" style="height:70px">
             <div class="card-header">Memory (% used)</div>
-            <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px">""" + str(mem_perc) + """</span>
+            <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px"><a href="/device/""" + name + """/graph/perf.memory.percent.used">"""  + str(mem_perc) + """</a></span>
             </div></td>
             <td style="padding-left:4px;padding-right:4px;text-align:center">
             <div class="card-div" style="height:70px">
             <div class="card-header">Pagefile (% used)</div>
-            <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px">""" + str(pagefile_perc) + """</span>
+            <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px"><a href="/device/""" + name + """/graph/perf.pagefile.percent.used">"""  + str(pagefile_perc) + """</a></span>
             </div></td>
             <td style="padding-left:4px;text-align:center">
             <div class="card-div" style="height:70px">
             <div class="card-header">Uptime (days)</div>
-            <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px">""" + str(uptime_days) + """</span>
+            <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px"><a href="/device/""" + name + """/graph/perf.system.uptime.seconds">"""  + str(uptime_days) + """</a></span>
             </div></td></tr></table>
             <table style="width:100%">  
             <tr><td style="padding-bottom:4px;text-align:left">
@@ -122,66 +122,71 @@ class mon_device:
 
         return html
 
-    def device_graph(name):
-        processor_data = AgentData.objects.filter(name = name, monitor = 'perf.processor.percent.used').order_by('-id')[:60]
-        memory_data = AgentData.objects.filter(name = name, monitor = 'perf.memory.percent.used').order_by('-id')[:60]
+    def device_graph(name, monitor):
+        device_data = AgentData.objects.filter(name = name, monitor = monitor).order_by('-id')[:61]
         data_list = []
-        graph_time = datetime.datetime.now() - datetime.timedelta(minutes=59)
+        max_value = 0
+        mid_value = 0
+        graph_time = datetime.datetime.now() - datetime.timedelta(minutes=60)
 
-        for i in range(60):
-            agent_data = mon_device_graph(time=graph_time.strftime('%H:%M'),pvalue=0,mvalue=0)
+        for i in range(61):
+            agent_data = mon_device_graph(time=graph_time.strftime('%H:%M'),dvalue=0)
             data_list.append(agent_data)
             graph_time = graph_time + datetime.timedelta(minutes=1)
 
-        for i in processor_data:
-            processor_value = i.value
+        for i in device_data:
+            if i.value > max_value:max_value = i.value
+            
+        for i in device_data:
+            device_value = i.value
             time_short = timezone.make_aware(datetime.datetime.fromtimestamp(i.timestamp), timezone.utc).strftime('%H:%M')
             for i in data_list:
                 if i.time == time_short:
-                    i.pvalue = processor_value
+                    if device_value == 0:
+                        i.dvalue = 0
+                    else:
+                        i.dvalue = (device_value / max_value)*100
+
+
         
-        for i in memory_data:
-            memory_value = i.value
-            time_short = timezone.make_aware(datetime.datetime.fromtimestamp(i.timestamp), timezone.utc).strftime('%H:%M')
-            for i in data_list:
-                if i.time == time_short:
-                    i.mvalue = memory_value
-        
-        processor_polyline = ''
-        processor_polyline_data = ''
-        memory_polyline = ''
-        memory_polyline_data = ''
-        xvalue = 25
-        x2 = 20
+
+        device_polyline = ""
+        device_polyline_data = ""
+        device_time = ""
+        xvalue = 55
+        time_x = 0
 
         for i in data_list:
-            pvalue = str(round(110 - i.pvalue))
-            mvalue = str(round(110 - i.mvalue))
-            m2 = str(round(i.mvalue))
-            processor_polyline_data += str(xvalue) + "," + pvalue + " "
-            memory_polyline_data += str(xvalue) + "," + mvalue + " "
-            xvalue += 14 
-
-        processor_polyline = '<polyline points="' + processor_polyline_data + '" style="fill:none;stroke:#29ABE0;stroke-width:1" />'
-        memory_polyline = '<polyline points="' + memory_polyline_data + '" style="fill:none;stroke:#ffc107;stroke-width:1" />'
-        
+            dvalue = str(round(110 - i.dvalue))
+            device_polyline_data += str(xvalue) + "," + dvalue + " "
+            time_x += 1
+            if time_x == 1:
+                device_time += """<text x='""" + str(xvalue) + """' y="130" fill="#8E8C84" text-anchor="middle">""" + str(i.time) + """</text>"""
+            if time_x == 5:
+                time_x = 0
             
-        html =  """<svg xmlns="http://www.w3.org/2000/svg" style="color:#8E8C84;" height=120 width=990>
-	    <rect x=22 y=10 width=835 height=1 fill=#ddd />
-        <rect x=25 y=35 width=835 height=1 fill=#ddd />
-        <rect x=22 y=60 width=835 height=1 fill=#ddd />
-        <rect x=25 y=85 width=835 height=1 fill=#ddd />
-        <rect x=22 y=110 width=835 height=1 fill=#ddd />
-        <rect x=25 y=10 width=1 height=100 fill=#ddd />
-        <text x="0" y="15" fill="#8E8C84">100</text>
-        <text x="5" y="65" fill="#8E8C84">50</text>
-        <text x="10" y="115" fill="#8E8C84">0</text>
-        <rect x=885 y=40 width="10" height="10" style="fill:#29ABE0" />
-        <rect x=885 y=60 width="10" height="10" style="fill:#ffc107" />
-        <text x="905" y="50" fill="#8E8C84">processor (%)</text>
-        <text x="905" y="70" fill="#8E8C84">memory (%)</text>
-        """ + memory_polyline + processor_polyline + """
-		</svg>"""
+            
+            
+            
+                
+
+        
+
+            xvalue += 14 
+        device_polyline = '<polyline points="' + device_polyline_data + '" style="fill:none;stroke:#29ABE0;stroke-width:1" />'
+                
+        html =  """<svg xmlns="http://www.w3.org/2000/svg" style="color:#8E8C84;" height=150 width=990>
+	    <rect x=52 y=10 width=855 height=1 fill=#ddd />
+        <rect x=55 y=35 width=855 height=1 fill=#ddd />
+        <rect x=52 y=60 width=855 height=1 fill=#ddd />
+        <rect x=55 y=85 width=855 height=1 fill=#ddd />
+        <rect x=52 y=110 width=855 height=1 fill=#ddd />
+        <rect x=55 y=10 width=1 height=100 fill=#ddd />
+        <text x="47" y="15" fill="#8E8C84" text-anchor="end">""" + str(int(max_value)) + """</text>
+        <text x="47" y="65" fill="#8E8C84" text-anchor="end">""" + str(int(max_value / 2)) + """</text>
+        <text x="47" y="115" fill="#8E8C84" text-anchor="end">0</text>
+        """ + device_polyline + device_time + """
+		</svg>""" 
 
         return html
 

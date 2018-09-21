@@ -1,4 +1,5 @@
 import pymysql.cursors
+import collect_settings
 
 def parse_data(message):
     timestamp = 0
@@ -65,12 +66,12 @@ def parse_data(message):
 
 def agent_system(timestamp, name, domain, ipaddress, osname, osbuild, osarchitecture, processors, memory):
 
-    connection = pymysql.connect(host='localhost',
-                                 user='django',
-                                 password='django',
-                                 db='monitoring',
-                                 charset='utf8mb4',
-                                 cursorclass=pymysql.cursors.DictCursor)
+    connection = pymysql.connect(host = collect_settings.dbhost,
+                                 user = collect_settings.dbuser,
+                                 password = collect_settings.dbpassword,
+                                 db = collect_settings.database,
+                                 charset = 'utf8mb4',
+                                 cursorclass = pymysql.cursors.DictCursor)
 
     try:
         with connection.cursor() as cursor:
@@ -96,12 +97,12 @@ def agent_system(timestamp, name, domain, ipaddress, osname, osbuild, osarchitec
 
 def agent_data(timestamp, name, monitor, value):
     
-    connection = pymysql.connect(host='localhost',
-                                 user='django',
-                                 password='django',
-                                 db='monitoring',
-                                 charset='utf8mb4',
-                                 cursorclass=pymysql.cursors.DictCursor)
+    connection = pymysql.connect(host = collect_settings.dbhost,
+                                 user = collect_settings.dbuser,
+                                 password = collect_settings.dbpassword,
+                                 db = collect_settings.database,
+                                 charset = 'utf8mb4',
+                                 cursorclass = pymysql.cursors.DictCursor)
 
     try:
         with connection.cursor() as cursor:
@@ -128,12 +129,12 @@ def agent_events_open(timestamp, name, monitor, message, status, severity):
         connection.close()
 
 def agent_events_close(name, monitor, severity):
-    connection = pymysql.connect(host='localhost',
-                                 user='django',
-                                 password='django',
-                                 db='monitoring',
-                                 charset='utf8mb4',
-                                 cursorclass=pymysql.cursors.DictCursor)
+    connection = pymysql.connect(host = collect_settings.dbhost,
+                                 user = collect_settings.dbuser,
+                                 password = collect_settings.dbpassword,
+                                 db = collect_settings.database,
+                                 charset = 'utf8mb4',
+                                 cursorclass = pymysql.cursors.DictCursor)
     try:
         with connection.cursor() as cursor:
             sql = "UPDATE mon_app_agentevent SET status=0 WHERE name=%s AND monitor=%s AND severity=%s AND status=1"

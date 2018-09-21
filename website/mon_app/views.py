@@ -44,6 +44,21 @@ def device_content(request, device_name):
     context = {'devicesystem':devicesystem,'devicedata':devicedata}
     return render(request, 'mon_app/device_content.html', context)
 
+@login_required
+def device_graph(request, device_name, monitor_name):
+    devicename = device_name
+    monitorname = monitor_name
+    context = {'devicename':devicename, 'monitorname':monitorname}
+    return render(request, 'mon_app/device_graph.html', context)
+
+@login_required
+def device_graph_content(request, device_name, monitor_name):
+    devicename = device_name
+    monitorname = monitor_name
+    devicegraph = mon_device.device_graph(device_name, monitor_name)
+    context = {'devicename':devicename, 'monitorname':monitorname, 'devicegraph':devicegraph}
+    return render(request, 'mon_app/device_graph_content.html', context)
+
 # Events
 @login_required
 def events(request):
