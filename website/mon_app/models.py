@@ -33,11 +33,6 @@ class AgentEvent(models.Model):
     message = models.CharField(max_length  = 250)
     status = models.BooleanField(default = True)
     severity = models.CharField(max_length = 11, choices = severity_choices, default = INFO)
-    #monitor = models.CharField(max_length = 250)
-    #eventdate = models.DateTimeField(auto_now_add = True)
-    #threshold = models.PositiveIntegerField()
-    #compare = models.CharField(max_length=2)
-    #timerange = models.PositiveIntegerField() 
     class Meta:
         permissions = (('mon_admin','Monitoring Admin'),)
         verbose_name_plural = 'AgentEvents'

@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+09/22/2018 - Updated device page and CSS.
+
 09/21/2018 - I fixed the collector's config file issue.  I still need to encrypt the db password however it's coming along nicely.  I also added back graphs.  They can be accessed currently via the individual device page as links from performance metrics.  I plan to do more with these as time permits.
 
 09/20/2018 - I fixed the collector service so that it now can stop via windows services.  I still need to fix the config file for this and clean up some code.  I removed asyncio from the agent as it wasn't improving performance dramtically and it just made for having more requirements.  I will add it back if it improves performance.

@@ -79,33 +79,32 @@ class mon_device:
                     fs_name = "Linux Filesystem: " + i             
                 html_fs += """<table style="width:100%"><tr>
                         <td style="width:33%">""" + fs_name + """ drive</td>
-                        <td style="width:33%">Free Space: """ + fs_free + """</td>
-                        <td style="width:33%">Filesystem Activity: """ + fs_active + """</td>
+                        <td style="width:33%"><a href="/device/""" + name + """/graph/perf.filesystem.""" + i + """.percent.free">Free Space: """ + fs_free + """</a></td>
+                        <td style="width:33%"><a href="/device/""" + name + """/graph/perf.filesystem.""" + i + """.percent.active">Filesystem Activity: """ + fs_active + """</a></td>
                         </tr></table>"""
             except:
                 pass
         html_fs += """</div></div></td></tr>"""
 
-        html = r"""<tr>
-            <td style="padding-right:4px;text-align:center">
+        html = """<tr><td style="padding-right:4px;text-align:center">
             <div class="card-div" style="height:70px">
             <div class="card-header">Processor (% used)</div>
-            <div style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px"><a href="/device/""" + name + """/graph/perf.processor.percent.used">""" + str(cpu_perc) + """</a></div>
+            <div  class="device-stats"><a class="device-stats" href="/device/""" + name + """/graph/perf.processor.percent.used">""" + str(cpu_perc) + """</a></div>
             </div></td>
             <td style="padding-left:4px;padding-right:4px;text-align:center">
             <div class="card-div" style="height:70px">
             <div class="card-header">Memory (% used)</div>
-            <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px"><a href="/device/""" + name + """/graph/perf.memory.percent.used">"""  + str(mem_perc) + """</a></span>
+            <span class="device-stats"><a class="device-stats" href="/device/""" + name + """/graph/perf.memory.percent.used">"""  + str(mem_perc) + """</a></span>
             </div></td>
             <td style="padding-left:4px;padding-right:4px;text-align:center">
             <div class="card-div" style="height:70px">
             <div class="card-header">Pagefile (% used)</div>
-            <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px"><a href="/device/""" + name + """/graph/perf.pagefile.percent.used">"""  + str(pagefile_perc) + """</a></span>
+            <span class="device-stats"><a class="device-stats" href="/device/""" + name + """/graph/perf.pagefile.percent.used">"""  + str(pagefile_perc) + """</a></span>
             </div></td>
             <td style="padding-left:4px;text-align:center">
             <div class="card-div" style="height:70px">
             <div class="card-header">Uptime (days)</div>
-            <span style="font-size:40px;font-weight:bold;color:#29ABE0;height:50px;line-height:50px"><a href="/device/""" + name + """/graph/perf.system.uptime.seconds">"""  + str(uptime_days) + """</a></span>
+            <span class="device-stats"><a class="device-stats" href="/device/""" + name + """/graph/perf.system.uptime.seconds">"""  + str(uptime_days) + """</a></span>
             </div></td></tr></table>
             <table style="width:100%">  
             <tr><td style="padding-bottom:4px;text-align:left">
@@ -114,10 +113,9 @@ class mon_device:
             <div style="padding-left: 10px">
             <table style="width:100%"><tr>
             <td style="width:33%">Network Total Traffic</td>
-            <td style="width:33%">Bytes Sent: """ + str(net_bs) + """</td>
-            <td style="width:33%">Bytes Received: """ + str(net_br) + """</td>
-            </tr></table></div></div>
-            </td></tr>"""
+            <td style="width:33%"><a href="/device/""" + name + """/graph/perf.network.bytes.sent">Bytes Sent: """ + str(net_bs) + """</a></td>
+            <td style="width:33%"><a href="/device/""" + name + """/graph/perf.network.bytes.received">Bytes Received: """ + str(net_br) + """</a></td>
+            </tr></table></div></div></td></tr>"""
         html += html_fs
 
         return html
