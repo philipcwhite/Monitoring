@@ -1,8 +1,7 @@
-import time, datetime, socket
+import time, datetime, socket, math
 from .models import AgentSystem, AgentEvent, AgentData
 from django.conf import settings
 from django.utils import timezone
-
 
 class mon_index:
     def donut_avail():
@@ -108,8 +107,10 @@ class mon_index:
         return html
  
 
-    def system_status():
-        agentsystem = AgentSystem.objects.all().order_by('name')
+    def system_status(page):
+        page_start = (page * 100) - 100
+        page_end = page_start + 100
+        agentsystem = AgentSystem.objects.all().order_by('name')[page_start:page_end]
         uptime_check = 600
         currenttime = time.time()
         os = ""
@@ -118,13 +119,36 @@ class mon_index:
 
         for i in agentsystem:
             dt = datetime.datetime.fromtimestamp(i.timestamp)
-            date = 'Last Reported: ' + str(timezone.make_aware(dt, timezone.utc)).replace(':00+00:00','')
+            date = """<span style="padding-right:10px">Last Reported: """ + str(timezone.make_aware(dt, timezone.utc)).replace(':00+00:00','') + "</span>"
             os = i.osname
             if (i.timestamp + uptime_check) >= currenttime:
                 icon = """<svg width="10" height="10"><rect width="10" height="10" style="fill:#93C54B" /></svg>"""
             else:
                 icon =  """<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg>"""
-                
             html = html + "<tr><td style='padding-left:20px'>" + icon + " &nbsp;<a href='device/" + str(i.name) + "'>" + str(i.name) + "</a></td><td>IP Address: " + str(i.ipaddress) + "</td><td>Domain: " + str(i.domain).lower() + "</td><td>Platform: " + os + " (" + str(i.osarchitecture) + ")</td><td>" + date + "</td></tr>"
-
         return html
+
+    def system_status_pager(page):
+        page_start = (page * 100) - 100
+        page_end = page_start + 100
+        page_count = int(math.ceil(AgentSystem.objects.count() / 100))
+        agentsystem = AgentSystem.objects.all().order_by('name')[page_start:page_end]
+        uptime_check = 600
+        currenttime = time.time()
+        os = ""
+        html = ""
+        icon = ""
+        html = ""
+        if page_count > 1:
+            for i in range(1,page_count + 1):
+                if i == page:
+                    html += """<td style="width:10px">""" + str(i) + "</td>"
+                elif i == 1:
+                    html += """<td style="width:10px"><a href="/">""" + str(i) + """</a></td>"""
+                else:
+                    html += """<td style="width:10px"><a href="/""" + str(i) + """">""" + str(i) + """</a></td>"""
+        return html
+
+
+
+

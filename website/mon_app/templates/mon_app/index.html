@@ -10,7 +10,7 @@
 <script>
     function refresh() {
         $.ajax({
-            url: '{% url 'mon_app:index_content' %}',
+            url: '/index_content/' + '{{page}}',
             success: function(data) {
                 $('#index_content').html(data);
             }

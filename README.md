@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+09/24/2018 - Added paginatation to the index view.  Removed Subscriptions.  Soon to be replaced with Notifications.
+
 09/22/2018 - Updated device page and CSS.
 
 09/21/2018 - I fixed the collector's config file issue.  I still need to encrypt the db password however it's coming along nicely.  I also added back graphs.  They can be accessed currently via the individual device page as links from performance metrics.  I plan to do more with these as time permits.
