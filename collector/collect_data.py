@@ -122,8 +122,8 @@ def agent_events_open(timestamp, name, monitor, message, status, severity):
                                  cursorclass=pymysql.cursors.DictCursor)
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO mon_app_agentevent (timestamp, name, monitor, message, status, severity) VALUES(%s,%s,%s,%s,%s,%s)"
-            cursor.execute(sql, (timestamp, name, monitor, message, status, severity))
+            sql = "INSERT INTO mon_app_agentevent (timestamp, name, monitor, message, status, severity, processed) VALUES(%s,%s,%s,%s,%s,%s,%s)"
+            cursor.execute(sql, (timestamp, name, monitor, message, status, severity, 0))
             connection.commit()
     finally:
         connection.close()
@@ -137,7 +137,7 @@ def agent_events_close(name, monitor, severity):
                                  cursorclass = pymysql.cursors.DictCursor)
     try:
         with connection.cursor() as cursor:
-            sql = "UPDATE mon_app_agentevent SET status=0 WHERE name=%s AND monitor=%s AND severity=%s AND status=1"
+            sql = "UPDATE mon_app_agentevent SET status=0 AND processed=0 WHERE name=%s AND monitor=%s AND severity=%s AND status=1"
             cursor.execute(sql, (name, monitor, severity))
             connection.commit()
     finally:

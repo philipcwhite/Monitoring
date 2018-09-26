@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+09/25/2018 - Added processed field to agentevents and notifyrule table for event processing.  The processed field is what the event engine will queue off of to process notifications.  The event engine will serve two tasks.  It will generate events when agents have not responded, and it will process event rules.  In this iteration of the application rules will be based off matching event text.  
+
 09/24/2018 - Added paginatation to the index view.  Removed Subscriptions.  Soon to be replaced with Notifications.
 
 09/22/2018 - Updated device page and CSS.

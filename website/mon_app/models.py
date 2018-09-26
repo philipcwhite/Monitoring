@@ -33,6 +33,7 @@ class AgentEvent(models.Model):
     message = models.CharField(max_length  = 250)
     status = models.BooleanField(default = True)
     severity = models.CharField(max_length = 11, choices = severity_choices, default = INFO)
+    processed = models.BooleanField(default = False)
     class Meta:
         permissions = (("mon_admin","Monitoring Admin"),)
         verbose_name_plural = "AgentEvents"
@@ -56,11 +57,22 @@ class AgentSystem(models.Model):
     def __str__(self):
         return self.name
 
-"""class Subscription(models.Model):
+class NotifyRule(models.Model):
+    CRIT = "1"
+    MAJR = "2"
+    WARN = "3"
+    INFO = "4"
+    severity_choices=(
+        (CRIT, "Critical"),
+        (MAJR, "Major"),
+        (WARN, "Warning"),
+        (INFO, "Information"),
+    )
     id = models.AutoField(unique = True, primary_key = True)
-    name = models.CharField(max_length = 100)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    notify = models.BooleanField(default = True)
-    class Meta:
-        permissions = (("mon_admin","Monitoring Admin"),)
-        verbose_name_plural = "Subscriptions"""
+    notify_name = models.CharField(max_length = 100)
+    notify_email = models.CharField(max_length = 100)
+    agent_name = models.CharField(max_length = 100)
+    agent_monitor = models.CharField(max_length  = 250)
+    agent_message = models.CharField(max_length  = 250)
+    agent_status = models.BooleanField(default = True)
+    agent_severity = models.CharField(max_length = 11, choices = severity_choices, default = INFO)
