@@ -1,0 +1,25 @@
+Install Notes
+
+Application Installation directory: C:\Progra~1\MonitoringServices\
+
+Must include: settings.cfg and certificate files
+
+
+
+For PyInstaller: 
+
+Compile: pyinstaller -F --hidden-import=win32timezone collect_service.py
+
+Install: C:\Progra~1\MonitoringServices\collect_service.exe install
+
+Compile: pyinstaller -F --hidden-import=win32timezone event_service.py
+
+Install: C:\Progra~1\MonitoringServices\event_service.exe install
+
+
+
+For Python:  
+
+sc create CollectService binPath="C:\Python\python.exe C:\Progra~1\MonitoringServices\collect_service.py" type=own error=ignore start=auto
+
+sc create EventService binPath="C:\Python\python.exe C:\Progra~1\MonitoringServices\event_service.py" type=own error=ignore start=auto

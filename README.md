@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+09/26/2018 - Repackaged the collector and event engine in the same directory "services".  No real changes to the collector however the event engine is now working.  As of now it just outputs a file to the service directory.  It will eventually send emails.  As of now filters can only be added via the django admin.  It will accept "%_%" for wildcards.  I will be adding a page in the web GUI for adding notification policies.  I am hoping to have a beta release ready in the next few weeks.   
+
 09/25/2018 - Added processed field to agentevents and notifyrule table for event processing.  The processed field is what the event engine will queue off of to process notifications.  The event engine will serve two tasks.  It will generate events when agents have not responded, and it will process event rules.  In this iteration of the application rules will be based off matching event text.  
 
 09/24/2018 - Added paginatation to the index view.  Removed Subscriptions.  Soon to be replaced with Notifications.
