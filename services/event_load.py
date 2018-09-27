@@ -10,7 +10,7 @@ def load_config():
             if 'server:' in i:
                 event_settings.server = i[7:].replace("\n","")
             if 'port:' in i:
-                event_settings.port = int(i[5:]).replace("\n","")
+                event_settings.port = int(i[5:].replace("\n",""))
             if 'secure:' in i:
                 event_settings.secure = i[7:].replace("\n","")
             if 'dbhost:' in i:
@@ -21,5 +21,11 @@ def load_config():
                 event_settings.dbpassword = i[11:].replace("\n","")
             if 'database:' in i:
                 event_settings.database = i[9:].replace("\n","")
+            if 'mailactive:' in i:
+                event_settings.mailactive = int(i[11:].replace("\n",""))
+            if 'mailserver:' in i:
+                event_settings.mailserver = i[11:].replace("\n","")
+            if 'mailadmin:' in i:
+                event_settings.mailadmin = i[10:].replace("\n","")
     except:
         pass

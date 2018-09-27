@@ -1,7 +1,6 @@
 # Global variables
 # Application path must be hardcoded
-application_path = 'C:\\Progra~1\\MonitoringServices\\'
-#application_path = 'C:\\Users\\philwhite\\Documents\\Python\\server\\'
+application_path = 'C:\\Progra~1\\MonitoringService\\'
 config_file = "settings.cfg"
 server = "10.211.55.17"
 port = 8888
@@ -11,3 +10,6 @@ dbhost = "localhost"
 dbuser = "django"
 dbpassword = "django"
 database = "monitoring"
+mailactive = 0
+mailserver = "localhost"
+mailadmin = "monitoring@monitoring"
