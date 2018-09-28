@@ -1,5 +1,5 @@
 import os
-import event_settings
+import event_settings,event_available
 
 def load_config():
     try:
@@ -7,10 +7,10 @@ def load_config():
         f = open(event_settings.application_path + event_settings.config_file, "r")
         fl = f.readlines()
         for i in fl:
-            if 'server:' in i:
-                event_settings.server = i[7:].replace("\n","")
-            if 'port:' in i:
-                event_settings.port = int(i[5:].replace("\n",""))
+            if 'mon_server:' in i:
+                event_settings.server = i[11:].replace("\n","")
+            if 'mon_port:' in i:
+                event_settings.port = int(i[9:].replace("\n",""))
             if 'secure:' in i:
                 event_settings.secure = i[7:].replace("\n","")
             if 'dbhost:' in i:
@@ -27,5 +27,9 @@ def load_config():
                 event_settings.mailserver = i[11:].replace("\n","")
             if 'mailadmin:' in i:
                 event_settings.mailadmin = i[10:].replace("\n","")
+            if 'availability_check:' in i:
+                event_settings.availability_check = int(i[19:].replace("\n",""))
+            if 'availability_severity:' in i:
+                event_settings.availability_severity = i[22:].replace("\n","")
     except:
         pass

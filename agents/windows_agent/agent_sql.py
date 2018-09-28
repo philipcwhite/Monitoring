@@ -80,7 +80,6 @@ class AgentSQL():
     def select_agent_data():
         try:
             output = ""
-            #sql_query = r"SELECT time, name, monitor, value FROM AgentData WHERE sent=0"
             sql_query = r"SELECT time, name, monitor, value FROM AgentData WHERE sent=0 AND monitor NOT LIKE '%perf.service%'"
             con = AgentSQL.sql_con()
             if con is not None:
@@ -173,7 +172,6 @@ class AgentSQL():
     def close_agent_event(monitor, severity):
         try:
             sql_query =  r"UPDATE AgentEvents SET status=0, sent=0 WHERE monitor='" + monitor + "' AND severity = " + severity 
-            #print(sql_query)
             con = AgentSQL.sql_con()
             if con is not None:
                 c = con.cursor()

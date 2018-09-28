@@ -1,5 +1,5 @@
 import os
-import collect_settings
+import collect_settings,collect_server
 
 def load_config():
     try:
@@ -7,12 +7,12 @@ def load_config():
         f = open(collect_settings.application_path + collect_settings.config_file, "r")
         fl = f.readlines()
         for i in fl:
-            if 'server:' in i:
-                collect_settings.server = i[7:].replace("\n","")
-            if 'port:' in i:
-                collect_settings.port = int(i[5:]).replace("\n","")
+            if 'mon_server:' in i:
+                collect_settings.server = i[11:].replace("\n","")
+            if 'mon_port:' in i:
+                collect_settings.port = int(i[9:].replace("\n",""))
             if 'secure:' in i:
-                collect_settings.secure = i[7:].replace("\n","")
+                collect_settings.secure = int(i[7:].replace("\n",""))
             if 'dbhost:' in i:
                 collect_settings.dbhost = i[7:].replace("\n","")
             if 'dbuser:' in i:

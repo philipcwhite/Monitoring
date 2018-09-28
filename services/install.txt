@@ -20,6 +20,6 @@ Install: C:\Progra~1\MonitoringService\event_service.exe install
 
 For Python:  
 
-sc create CollectService binPath="C:\Python\python.exe C:\Progra~1\MonitoringService\collect_service.py" type=own error=ignore start=auto
+sc create CollectService binPath="python.exe C:\Progra~1\MonitoringService\collect_service.py" type=own error=ignore start=auto
 
-sc create EventService binPath="C:\Python\python.exe C:\Progra~1\MonitoringService\event_service.py" type=own error=ignore start=auto
+sc create EventService binPath="python.exe C:\Progra~1\MonitoringService\event_service.py" type=own error=ignore start=auto

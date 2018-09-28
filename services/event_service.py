@@ -13,7 +13,7 @@ import win32service
 import win32serviceutil
 import datetime
 # User classes
-import event_load, event_server, event_settings
+import event_available, event_load, event_server, event_settings
 
 class EventService(win32serviceutil.ServiceFramework):
     _svc_name_ = "EventService"
@@ -35,6 +35,8 @@ class EventService(win32serviceutil.ServiceFramework):
         while rc != win32event.WAIT_OBJECT_0:
             a = datetime.datetime.now().second
             if a == 0:
+                event_available.EventAvailable.check_available()
+                event_available.EventAvailable.check_open()
                 event_server.ServerEvent.process_events()
             rc = win32event.WaitForSingleObject(self.hWaitStop, 1000)
                 

@@ -1,15 +1,17 @@
 # Global variables
 # Application path must be hardcoded
 application_path = 'C:\\Progra~1\\MonitoringService\\'
+availability_check = 300
+availability_severity = 1
 config_file = "settings.cfg"
-server = "10.211.55.17"
-port = 8888
-secure = 1
-running = 1
-dbhost = "localhost"
-dbuser = "django"
-dbpassword = "django"
 database = "monitoring"
+dbhost = "localhost"
+dbpassword = "django"
+dbuser = "django"
 mailactive = 0
-mailserver = "localhost"
 mailadmin = "monitoring@monitoring"
+mailserver = "localhost"
+port = 8888
+running = 1
+secure = 1
+server = "56.76.47.194"

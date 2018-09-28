@@ -52,4 +52,3 @@ class CollectServer():
         except:
             pass
 
-#CollectServer.connection_loop()

@@ -1,6 +1,15 @@
 import pymysql.cursors
 import collect_settings
 
+def mon_con():
+    connection = pymysql.connect(host = collect_settings.dbhost,
+                                 user = collect_settings.dbuser,
+                                 password = collect_settings.dbpassword,
+                                 db = collect_settings.database,
+                                 charset = 'utf8mb4',
+                                 cursorclass = pymysql.cursors.DictCursor)
+    return connection
+
 def parse_data(message):
     timestamp = 0
     name = '' 
@@ -65,17 +74,9 @@ def parse_data(message):
         
 
 def agent_system(timestamp, name, domain, ipaddress, osname, osbuild, osarchitecture, processors, memory):
-
-    connection = pymysql.connect(host = collect_settings.dbhost,
-                                 user = collect_settings.dbuser,
-                                 password = collect_settings.dbpassword,
-                                 db = collect_settings.database,
-                                 charset = 'utf8mb4',
-                                 cursorclass = pymysql.cursors.DictCursor)
-
+    connection = mon_con()
     try:
         with connection.cursor() as cursor:
-            # Read a single record
             sql = "SELECT name from mon_app_agentsystem where name=%s"
             cursor.execute(sql, (name,))
             result = cursor.fetchone()
@@ -96,14 +97,7 @@ def agent_system(timestamp, name, domain, ipaddress, osname, osbuild, osarchitec
         connection.close()
 
 def agent_data(timestamp, name, monitor, value):
-    
-    connection = pymysql.connect(host = collect_settings.dbhost,
-                                 user = collect_settings.dbuser,
-                                 password = collect_settings.dbpassword,
-                                 db = collect_settings.database,
-                                 charset = 'utf8mb4',
-                                 cursorclass = pymysql.cursors.DictCursor)
-
+    connection = mon_con()
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO mon_app_agentdata (timestamp, name, monitor, value) VALUES(%s,%s,%s,%s)"
@@ -114,12 +108,7 @@ def agent_data(timestamp, name, monitor, value):
         connection.close()
 
 def agent_events_open(timestamp, name, monitor, message, status, severity):
-    connection = pymysql.connect(host='localhost',
-                                 user='django',
-                                 password='django',
-                                 db='monitoring',
-                                 charset='utf8mb4',
-                                 cursorclass=pymysql.cursors.DictCursor)
+    connection = mon_con()
     try:
         with connection.cursor() as cursor:
             sql = "INSERT INTO mon_app_agentevent (timestamp, name, monitor, message, status, severity, processed) VALUES(%s,%s,%s,%s,%s,%s,%s)"
@@ -129,12 +118,7 @@ def agent_events_open(timestamp, name, monitor, message, status, severity):
         connection.close()
 
 def agent_events_close(name, monitor, severity):
-    connection = pymysql.connect(host = collect_settings.dbhost,
-                                 user = collect_settings.dbuser,
-                                 password = collect_settings.dbpassword,
-                                 db = collect_settings.database,
-                                 charset = 'utf8mb4',
-                                 cursorclass = pymysql.cursors.DictCursor)
+    connection = mon_con()
     try:
         with connection.cursor() as cursor:
             sql = "UPDATE mon_app_agentevent SET status=0 AND processed=0 WHERE name=%s AND monitor=%s AND severity=%s AND status=1"
