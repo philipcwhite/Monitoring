@@ -38,8 +38,8 @@ def agent_filter_select(id):
         with connection.cursor() as cursor:
             sql = """select t1.notify_email, t1.notify_name, t2.id, t2.timestamp, t2.name, t2.monitor, t2.message, t2.severity, t2.status FROM mon_app_notifyrule as t1 
                   INNER JOIN mon_app_agentevent as t2 on 
-                  t2.name LIKE t1.agent_name AND t2.monitor LIKE t1.agent_monitor AND t2.message LIKE t1.agent_message
-                  AND t2.status LIKE t1.agent_status AND t2.severity LIKE t1.agent_severity AND t2.processed=0 AND T2.id<=""" + str(id)
+                  t2.name LIKE t1.agent_name AND t2.monitor LIKE t1.agent_monitor 
+                  AND t2.status LIKE t1.agent_status AND t2.severity LIKE t1.agent_severity AND t2.processed=0 AND T2.id<=""" + str(id) + " AND t1.notify_enabled=1"
             cursor.execute(sql)
             result = cursor.fetchall()
             agent_events_processed(id)

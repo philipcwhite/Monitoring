@@ -20,9 +20,14 @@ urlpatterns=[
     path("event_close/<int:event_id>", views.event_close, name="event_close"),
     path("reports", views.reports, name="reports"),
     path("settings", views.settings, name="settings"), 
+    path("settings/notify", views.notify, name="notify"),
+    path("settings/notify/add", views.notify_add, name="notify_add"),
+    path("settings/notify/edit/<int:notify_id>", views.notify_edit, name="notify_edit"),
+    path("settings/notify/delete/<int:notify_id>", views.notify_delete, name="notify_delete"),
     path("search", views.search, name="search"), 
     #User Management
     path("register/", views.register, name="register"),
+    path("user/", views.change_password, name="change_password"),
     path("login/", auth_views.LoginView.as_view(), name="login"),
     path("logout/", auth_views.LogoutView.as_view(), {"next_page": "/"}, name="logout"),   
 ]   

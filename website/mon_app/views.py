@@ -1,8 +1,12 @@
 from django.shortcuts import render
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import AgentData, AgentEvent, AgentSystem
+from .models import AgentData, AgentEvent, AgentSystem, NotifyRule
+from .forms import NotifyRuleForm
 from .mon_device import mon_device, mon_devices
 from .mon_index import mon_index
 from .mon_events import mon_events
@@ -94,6 +98,45 @@ def reports(request):
 def settings(request):
     return render(request, "mon_app/settings.html")
 
+@login_required
+def notify(request):
+    return render(request, "mon_app/notify.html")
+
+@login_required
+def notify_add(request):
+    if request.method != 'POST':
+        form=NotifyRuleForm()
+    else:
+        form = NotifyRuleForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('mon_app:settings'))
+    return render(request, 'mon_app/notify_modify.html', {'form': form})
+
+@login_required
+def notify_edit(request, notify_id):
+    notifyrule=NotifyRule.objects.get(id=notify_id)
+    if request.method != 'POST':
+        form=NotifyRuleForm(instance=notifyrule)
+    else:
+        form = NotifyRuleForm(instance=notifyrule, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('mon_app:settings'))
+    context={'form':form}
+    return render(request, 'mon_app/notify_modify.html', context)
+
+@login_required
+def notify_delete(request, notify_id):
+    if request.method != 'POST':
+        notifyrule=NotifyRule.objects.get(id=notify_id)
+    else:
+        notifyrule = get_object_or_404(NotifyRule, id=notify_id)
+        notifyrule.delete()
+        return HttpResponseRedirect(reverse('mon_app:settings'))
+    context={'notifyrule':notifyrule}
+    return render(request, 'mon_app/notify_modify.html', context)
+
 # Search
 @login_required
 def search(request):
@@ -121,5 +164,24 @@ def register(request):
     else:
         form=UserCreationForm()
     return render(request, "registration/register.html", {"form":form})
+
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('change_password')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'registration/change_password.html', {'form': form})
+
+
+
+
+
 
 

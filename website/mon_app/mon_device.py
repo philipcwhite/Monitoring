@@ -24,6 +24,10 @@ class mon_device:
         <td><b>Memory:</b> """ + str(agentsystem.memory)[:-3] + """ MB</td>
         </tr></table>"""
 
+        """agentsystem2 = AgentSystem.objects.values('name').distinct()
+        for i in agentsystem2:
+            html += str(i['name'])"""
+
         return html
 
 

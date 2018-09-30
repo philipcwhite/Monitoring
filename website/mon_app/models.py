@@ -58,6 +58,26 @@ class AgentSystem(models.Model):
         return self.name
 
 class NotifyRule(models.Model):
+    agentsystem = AgentSystem.objects.order_by('name').values('name').distinct()
+    agent_name_list_a = []
+    agent_name_list_b = []
+    agent_name_list_a.append("%_%")
+    agent_name_list_b.append("All")
+    for i in agentsystem:
+        agent_name_list_a.append(i['name'])
+        agent_name_list_b.append(i['name'])
+    agent_name_list = zip(agent_name_list_a,agent_name_list_b)
+    
+    agentdata = AgentData.objects.order_by('monitor').values('monitor').distinct()[:1000]
+    agent_monitor_list_a = []
+    agent_monitor_list_b = []
+    agent_monitor_list_a.append("%_%")
+    agent_monitor_list_b.append("All")
+    for i in agentdata:
+        agent_monitor_list_a.append(i['monitor'])
+        agent_monitor_list_b.append(i['monitor'])
+    agent_monitor_list = zip(agent_monitor_list_a,agent_monitor_list_b)
+
     CRIT = "1"
     MAJR = "2"
     WARN = "3"
@@ -71,8 +91,13 @@ class NotifyRule(models.Model):
     id = models.AutoField(unique = True, primary_key = True)
     notify_name = models.CharField(max_length = 100)
     notify_email = models.CharField(max_length = 100)
-    agent_name = models.CharField(max_length = 100)
-    agent_monitor = models.CharField(max_length  = 250)
-    agent_message = models.CharField(max_length  = 250)
+    notify_enabled = models.BooleanField(default = True)
+    agent_name = models.CharField(max_length = 100, choices = agent_name_list, default = "ALL")
+    agent_monitor = models.CharField(max_length  = 250, choices = agent_monitor_list, default = "ALL")
     agent_status = models.BooleanField(default = True)
     agent_severity = models.CharField(max_length = 11, choices = severity_choices, default = INFO)
+    class Meta:
+        permissions = (("mon_admin","Monitoring Admin"),)
+        verbose_name_plural = "NotifyRules"
+    def __str__(self):
+        return self.notify_name
