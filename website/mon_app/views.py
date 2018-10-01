@@ -100,7 +100,9 @@ def settings(request):
 
 @login_required
 def notify(request):
-    return render(request, "mon_app/notify.html")
+    notifyrule = NotifyRule.objects.all().order_by('notify_name')
+    context = {"notifyrule":notifyrule}
+    return render(request, "mon_app/notify.html", context)
 
 @login_required
 def notify_add(request):

@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+10/01/2018 - Linked to notifications page.  Minor changes.
+
 09/29/2018 - I added forms for modifying notification policies and a password change form.  Not everything is currently linked or stylized at this point.  For the Notification policies I added drop down forms for agent selection and monitor selection.   
 
 09/28/2018 - Updated the Agent and Server services.  The EventService now creates events for agent down.  The first beta should be out in a few weeks.  I still have some work left to do on the website and some code cleanup.  The first release will be more or less a milestone rather than a fully useable product.  There are still a lot of things I need to do.  Django can sometimes be tricky to deploy so I would like to find a better way to release the web server.  Perhaps wrapping Django in CherryPy.  Ease of use is a big priority.  I'll probably use inno setup for the Windows build to do some of the deployment.  
