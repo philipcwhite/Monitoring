@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+10/01/2018 - One of the main points of building this app was to make it user friendly.  I think I sadly failed when I incorporated Django.  It's a wonderful framework but I'm not sure I can make a simple deployable package using it.  I know how to make it work but I can see someone who is not a Python coder banging their head on the wall trying to get it to work.  For this reason I'm backpeddling.  I have been working with CherryPy all day and I may go this route if I can get authentication and authorization working.  It is a huge and painful rewrite but it make the app so much easier for end users (maybe a little harder for me).  
+
 10/01/2018 - Linked to notifications page.  Minor changes.
 
 09/29/2018 - I added forms for modifying notification policies and a password change form.  Not everything is currently linked or stylized at this point.  For the Notification policies I added drop down forms for agent selection and monitor selection.   
