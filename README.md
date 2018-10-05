@@ -15,6 +15,8 @@ Device View
 
 ## Updates
 
+10/5/2018 - Devices, graphing, and the event view are back.  I hope to have the first Windows beta release out in a week or so.  
+
 10/4/2018 - I started a massive rewrite of the webserver using CherryPy.  A lot of the existing functionality is currently missing.  I am working to add this back as soon as possible.  I was going to hold off on updating the code repository but this is the direction I am moving in so I am keeping the project up to date.  I've also cleaned up a lot of the template code and fixed a lot of bugs in the website and collector.  As this gets closer to an official release I will post more detailed documentation on how things work.  I am planning on using InnoSetup for windows to build an installable package for both the agent and server.  I am not a Linux expert so and Linux development will come in a later release.
 
 So what has been done/ported?  The main framework for the site has been moved over.  Pages are there but many are blank.  The event engine and collector are both working.  On the website, I have built a simple cookie/session authentication system.  There is room for improvement here but it is working.  The website runs as a Windows service.  Currently off the default 8080 port.  SSL will be configured later.  No need for Apache, IIS, etc. :)

@@ -59,6 +59,11 @@ class WebViews:
         &nbsp;&nbsp;<a href="/devices">Devices</a>&nbsp;>&nbsp;""" + name + """&nbsp;"""  
         return html
 
+    def load_bc_device_graph(name, monitor):
+        html = """<svg class="bread-font" viewBox="0 0 512 512"><path fill="currentColor" d="M480 160H32c-17.673 0-32-14.327-32-32V64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm112 248H32c-17.673 0-32-14.327-32-32v-64c0-17.673 14.327-32 32-32h448c17.673 0 32 14.327 32 32v64c0 17.673-14.327 32-32 32zm-48-88c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24zm-64 0c-13.255 0-24 10.745-24 24s10.745 24 24 24 24-10.745 24-24-10.745-24-24-24z"></path></svg>
+        &nbsp;&nbsp;<a href="/devices">Devices</a>&nbsp;>&nbsp;<a href="/devices/""" + name + """">""" + name + "</a>&nbsp;>&nbsp;" + monitor + """&nbsp;"""
+        return html
+
     def load_bc_events():
         html = """<svg class="bread-font" viewBox="0 0 576 512"><path fill="currentColor" d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"></path></svg>    
         &nbsp;&nbsp;Events&nbsp;"""  
@@ -117,14 +122,39 @@ class WebViews:
         </table></div></td></tr></table>"""
         return html
 
-    def load_basic_page(content):
+    def load_basic_page(title, content):
         html = """<table style="width:100%;"><tr><td>
         <div class="card-div">
-        <div class="card-header">Search Results</div>
+        <div class="card-header">""" + title + """</div>
         <table style="width:100%;">
         <tr>
         <td style="padding-left:10px">
         """ + content + """
         </td></tr></table> 
+        </div></td></tr></table>"""
+        return html
+
+    def load_device_content(system, data):
+        html = """<table style="width:100%;">
+        <tr><td colspan="4" style="padding-bottom:4px;text-align:left">
+        <div class="card-div" style="height:45px">
+        <div class="card-header">System Information</div>
+        <div style="padding-left: 10px">
+        """ + system + """
+        </div></div></td></tr>
+        """ + data + """
+        </table>"""
+        return html
+
+    def load_events_content(summary, events):
+        html = """<table style="width:100%;">
+        <tr><td><div class="card-div">
+        <div class="card-header">Event Summary</div>
+        """ + summary + """ 
+        </div></td></tr>
+        <tr><td style="text-align: left;padding-top:8px">
+        <div class="card-div">
+        <div class="card-header">Open Events</div>
+        """ + events + """    
         </div></td></tr></table>"""
         return html

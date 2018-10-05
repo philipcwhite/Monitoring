@@ -94,10 +94,12 @@ class WebIndex:
         except:
             pass
         try:
-            agent_cpu_query = WebData.web_code_device_data_latest(name, 'perf.processor.percent.used')
-            cpu_perc = agent_cpu_query['value']
-            agent_mem_query = WebData.web_code_device_data_latest(name, 'perf.memory.percent.used')
-            mem_perc = agent_mem_query['value']
+            agent_perf = WebData.web_code_device_data_latest(name)
+            cpu_perc = 0
+            mem_perc = 0
+            for i in agent_perf:
+                if i['monitor'] == 'perf.processor.percent.used' : cpu_perc = float(i['value'])
+                if i['monitor'] == 'perf.memory.percent.used' : mem_perc = float(i['value'])
         except:
             pass
         html = """<table style="width:100%;height:105px"><tr><td style="width:50%;padding-left:25px;vertical-align:top;padding-top:10px">
@@ -111,7 +113,7 @@ class WebIndex:
             cpu_color = "93C54B"
             mem_color = "93C54B"
             if cpu_perc >= 90 : cpu_color = "D9534F"
-            html = html + """<svg width="10" height="10"><rect width="10" height="10" style="fill:#""" + cpu_color + """" /></svg> """ + str(cpu_perc)[:-3] + """% CPU<br />"""
+            html = html + """<svg width="10" height="10"><rect width="10" height="10" style="fill:#""" + cpu_color + """" /></svg> """ + str(cpu_perc)[:-2] + """% CPU<br />"""
             if mem_perc >= 90: mem_color = "D9534F"
             html = html + """<svg width="10" height="10"><rect width="10" height="10" style="fill:#""" + mem_color + """" /></svg> """ + str(mem_perc)[:-3] + """% Memory<br />"""
         else:
@@ -163,6 +165,257 @@ class WebIndex:
         page = int(pstring.replace("page=", ""))
         html += WebViews.load_index_content(WebIndex.index_block_1(), WebIndex.index_block_2(), WebIndex.index_block_3(), WebIndex.index_block_4(page), WebIndex.index_block_pager(page))
         return html
+
+class WebDeviceGraph:
+    def __init__(self, time, dvalue):
+        self.time=time
+        self.dvalue=dvalue
+
+class WebDevice:
+    def device_content_system(name):
+        agentsystem = WebData.web_code_device_system(name)
+        html = """<table style="width:100%"><tr>
+        <td><b>Name:</b> """ + agentsystem['name'] + """</td>
+        <td><b>IP Address:</b> """ + agentsystem['ipaddress'] + """</td>
+        <td><b>Domain:</b> """ + agentsystem['domain'].lower() + """</td>
+        <td><b>Platform:</b> """ + agentsystem['platform'] + " (" + agentsystem['architecture'] + """)</td>
+        <td><b>Build:</b> """ + str(agentsystem['buildnumber']) + """</td>
+        <td><b>Processors:</b> """ + str(agentsystem['processors']) + """</td>
+        <td><b>Memory:</b> """ + str(agentsystem['memory'])[:-3] + """ MB</td>
+        </tr></table>"""
+        return html
+
+    def device_content_data(name):  
+        agentsystem = WebData.web_code_device_system(name)
+        agent_query = WebData.web_code_device_data_latest(name)
+        cpu_perc = 0
+        mem_perc = 0
+        pagefile_perc = 0
+        uptime_days = 0
+        net_br = 0
+        net_bs = 0
+        fs_list = []
+        for i in agent_query:
+            if i['monitor'] == 'perf.processor.percent.used':
+                cpu_perc = round(float(i['value']), 0)
+            if i['monitor'] == 'perf.memory.percent.used':
+                mem_perc = round(float(i['value']), 0)
+            if i['monitor'] == 'perf.pagefile.percent.used':
+                pagefile_perc = round(float(i['value']), 0)
+            if i['monitor'] == 'perf.system.uptime.seconds':
+                uptime_days = round(float(i['value']) / 86400, 0)
+            if i['monitor'] == 'perf.network.bytes.received':
+                net_br = round(float(i['value']), 0)
+            if i['monitor'] == 'perf.network.bytes.sent':
+                net_bs = round(float(i['value']), 0)
+            if 'filesystem' in i['monitor'] and 'active' in i['monitor']:
+                fs_name = i['monitor'].replace('perf.filesystem.','').replace('.percent.active','')
+                fs_list.append(fs_name)
+        
+        html_fs = """<tr><td  style="padding-bottom:4px;text-align:left">
+                  <div class="card-div">
+                  <div class="card-header">Filesystem Monitors</div>
+                  <div style="padding-left: 10px">"""
+        for i in fs_list:
+            try:
+                fs_query_free = WebData.web_code_device_filesystem(name, 'perf.filesystem.' + i + '.percent.free')
+                fs_query_active = WebData.web_code_device_filesystem(name,'perf.filesystem.' + i + '.percent.active')
+                fs_free = str(round(float(fs_query_free['value']),0))
+                fs_active = str(round(float(fs_query_active['value']),0))
+                fs_name = ""
+                if agentsystem['platform'] == 'Windows':
+                    fs_name = "Windows " + i + " drive"
+                elif agentsystem['platform'] == 'Linux':
+                    fs_name = "Linux Filesystem: " + i             
+                html_fs += """<table style="width:100%"><tr>
+                        <td style="width:33%">""" + fs_name + """ drive</td>
+                        <td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.free">Free Space: """ + fs_free + """</a></td>
+                        <td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.active">Filesystem Activity: """ + fs_active + """</a></td>
+                        </tr></table>"""
+            except:
+                pass
+        html_fs += """</div></div></td></tr>""" 
+        html = """<tr><td style="padding-right:4px;text-align:center">
+            <div class="card-div" style="height:70px">
+            <div class="card-header">Processor (% used)</div>
+            <div  class="device-stats"><a class="device-stats" href="/devices/""" + name + """/perf.processor.percent.used">""" + str(cpu_perc) + """</a></div>
+            </div></td>
+            <td style="padding-left:4px;padding-right:4px;text-align:center">
+            <div class="card-div" style="height:70px">
+            <div class="card-header">Memory (% used)</div>
+            <span class="device-stats"><a class="device-stats" href="/devices/""" + name + """/perf.memory.percent.used">"""  + str(mem_perc) + """</a></span>
+            </div></td>
+            <td style="padding-left:4px;padding-right:4px;text-align:center">
+            <div class="card-div" style="height:70px">
+            <div class="card-header">Pagefile (% used)</div>
+            <span class="device-stats"><a class="device-stats" href="/devices/""" + name + """/perf.pagefile.percent.used">"""  + str(pagefile_perc) + """</a></span>
+            </div></td>
+            <td style="padding-left:4px;text-align:center">
+            <div class="card-div" style="height:70px">
+            <div class="card-header">Uptime (days)</div>
+            <span class="device-stats"><a class="device-stats" href="/devices/""" + name + """/perf.system.uptime.seconds">"""  + str(uptime_days) + """</a></span>
+            </div></td></tr></table>
+            <table style="width:100%">  
+            <tr><td style="padding-bottom:4px;text-align:left">
+            <div class="card-div">
+            <div class="card-header">Network Monitors</div>
+            <div style="padding-left: 10px">
+            <table style="width:100%"><tr>
+            <td style="width:33%">Network Total Traffic</td>
+            <td style="width:33%"><a href="/devices/""" + name + """/graph/perf.network.bytes.sent">Bytes Sent: """ + str(net_bs) + """</a></td>
+            <td style="width:33%"><a href="/devices/""" + name + """/graph/perf.network.bytes.received">Bytes Received: """ + str(net_br) + """</a></td>
+            </tr></table></div></div></td></tr>"""
+        html += html_fs
+
+        return html
+
+    def device_content(name):
+        html=""
+        html = WebViews.load_device_content(WebDevice.device_content_system(name), WebDevice.device_content_data(name))
+        return html
+
+    def device_graph(name, monitor):
+        device_data = WebData.web_code_device_graph(name, monitor)
+        data_list = []
+        max_value = 0
+        mid_value = 0
+        graph_time = datetime.datetime.now() - datetime.timedelta(minutes=60)
+        for i in range(61):
+            agent_data = WebDeviceGraph(time=graph_time.strftime('%H:%M'),dvalue=0)
+            data_list.append(agent_data)
+            graph_time = graph_time + datetime.timedelta(minutes=1)
+        for i in device_data:
+            if float(i['value']) > max_value:max_value = float(i['value'])          
+        for i in device_data:
+            device_value = float(i['value'])
+            time_short = datetime.datetime.fromtimestamp(int(i['timestamp'])).strftime('%H:%M')
+            for i in data_list:
+                if i.time == time_short:
+                    if device_value == 0:
+                        i.dvalue = 0
+                    else:
+                        i.dvalue = (device_value / max_value)*100
+        device_polyline = ""
+        device_polyline_data = ""
+        device_time = ""
+        xvalue = 55
+        time_x = 0
+
+        for i in data_list:
+            dvalue = str(round(110 - i.dvalue))
+            device_polyline_data += str(xvalue) + "," + dvalue + " "
+            time_x += 1
+            if time_x == 1:
+                device_time += """<text x='""" + str(xvalue) + """' y="130" fill="#8E8C84" text-anchor="middle">""" + str(i.time) + """</text>"""
+            if time_x == 5:
+                time_x = 0            
+            xvalue += 14 
+        device_polyline = '<polyline points="' + device_polyline_data + '" style="fill:none;stroke:#29ABE0;stroke-width:1" />'
+                
+        html =  """<svg xmlns="http://www.w3.org/2000/svg" style="color:#8E8C84;" height=150 width=990>
+	    <rect x=52 y=10 width=855 height=1 fill=#ddd />
+        <rect x=55 y=35 width=855 height=1 fill=#ddd />
+        <rect x=52 y=60 width=855 height=1 fill=#ddd />
+        <rect x=55 y=85 width=855 height=1 fill=#ddd />
+        <rect x=52 y=110 width=855 height=1 fill=#ddd />
+        <rect x=55 y=10 width=1 height=100 fill=#ddd />
+        <text x="47" y="15" fill="#8E8C84" text-anchor="end">""" + str(int(max_value)) + """</text>
+        <text x="47" y="65" fill="#8E8C84" text-anchor="end">""" + str(int(max_value / 2)) + """</text>
+        <text x="47" y="115" fill="#8E8C84" text-anchor="end">0</text>
+        """ + device_polyline + device_time + """
+		</svg>""" 
+        return html
+
+    def device_graph_content(name, monitor):
+        html = WebViews.load_basic_page("System Performance", WebDevice.device_graph(name, monitor))
+        return html
+
+class WebDevices:
+    def device_index():
+        agentsystem = WebData.web_code_device_all()
+        uptime_check = 600
+        currenttime = time.time()
+        html = ""
+        icon = ""
+        for i in agentsystem:
+            if (i['timestamp'] + uptime_check) >= currenttime:
+                icon = """<svg width="10" height="10"><rect width="10" height="10" style="fill:#93C54B" /></svg>"""
+            else:
+                icon =  """<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg>"""
+            html = html + """<tr><td style="padding-left:10px">""" + icon + "</td><td><a href='/devices/" + str(i['name']) + "'>" + str(i['name']) + "</td><td>" + str(i['domain']) + "</td><td>" + str(i['ipaddress']) + "</td><td>" + str(i['platform']) + "</td></tr>"
+        return html
+
+class WebEvents:
+    def event_summary():
+        total = 0
+        info = 0
+        warn = 0
+        majr = 0
+        crit = 0
+        agentevents = WebData.web_code_event_totals()
+        for i in agentevents:
+            sev = int(i['severity'])
+            sev_tot = int(i['total'])
+            if sev == 1:
+                crit = sev_tot
+            elif sev == 2:
+                majr = sev_tot
+            elif sev == 3:
+                warn = sev_tot
+            elif sev == 4:
+                info = sev_tot
+        total = info + warn + majr + crit
+        html = """<table style="width:100%;text-align:center"><tr>
+        <td style="text-align:left; padding-left:10px">Open Events</td>
+        <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#CCCCCC" /></svg>&nbsp; """ + str(total) + """&nbsp;  Total</td>
+        <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#29ABE0" /></svg>&nbsp;  """ + str(info) + """&nbsp;  Information</td>
+        <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#FFC107" /></svg>&nbsp;  """ + str(warn) + """&nbsp;  Warning</td>
+        <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#F47C3C" /></svg>&nbsp;  """ + str(majr) + """&nbsp;  Major</td>
+        <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#D9534F" /></svg>&nbsp;  """ + str(crit) + """&nbsp;  Critical</td>
+        </tr></table>"""
+        return html
+
+    def event_list():
+        agentevents = WebData.web_code_open_events()
+        html = """<table style="width:100%">"""
+        color = "#CCCCCC"
+
+        for i in agentevents:
+            #dt = datetime.datetime.fromtimestamp(i['timestamp'])
+            date = str(datetime.datetime.fromtimestamp(int(i['timestamp'])))
+            sev_text = ""
+            if i['severity'] == 4:
+                color = "#29ABE0"
+                sev_text = "Information"
+            elif i['severity'] == 3:
+                color = "#FFC107"
+                sev_text = "Warning"
+            elif i['severity'] == 2:
+                color = "#F47C3C"
+                sev_text = "Major"
+            elif i['severity'] == 1:
+                color = "#D9534F"
+                sev_text = "Critical"
+            html = html + """<tr><td style="text-align:left;padding-left:10px">""" + date + """</td>
+            <td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" style="fill:""" + color + """" /></svg> """ + sev_text + """</td>
+            <td><a href="/device/""" + i['name'] + """">""" + i['name'] + """</a></td>
+            <td>""" + i['message'] + """</td>
+            <td style="text-align:right;padding-right:10px"><form><input type="button" onclick="window.location.href='/event_close/""" + str(i['id']) + """'" class="action-button" value="Close Event" /></form></td>
+            </tr>"""
+
+            html = html + "</table"
+
+        return html
+
+    def events_content():
+        html = WebViews.load_events_content(WebEvents.event_summary(), WebEvents.event_list())
+        return html
+
+    def event_close(event_id):
+        agentevent = AgentEvent.objects.get(id = event_id)
+        agentevent.status = False
+        agentevent.save()
+
 
 class WebSearch:
     def search_devices(device):

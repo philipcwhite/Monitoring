@@ -34,7 +34,7 @@ body{margin:0px;padding:0px;height:100%;width:100%;font:12px "Segoe UI", "Helvet
 .nav-button5{border:none;display:block;padding:16px 16px;color:inherit;cursor:pointer;height:16px;transition:0.5s;}
 .nav-button5:hover{color:#D9534F!important;background-color:#EEE!important;transition:0.5s;}
 
-.search-div{float:right;width:220px;padding-top:12px}
+.search-div{float:right;width:220px;padding-top:8px}
 .search-font{color:#8E8C84;height:16px;width:16px;line-height:16px;vertical-align: text-top}
 .search-button{border-radius:3px;color:#FFF;font-size:11px;background:#93C54B;padding:5px 5px;text-decoration:none;font-weight:bold;border-style:none;transition: 0.5s;}
 .search-button:hover{background-color: #80b139;border-color: #79A736;transition: 0.5s;}

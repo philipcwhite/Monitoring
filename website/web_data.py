@@ -69,13 +69,46 @@ class WebData:
         finally:
             connection.close()
 
-    def web_code_device_data_latest(name, monitor):
+    def web_code_device_data_latest(name):
         connection = WebData.web_con()
         try:
             with connection.cursor() as cursor:
-                sql = r"SELECT id, timestamp, name, monitor, value FROM agentdata WHERE name='" + name +"' AND monitor='" + monitor + "' ORDER BY ID DESC LIMIT 1"
+                sql = r"SELECT id, timestamp, name, monitor, value from agentdata where name='" + name + "' and timestamp = (SELECT timestamp from agentdata where name='" + name + "' order by id desc LIMIT 1)"
+                cursor.execute(sql)
+                result = cursor.fetchall()
+                return result
+        finally:
+            connection.close()
+
+    def web_code_device_filesystem(name, monitor):
+        connection = WebData.web_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = r"SELECT id, timestamp, name, monitor, value from agentdata where name='" + name + "' and monitor='" + monitor + "' order by id desc LIMIT 1"
                 cursor.execute(sql)
                 result = cursor.fetchone()
+                return result
+        finally:
+            connection.close()
+
+    def web_code_device_graph(name, monitor):
+        connection = WebData.web_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = r"SELECT id, timestamp, name, monitor, value from agentdata where name='" + name + "' and monitor='" + monitor + "' order by id desc LIMIT 61"
+                cursor.execute(sql)
+                result = cursor.fetchall()
+                return result
+        finally:
+            connection.close()
+
+    def web_code_device_all():
+        connection = WebData.web_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = r"SELECT id, timestamp, name, ipaddress, platform, buildnumber, architecture, domain, processors, memory FROM agentsystem ORDER BY name"
+                cursor.execute(sql)
+                result = cursor.fetchall()
                 return result
         finally:
             connection.close()
@@ -102,4 +135,23 @@ class WebData:
         finally:
             connection.close()
 
-    
+    def web_code_open_events():
+        connection = WebData.web_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = r"SELECT id, timestamp, name, monitor, message, severity from agentevent where status=1 order by id desc"
+                cursor.execute(sql)
+                result = cursor.fetchall()
+                return result
+        finally:
+            connection.close()
+
+    def web_code_close_event(id):
+        connection = WebData.web_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = r"UPDATE agentevent SET status=0 where id=" + id
+                cursor.execute(sql)
+                connection.commit()
+        finally:
+            connection.close()
