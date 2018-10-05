@@ -1,0 +1,42 @@
+Install Notes
+
+Windows application installation directories: 
+C:\Progra~1\monitoring\
+
+C:\Progra~1\monitoring\collect
+
+C:\Progra~1\monitoring\event
+C:\Progra~1\monitoring\website
+
+MySQL/MariaDB SQL install script included.
+
+If using Python (raw):  
+
+I am currently writing the app on Python 3.6.5.  You must also install pymysql and cherrypy.
+pip install pymysql
+pip install cherrypy
+
+sc create monitoringcollect displayname="Monitoring Collect Engine" binPath="python.exe C:\Progra~1\monitoring\collect\collect_service.py" type=own error=ignore start=auto
+
+
+sc create monitoringevent displayname="Monitoring Event Engine" binPath="python.exe C:\Progra~1\monitoring\event\event_service.py" type=own error=ignore start=auto
+
+
+sc create monitoringweb displayname="Monitoring Website" binPath="python.exe C:\Progra~1\monitoring\website\web_service.py" type=own error=ignore start=auto
+ 
+
+For PyInstaller: 
+
+Compile: pyinstaller -F --hidden-import=win32timezone collect_service.py
+
+Install: C:\Progra~1\monitoring\collect\collect_service.exe install
+
+Compile: pyinstaller -F --hidden-import=win32timezone event_service.py
+
+Install: C:\Progra~1\monitoring\event\event_service.exe install
+
+
+Compile: pyinstaller -F --hidden-import=win32timezone web_service.py
+
+Install: C:\Progra~1\monitoring\web\web_service.exe install
+

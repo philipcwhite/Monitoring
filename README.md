@@ -15,7 +15,13 @@ Device View
 
 ## Updates
 
-10/01/2018 - One of the main points of building this app was to make it user friendly.  I think I sadly failed when I incorporated Django.  It's a wonderful framework but I'm not sure I can make a simple deployable package using it.  I know how to make it work but I can see someone who is not a Python coder banging their head on the wall trying to get it to work.  For this reason I'm backpeddling.  I have been working with CherryPy all day and I may go this route if I can get authentication and authorization working.  It is a huge and painful rewrite but it make the app so much easier for end users (maybe a little harder for me).  
+10/4/2018 - I started a massive rewrite of the webserver using CherryPy.  A lot of the existing functionality is currently missing.  I am working to add this back as soon as possible.  I was going to hold off on updating the code repository but this is the direction I am moving in so I am keeping the project up to date.  I've also cleaned up a lot of the template code and fixed a lot of bugs in the website and collector.  As this gets closer to an official release I will post more detailed documentation on how things work.  I am planning on using InnoSetup for windows to build an installable package for both the agent and server.  I am not a Linux expert so and Linux development will come in a later release.
+
+So what has been done/ported?  The main framework for the site has been moved over.  Pages are there but many are blank.  The event engine and collector are both working.  On the website, I have built a simple cookie/session authentication system.  There is room for improvement here but it is working.  The website runs as a Windows service.  Currently off the default 8080 port.  SSL will be configured later.  No need for Apache, IIS, etc. :)
+
+Time for sleep.  So much more coding left to do...
+
+10/01/2018 - One of the main points of building this app was to make it user friendly.  I think I sadly failed when I incorporated Django.  It's a wonderful framework but I'm not sure I can make a simple deployable package using it.  I know how to make it work but I can see someone who is not a Python coder banging their head on the wall trying to get it to work.  For this reason I'm backpeddling.  I have been working with CherryPy all day and I may go this route if I can get authentication and authorization working.  It is a huge and painful rewrite but it makes the app so much easier for end users (maybe a little harder for me).  
 
 10/01/2018 - Linked to notifications page.  Minor changes.
 
