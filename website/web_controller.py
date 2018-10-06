@@ -24,21 +24,21 @@ class WebController:
         return html
 
     @cherrypy.expose
-    def events(self):
+    def events(self, status=1):
         user=WebAuth.check_auth()
-        html = WebViews.load_base(user, WebViews.load_bc_events(), WebViews.load_refresh("/events_content/"))
+        html = WebViews.load_base(user, WebViews.load_bc_events(), WebViews.load_refresh("/events_content/" + str(status)))
         return html
 
     @cherrypy.expose
-    def events_content(self):
+    def events_content(self, status=1):
         user = WebAuth.check_auth()
-        html = WebEvents.events_content()
+        html = WebEvents.events_content(status)
         return html
 
     @cherrypy.expose
-    def event_close(self, id):
+    def event_change(self, id, status):
         user = WebAuth.check_auth()
-        WebData.web_code_close_event(id)
+        WebData.web_code_change_event_status(id, status)
         raise cherrypy.HTTPRedirect("/events")
 
 

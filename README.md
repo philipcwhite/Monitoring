@@ -1,9 +1,16 @@
-# Monitoring2 ver. 0.01a
+# Monitoring ver. 0.01b
 Monitoring Server and Agents written in Python
 
 ## About
+The goal of this project is to make a tool that provides good functionality and is relatively easy to deploy and use.  I come from a Windows background so the initial focus of the tool is for Windows based monitoring.  Also, I know how bleak the options are for Windows based monitoring tools so it fills a nice void.  That being said, I do plan to add Linux support as well.
 
-This repository currently contains the code for the monitoring server, collector, and Windows agent.  It is a early beta at this point however some of the functionality is working.  The agent and collector currently work.  The agent collects WMI data and sends it via SSL to the collector which translates the data to the MySQL database.  The webserver is partially working.  The home page displays some agent data and graphs and refreshes content via AJAX.    
+This repository contains the code for the monitoring web server, collect and event engines, and a Windows agent.  It is a early beta at this point however most of the functionality is working.  
+
+### The Monitoring Server
+The monitoring server is composed of three services: the website, the collect engine, and the event engine.  These services all connect to a MySQL (MariaDB) backend.  The website coded in pure Python and runs on CherryPy as a Windows service.  It's main purpose is for viewing the event data although it provides user, notification policy, and event administration.  The collect engine mainly acts as a gateway to translate TCP/SSL data from agents into SQL records.  It does some event management as well when it is processing incoming events.  The event engine takes care of agent down events and processes notifications.  Notifications are by default logged and can be sent to a SMTP server.  
+
+### The Windows Agent
+The Windows agent collects data via WMIC and processes events locally.  It stores its data in a SQLite database which allows the agent to maintain state even after reboots and system crashes.  Data is transferred via TCP (or TCP/SSL) to the Collect Engine on the Monitoring Server.  All data transmissions require a response from the Collect Server to assure data has been transferred.  If the Agent does not receive a response it will keep trying to send the data until it succeeds.  Data is transferred via TCP over port 8888 (SSL by default).  Agent configuration and thresholds are maintained locally on the agent.  The agent receives no configuration or commands from above.  This is designed by default to allow agents to function in a secured environment.
 
 ## Screenshots
 
@@ -14,6 +21,8 @@ Home View
 Device View
 
 ## Updates
+
+10/5/2018 - Added the ability to view closed events and re-open them if needed.  No functionality is currently role locked.  This will be added in a future update.  Updated the About section.
 
 10/5/2018 - Devices, graphing, and the event view are back.  I hope to have the first Windows beta release out in a week or so.  
 

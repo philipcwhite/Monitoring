@@ -3,15 +3,6 @@ import hashlib
 from web_data import WebData
 
 class WebAuth:
-    """def check_auth():
-        try:
-            user = cherrypy.request.cookie['authenticated']
-            if not user is None:cherrypy.session['authenticated']=user
-        except:
-            pass
-        auth = cherrypy.session.get('authenticated', None)
-        if auth == None : raise cherrypy.HTTPRedirect("/logon")
-        return auth"""
     
     def check_auth():
         auth = cherrypy.session.get('authenticated', None)

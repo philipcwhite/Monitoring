@@ -14,7 +14,7 @@ def agent_select_id():
     connection = mon_con()
     try:
         with connection.cursor() as cursor:
-            sql = "SELECT id from agentevent ORDER BY id DESC LIMIT 1" 
+            sql = "SELECT id from agentevents ORDER BY id DESC LIMIT 1" 
             cursor.execute(sql)
             result = cursor.fetchone()
             result = str(result["id"])
@@ -26,7 +26,7 @@ def agent_events_processed(id):
     connection = mon_con()
     try:
         with connection.cursor() as cursor:
-            sql = "UPDATE agentevent SET processed=1 WHERE id<=" + str(id)
+            sql = "UPDATE agentevents SET processed=1 WHERE id<=" + str(id)
             cursor.execute(sql)
             connection.commit()
     finally:
@@ -37,7 +37,7 @@ def agent_filter_select(id):
     try:
         with connection.cursor() as cursor:
             sql = """select t1.notify_email, t1.notify_name, t2.id, t2.timestamp, t2.name, t2.monitor, t2.message, t2.severity, t2.status FROM notifyrule as t1 
-                  INNER JOIN agentevent as t2 on 
+                  INNER JOIN agentevents as t2 on 
                   t2.name LIKE t1.agent_name AND t2.monitor LIKE t1.agent_monitor 
                   AND t2.status LIKE t1.agent_status AND t2.severity LIKE t1.agent_severity AND t2.processed=0 AND T2.id<=""" + str(id) + " AND t1.notify_enabled=1"
             cursor.execute(sql)
@@ -62,10 +62,10 @@ def agent_avail_event_open(timestamp, name, message, severity):
     connection = mon_con()
     try:
         with connection.cursor() as cursor:
-            sql = r"""INSERT INTO agentevent 
+            sql = r"""INSERT INTO agentevents 
             (timestamp, name, monitor, message, status, severity, processed) 
             SELECT """ + str(timestamp) + """, '""" + name + """', 'perf.system.availability.seconds', '""" + message + """', 1, """ + str(severity) + """, 0 FROM DUAL
-            WHERE NOT EXISTS (SELECT name FROM agentevent WHERE name='""" + name + """' AND monitor='perf.system.availability.seconds' AND status=1)"""
+            WHERE NOT EXISTS (SELECT name FROM agentevents WHERE name='""" + name + """' AND monitor='perf.system.availability.seconds' AND status=1)"""
             cursor.execute(sql)
             connection.commit()
     finally:
@@ -75,7 +75,7 @@ def agent_avail_select_event_open(timestamp):
     connection = mon_con()
     try:
         with connection.cursor() as cursor:
-            sql = r"""SELECT DISTINCT t1.name FROM agentevent as t1 
+            sql = r"""SELECT DISTINCT t1.name FROM agentevents as t1 
             INNER JOIN agentdata as t2 on t1.name = t2.name
             WHERE t1.monitor='perf.system.availability.seconds' AND t1.status=1 AND t2.timestamp >=""" + str(timestamp)
             cursor.execute(sql)
@@ -84,7 +84,7 @@ def agent_avail_select_event_open(timestamp):
                 for i in result:
                     name = i['name']
                     print(name)
-                    sql = r"UPDATE agentevent SET status=0 WHERE name='" + name + "'"
+                    sql = r"UPDATE agentevents SET status=0 WHERE name='" + name + "'"
                     cursor.execute(sql)
                     connection.commit()
     finally:

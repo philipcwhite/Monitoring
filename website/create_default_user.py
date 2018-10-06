@@ -1,8 +1,6 @@
 import pymysql.cursors
 import hashlib
 
-#This is a temporary script to create a default user.  
-
 def mon_con():
     connection = pymysql.connect(host = 'localhost',
                                  user = 'test',
@@ -33,6 +31,6 @@ def create_user(username, password):
 
 
 
-create_user("admin", "test")
+create_user("philwhite", "test")
 
 

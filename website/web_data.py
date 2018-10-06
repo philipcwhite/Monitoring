@@ -36,11 +36,11 @@ class WebData:
         finally:
             connection.close()
 
-    def web_code_event_totals():
+    def web_code_event_totals(status):
         connection = WebData.web_con()
         try:
             with connection.cursor() as cursor:
-                sql = r"SELECT severity, count(severity) as total from agentevent WHERE status=1 group by severity"
+                sql = r"SELECT severity, count(severity) as total from agentevents WHERE status=" + str(status) + r" group by severity"
                 cursor.execute(sql)
                 result = cursor.fetchall()
                 return result
@@ -62,7 +62,7 @@ class WebData:
         connection = WebData.web_con()
         try:
             with connection.cursor() as cursor:
-                sql = r"SELECT name FROM agentsystem WHERE name LIKE '%" + name +"%'"
+                sql = r"SELECT name FROM agentsystem WHERE name LIKE '%" + name + r"%'"
                 cursor.execute(sql)
                 result = cursor.fetchall()
                 return result
@@ -73,7 +73,7 @@ class WebData:
         connection = WebData.web_con()
         try:
             with connection.cursor() as cursor:
-                sql = r"SELECT id, timestamp, name, monitor, value from agentdata where name='" + name + "' and timestamp = (SELECT timestamp from agentdata where name='" + name + "' order by id desc LIMIT 1)"
+                sql = r"SELECT id, timestamp, name, monitor, value from agentdata where name='" + name + r"' and timestamp = (SELECT timestamp from agentdata where name='" + name + "' order by id desc LIMIT 1)"
                 cursor.execute(sql)
                 result = cursor.fetchall()
                 return result
@@ -84,7 +84,7 @@ class WebData:
         connection = WebData.web_con()
         try:
             with connection.cursor() as cursor:
-                sql = r"SELECT id, timestamp, name, monitor, value from agentdata where name='" + name + "' and monitor='" + monitor + "' order by id desc LIMIT 1"
+                sql = r"SELECT id, timestamp, name, monitor, value from agentdata where name='" + name + r"' and monitor='" + monitor + "' order by id desc LIMIT 1"
                 cursor.execute(sql)
                 result = cursor.fetchone()
                 return result
@@ -95,7 +95,7 @@ class WebData:
         connection = WebData.web_con()
         try:
             with connection.cursor() as cursor:
-                sql = r"SELECT id, timestamp, name, monitor, value from agentdata where name='" + name + "' and monitor='" + monitor + "' order by id desc LIMIT 61"
+                sql = r"SELECT id, timestamp, name, monitor, value from agentdata where name='" + name + r"' and monitor='" + monitor + "' order by id desc LIMIT 61"
                 cursor.execute(sql)
                 result = cursor.fetchall()
                 return result
@@ -135,22 +135,22 @@ class WebData:
         finally:
             connection.close()
 
-    def web_code_open_events():
+    def web_code_events(status):
         connection = WebData.web_con()
         try:
             with connection.cursor() as cursor:
-                sql = r"SELECT id, timestamp, name, monitor, message, severity from agentevent where status=1 order by id desc"
+                sql = r"SELECT id, timestamp, name, monitor, message, severity from agentevents where status=" + str(status) + r" order by id desc"
                 cursor.execute(sql)
                 result = cursor.fetchall()
                 return result
         finally:
             connection.close()
 
-    def web_code_close_event(id):
+    def web_code_change_event_status(id, status):
         connection = WebData.web_con()
         try:
             with connection.cursor() as cursor:
-                sql = r"UPDATE agentevent SET status=0 where id=" + id
+                sql = r"UPDATE agentevents SET status=" + str(status) + r" where id=" + str(id)
                 cursor.execute(sql)
                 connection.commit()
         finally:

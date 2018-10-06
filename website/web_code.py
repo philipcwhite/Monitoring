@@ -36,7 +36,7 @@ class WebIndex:
         warn = 0
         majr = 0
         crit = 0
-        agentevents = WebData.web_code_event_totals()
+        agentevents = WebData.web_code_event_totals(1)
         for i in agentevents:
             sev = int(i['severity'])
             sev_tot = int(i['total'])
@@ -346,13 +346,13 @@ class WebDevices:
         return html
 
 class WebEvents:
-    def event_summary():
+    def event_summary(status):
         total = 0
         info = 0
         warn = 0
         majr = 0
         crit = 0
-        agentevents = WebData.web_code_event_totals()
+        agentevents = WebData.web_code_event_totals(status)
         for i in agentevents:
             sev = int(i['severity'])
             sev_tot = int(i['total'])
@@ -365,6 +365,13 @@ class WebEvents:
             elif sev == 4:
                 info = sev_tot
         total = info + warn + majr + crit
+        change_status = abs(int(status) - 1)
+        change_status_text = ""
+        if change_status == 0:
+            change_status_text="Closed Events"
+        else:
+            change_status_text = "Opened Events"
+
         html = """<table style="width:100%;text-align:center"><tr>
         <td style="text-align:left; padding-left:10px">Open Events</td>
         <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#CCCCCC" /></svg>&nbsp; """ + str(total) + """&nbsp;  Total</td>
@@ -372,49 +379,56 @@ class WebEvents:
         <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#FFC107" /></svg>&nbsp;  """ + str(warn) + """&nbsp;  Warning</td>
         <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#F47C3C" /></svg>&nbsp;  """ + str(majr) + """&nbsp;  Major</td>
         <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#D9534F" /></svg>&nbsp;  """ + str(crit) + """&nbsp;  Critical</td>
+        <td style="text-align:right;padding-right:12px"><form><input type="button" onclick="window.location.href='/events/?status=""" + str(change_status) + """'" class="action-button" value='""" + change_status_text + """' /></form></td>
         </tr></table>"""
         return html
 
-    def event_list():
-        agentevents = WebData.web_code_open_events()
+    def event_list(status):
+        agentevents = WebData.web_code_events(status)
         html = """<table style="width:100%">"""
         color = "#CCCCCC"
+        change_status = abs(int(status) - 1)
+        change_status_text = ""
+        if change_status == 0:
+            change_status_text="Close Event"
+        else:
+            change_status_text = "Open Event"
 
         for i in agentevents:
-            #dt = datetime.datetime.fromtimestamp(i['timestamp'])
             date = str(datetime.datetime.fromtimestamp(int(i['timestamp'])))
             sev_text = ""
-            if i['severity'] == 4:
+            if int(i['severity']) == 4:
                 color = "#29ABE0"
                 sev_text = "Information"
-            elif i['severity'] == 3:
+            elif int(i['severity']) == 3:
                 color = "#FFC107"
                 sev_text = "Warning"
-            elif i['severity'] == 2:
+            elif int(i['severity']) == 2:
                 color = "#F47C3C"
                 sev_text = "Major"
-            elif i['severity'] == 1:
+            elif int(i['severity']) == 1:
                 color = "#D9534F"
                 sev_text = "Critical"
+            
             html = html + """<tr><td style="text-align:left;padding-left:10px">""" + date + """</td>
             <td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" style="fill:""" + color + """" /></svg> """ + sev_text + """</td>
             <td><a href="/device/""" + i['name'] + """">""" + i['name'] + """</a></td>
             <td>""" + i['message'] + """</td>
-            <td style="text-align:right;padding-right:10px"><form><input type="button" onclick="window.location.href='/event_close/""" + str(i['id']) + """'" class="action-button" value="Close Event" /></form></td>
+            <td style="text-align:right;padding-right:12px"><form><input type="button" onclick="window.location.href='/event_change/""" + str(i['id']) + """/""" + str(change_status) + """'" class="action-button" value='""" + change_status_text +"""'  /></form></td>
             </tr>"""
 
-            html = html + "</table"
+        html = html + "</table>"
 
         return html
 
-    def events_content():
-        html = WebViews.load_events_content(WebEvents.event_summary(), WebEvents.event_list())
+    def events_content(status):
+        html = WebViews.load_events_content(WebEvents.event_summary(status), WebEvents.event_list(status))
         return html
 
-    def event_close(event_id):
+    """def event_close(event_id):
         agentevent = AgentEvent.objects.get(id = event_id)
         agentevent.status = False
-        agentevent.save()
+        agentevent.save()"""
 
 
 class WebSearch:

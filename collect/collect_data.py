@@ -111,7 +111,7 @@ def agent_events_open(timestamp, name, monitor, message, status, severity):
     connection = mon_con()
     try:
         with connection.cursor() as cursor:
-            sql = "INSERT INTO agentevent (timestamp, name, monitor, message, status, severity, processed) VALUES(%s,%s,%s,%s,%s,%s,%s)"
+            sql = "INSERT INTO agentevents (timestamp, name, monitor, message, status, severity, processed) VALUES(%s,%s,%s,%s,%s,%s,%s)"
             cursor.execute(sql, (timestamp, name, monitor, message, status, severity, 0))
             connection.commit()
     finally:
@@ -121,7 +121,7 @@ def agent_events_close(name, monitor, severity):
     connection = mon_con()
     try:
         with connection.cursor() as cursor:
-            sql = "UPDATE agentevent SET status=0 AND processed=0 WHERE name=%s AND monitor=%s AND severity=%s AND status=1"
+            sql = "UPDATE agentevents SET status=0 AND processed=0 WHERE name=%s AND monitor=%s AND severity=%s AND status=1"
             cursor.execute(sql, (name, monitor, severity))
             connection.commit()
     finally:
