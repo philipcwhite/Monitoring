@@ -365,15 +365,17 @@ class WebEvents:
             elif sev == 4:
                 info = sev_tot
         total = info + warn + majr + crit
+        status_text = ""
         change_status = abs(int(status) - 1)
         change_status_text = ""
         if change_status == 0:
-            change_status_text="Closed Events"
+            status_text = "Open Events"
+            change_status_text = "Closed Events"
         else:
-            change_status_text = "Opened Events"
-
+            status_text = "Closed Events"
+            change_status_text = "Open Events"
         html = """<table style="width:100%;text-align:center"><tr>
-        <td style="text-align:left; padding-left:10px">Open Events</td>
+        <td style="text-align:left; padding-left:10px">""" + status_text + """</td>
         <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#CCCCCC" /></svg>&nbsp; """ + str(total) + """&nbsp;  Total</td>
         <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#29ABE0" /></svg>&nbsp;  """ + str(info) + """&nbsp;  Information</td>
         <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#FFC107" /></svg>&nbsp;  """ + str(warn) + """&nbsp;  Warning</td>

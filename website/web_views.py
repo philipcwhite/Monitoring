@@ -154,7 +154,7 @@ class WebViews:
         </div></td></tr>
         <tr><td style="text-align: left;padding-top:8px">
         <div class="card-div">
-        <div class="card-header">Open Events</div>
+        <div class="card-header">Events</div>
         """ + events + """    
         </div></td></tr></table>"""
         return html
