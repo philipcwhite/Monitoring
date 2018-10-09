@@ -78,6 +78,38 @@ class WebController:
         return html
 
     @cherrypy.expose
+    def notify(self):
+        user=WebAuth.check_auth()
+        html=""
+        return html
+    
+    @cherrypy.expose
+    def notify_add(self, notify_name = None, notify_email = None, agent_name = None, agent_monitor = None, agent_status = None, agent_severity = None, notify_enabled = None):
+        user=WebAuth.check_auth()
+        html=""
+        if notify_name is None and notify_email is None and agent_name is None and agent_monitor is None and agent_status is None and agent_severity is None and notify_enabled is None:
+            return html
+        else:
+            # process post
+            return html
+
+    @cherrypy.expose
+    def notify_edit(self, id, notify_name = None, notify_email = None, agent_name = None, agent_monitor = None, agent_status = None, agent_severity = None, notify_enabled = None):
+        user=WebAuth.check_auth()
+        html=""
+        if notify_name is None and notify_email is None and agent_name is None and agent_monitor is None and agent_status is None and agent_severity is None and notify_enabled is None:
+            return html
+        else:
+            # process post
+            return html
+ 
+    @cherrypy.expose
+    def notify_delete(self, id):
+        user=WebAuth.check_auth()
+        html=""
+        return html 
+    
+    @cherrypy.expose
     def search(self, device=None):
         user=WebAuth.check_auth()
         html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Search Results", WebSearch.search_devices(device)))
