@@ -3,7 +3,7 @@ import web_views
 from web_auth import WebAuth
 from web_views import WebViews
 from web_data import WebData
-from web_code import WebIndex, WebDevice, WebDevices, WebEvents, WebSearch
+from web_code import WebIndex, WebDevice, WebDevices, WebEvents, WebNotify, WebSettings, WebSearch
 
 user=""
 
@@ -74,13 +74,13 @@ class WebController:
     @cherrypy.expose
     def settings(self):
         user=WebAuth.check_auth()
-        html = WebViews.load_base(user, WebViews.load_bc_settings(), "settings")
+        html = WebViews.load_base(user, WebViews.load_bc_settings(),  WebViews.load_basic_page("Settings", WebSettings.settings()))
         return html
 
     @cherrypy.expose
     def notify(self):
         user=WebAuth.check_auth()
-        html=""
+        html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Notification Rules", WebNotify.notify_rules()))
         return html
     
     @cherrypy.expose

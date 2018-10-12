@@ -22,6 +22,8 @@ Device View
 
 ## Updates
 
+10/11/2018 - Updated Notification Rules web pages.  SQL code, some app code, and some templates are done.  I still need to make the add/edit pages.
+
 10/9/2018 - Added some code for managing notifications.  I still need to create templates and add some code for processing.  I've been experimenting with writing my own python webserver as well.  This probably won't be used for this project or revision though.    
 
 10/5/2018 - Added the ability to view closed events and re-open them if needed.  No functionality is currently role locked.  This will be added in a future update.  Updated the About section.

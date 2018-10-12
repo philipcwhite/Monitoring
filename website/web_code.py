@@ -381,7 +381,7 @@ class WebEvents:
         <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#FFC107" /></svg>&nbsp;  """ + str(warn) + """&nbsp;  Warning</td>
         <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#F47C3C" /></svg>&nbsp;  """ + str(majr) + """&nbsp;  Major</td>
         <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#D9534F" /></svg>&nbsp;  """ + str(crit) + """&nbsp;  Critical</td>
-        <td style="text-align:right;padding-right:12px"><form><input type="button" onclick="window.location.href='/events/?status=""" + str(change_status) + """'" class="action-button" value='""" + change_status_text + """' /></form></td>
+        <td style="text-align:right;padding-right:12px"><input type="button" onclick="window.location.href='/events/?status=""" + str(change_status) + """'" class="action-button" value='""" + change_status_text + """' /></td>
         </tr></table>"""
         return html
 
@@ -416,7 +416,7 @@ class WebEvents:
             <td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" style="fill:""" + color + """" /></svg> """ + sev_text + """</td>
             <td><a href="/device/""" + i['name'] + """">""" + i['name'] + """</a></td>
             <td>""" + i['message'] + """</td>
-            <td style="text-align:right;padding-right:12px"><form><input type="button" onclick="window.location.href='/event_change/""" + str(i['id']) + """/""" + str(change_status) + """'" class="action-button" value='""" + change_status_text +"""'  /></form></td>
+            <td style="text-align:right;padding-right:12px"><input type="button" onclick="window.location.href='/event_change/""" + str(i['id']) + """/""" + str(change_status) + """'" class="action-button" value='""" + change_status_text +"""'  /></td>
             </tr>"""
 
         html = html + "</table>"
@@ -427,10 +427,10 @@ class WebEvents:
         html = WebViews.load_events_content(WebEvents.event_summary(status), WebEvents.event_list(status))
         return html
 
-    """def event_close(event_id):
-        agentevent = AgentEvent.objects.get(id = event_id)
-        agentevent.status = False
-        agentevent.save()"""
+class WebSettings:
+    def settings():
+        html = """<a href="/notify">Notification Rules</a><br />"""
+        return html
 
 
 class WebSearch:
@@ -440,3 +440,14 @@ class WebSearch:
         for i in results:
             html += """<a href="/devices/""""" + str(i["name"]) + """/">""" + str(i["name"]) + "</a></br />"
         return html
+
+class WebNotify:
+    def notify_rules():
+        notifyrules = WebData.web_code_select_notifyrules()
+        html = ""
+        for i in notifyrules:
+            html += """<a href="/notify_edit/""" + str(i["id"]) + """">""" + str(i["notify_name"]) + "</a><br />"
+        html += """<input type="button" onclick="window.location.href='/notify_add/'" class="action-button" value="Add Notification Rule" />"""
+        return html
+
+        
