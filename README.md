@@ -22,6 +22,8 @@ Device View
 
 ## Updates
 
+10/17/2018 - Finished coding the Notification Rules page.  Also replaced the default CherryPy favicon with a generic M.  I'll probably update this to something custom later on.  I have a little work left to do with user and session management that I'll be tackling next.
+
 10/11/2018 - Updated Notification Rules web pages.  SQL code, some app code, and some templates are done.  I still need to make the add/edit pages.
 
 10/9/2018 - Added some code for managing notifications.  I still need to create templates and add some code for processing.  I've been experimenting with writing my own python webserver as well.  This probably won't be used for this project or revision though.    

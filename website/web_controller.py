@@ -88,26 +88,32 @@ class WebController:
         user=WebAuth.check_auth()
         html=""
         if notify_name is None and notify_email is None and agent_name is None and agent_monitor is None and agent_status is None and agent_severity is None and notify_enabled is None:
+            html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Add Notification Rule", WebNotify.notify_add()))
             return html
         else:
             # process post
-            return html
+            #html = notify_name + " " + notify_email + " " + agent_name + " " + agent_monitor + " " + str(agent_status) + " " + str(agent_severity) + " " + str(notify_enabled)
+            #return html
+            WebData.web_code_insert_notifyrules(notify_name, notify_email, agent_name, agent_monitor, agent_status, agent_severity, notify_enabled)
+            raise cherrypy.HTTPRedirect("/notify")
 
     @cherrypy.expose
     def notify_edit(self, id, notify_name = None, notify_email = None, agent_name = None, agent_monitor = None, agent_status = None, agent_severity = None, notify_enabled = None):
         user=WebAuth.check_auth()
         html=""
         if notify_name is None and notify_email is None and agent_name is None and agent_monitor is None and agent_status is None and agent_severity is None and notify_enabled is None:
+            html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Edit Notification Rule", WebNotify.notify_edit(id)))
             return html
         else:
             # process post
-            return html
+            WebData.web_code_update_notifyrules(id, notify_name, notify_email, agent_name, agent_monitor, agent_status, agent_severity, notify_enabled)
+            raise cherrypy.HTTPRedirect("/notify")
  
     @cherrypy.expose
     def notify_delete(self, id):
         user=WebAuth.check_auth()
-        html=""
-        return html 
+        WebData.web_code_delete_notify_rule(id)
+        raise cherrypy.HTTPRedirect("/notify")
     
     @cherrypy.expose
     def search(self, device=None):
@@ -129,4 +135,3 @@ class WebController:
         cherrypy.session.delete()
         cherrypy.lib.sessions.expire()
         raise cherrypy.HTTPRedirect("/logon")
-

@@ -13,6 +13,10 @@ tools.staticdir.root: 'C:\\Progra~1\\monitoring\\website\\'
 tools.staticdir.on: True
 tools.staticdir.dir: './public'
 
+[/favicon.ico]
+tools.staticfile.on: True
+tools.staticfile.filename: "/static/images/favicon.ico"
+
 [database]
 host: 'localhost'
 user: 'test'

@@ -58,6 +58,17 @@ class WebData:
         finally:
             connection.close()
 
+    def web_code_device_system_names():
+        connection = WebData.web_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = r"SELECT name FROM agentsystem ORDER by name"
+                cursor.execute(sql)
+                result = cursor.fetchall()
+                return result
+        finally:
+            connection.close()
+
     def web_code_device_system_search(name):
         connection = WebData.web_con()
         try:
@@ -166,6 +177,17 @@ class WebData:
                 return result
         finally:
             connection.close()
+    
+    def web_code_select_notifyrule(id):
+        connection = WebData.web_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = r"SELECT id, notify_name, notify_email, agent_name, agent_monitor, agent_status, agent_severity, notify_enabled FROM notifyrule WHERE id=" + str(id) + " order by notify_name"
+                cursor.execute(sql)
+                result = cursor.fetchone()
+                return result
+        finally:
+            connection.close()
 
     def web_code_insert_notifyrules(notify_name, notify_email, agent_name, agent_monitor, agent_status, agent_severity, notify_enabled):
         connection = WebData.web_con()
@@ -181,7 +203,7 @@ class WebData:
         connection = WebData.web_con()
         try:
             with connection.cursor() as cursor:
-                sql = r"UPDATE notifyrule SET notify_name='" + notify_name + "',notify_email='" + notify_email + "',agent_name='" + agent_name + "',agent_monitor='" + agent_monitor + "',agent_status=" + str(agent_status) + ",agent_severity=" + str(agent_severity) + ",notify_enabled=" + str(notify_enabled) + ")"
+                sql = r"UPDATE notifyrule SET notify_name='" + notify_name + "',notify_email='" + notify_email + "',agent_name='" + agent_name + "',agent_monitor='" + agent_monitor + "',agent_status=" + str(agent_status) + ",agent_severity=" + str(agent_severity) + ",notify_enabled=" + str(notify_enabled)
                 cursor.execute(sql)
                 connection.commit()
         finally:

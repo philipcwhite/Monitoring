@@ -444,10 +444,57 @@ class WebSearch:
 class WebNotify:
     def notify_rules():
         notifyrules = WebData.web_code_select_notifyrules()
-        html = ""
+        html = "<table>"
         for i in notifyrules:
-            html += """<a href="/notify_edit/""" + str(i["id"]) + """">""" + str(i["notify_name"]) + "</a><br />"
-        html += """<input type="button" onclick="window.location.href='/notify_add/'" class="action-button" value="Add Notification Rule" />"""
+            html += "<tr><td>" + str(i["notify_name"]) + """</td><td> <input type="button" onclick="window.location.href='/notify_edit/""" + str(i["id"]) + """'" class="action-button" value="Edit" />
+            <input type="button" onclick="window.location.href='/notify_delete/""" + str(i["id"]) + """'" class="action-button" value="Delete" /></td></tr>"""
+        html += """</table><br /><input type="button" onclick="window.location.href='/notify_add/'" class="action-button" value="Add Notification Rule" />"""
         return html
 
+    def notify_add():
+        html = """<form action='' method='POST'><table><tr><td>Rule Name</td><td><input type='text' name='notify_name' /></td></tr>
+               <tr><td>Email Address</td><td><input type='text' name='notify_email' /></td></tr>"""
+        dd_html = "<tr><td>Hostname</td><td><select name='agent_name'><option value='%_%'>All</option>"
+        hostnames = WebData.web_code_device_system_names()
+        for i in hostnames:
+            dd_html += "<option value='" + str(i["name"]) + "'>" + str(i["name"]) + "</option>"
+        dd_html += "</select></td></tr>"
+        html += dd_html
+        html += "<tr><td>Monitor</td><td><input type='text' name='agent_monitor' /></td></tr>"
+        html += "<tr><td>Status</td><td><input type='radio' name='agent_status' value='1' /> Open <input type='radio' name='agent_status' value='0' /> Closed</td></tr>"
+        html += "<tr><td>Severity</td><td><select name='agent_severity'><option value='4'>Information</option><option value='3'>Warning</option><option value='2'>Major</option><option value='1'>Critical</option>"
+        html += "<tr><td>Enabled</td><td><input type='radio' name='notify_enabled' value='1' /> True <input type='radio' name='notify_enabled' value='0' /> False</td></tr>"
+        html += "<tr><td></td><td><input type='submit' value='submit' /></td></tr></table>"
+
+        return html
+    
+    def notify_edit(id):
+        rule = WebData.web_code_select_notifyrule(id)
+        html = ""
+        html = """<form action='' method='POST'><table><tr><td>Rule Name</td><td><input type='text' name='notify_name' value='""" + str(rule['notify_name']) + """' /></td></tr>
+               <tr><td>Email Address</td><td><input type='text' name='notify_email'  value='""" + str(rule['notify_email']) + """' /></td></tr>"""
+        html += "<tr><td>Hostname</td><td><input type='text' name='agent_name' value='" + str(rule['agent_name']) + "' /></td></tr>"
+        html += "<tr><td>Monitor</td><td><input type='text' name='agent_monitor' value='" + str(rule['agent_monitor']) + "' /></td></tr>"
+        if int(rule['agent_status']) == 1:
+            html += "<tr><td>Status</td><td><input type='radio' name='agent_status' value='1' checked='checked' /> Open <input type='radio' name='agent_status' value='0' /> Closed</td></tr>"
+        else:
+            html += "<tr><td>Status</td><td><input type='radio' name='agent_status' value='1' /> Open <input type='radio' name='agent_status' value='0' checked='checked' /> Closed</td></tr>"
         
+        html += "<tr><td>Severity</td><td><select name='agent_severity'>"
+        if int(rule['agent_severity']) == 4: 
+            html += "<option value='4' selected>Information</option><option value='3'>Warning</option><option value='2'>Major</option><option value='1'>Critical</option>"
+        elif int(rule['agent_severity']) == 3:
+            html += "<option value='4'>Information</option><option value='3' selected>Warning</option><option value='2'>Major</option><option value='1'>Critical</option>"
+        elif int(rule['agent_severity']) == 2:
+            html += "<option value='4'>Information</option><option value='3'>Warning</option><option value='2' selected>Major</option><option value='1'>Critical</option>"
+        elif int(rule['agent_severity']) == 1:
+            html += "<option value='4'>Information</option><option value='3'>Warning</option><option value='2'>Major</option><option value='1' selected>Critical</option>"
+        if int(rule['notify_enabled']) == 1:
+            html += "<tr><td>Enabled</td><td><input type='radio' name='notify_enabled' value='1' checked='checked' /> True <input type='radio' name='Notify_Enabled' value='0' /> False</td></tr>"
+        else:
+            html += "<tr><td>Enabled</td><td><input type='radio' name='notify_enabled' value='1' /> True <input type='radio' name='notify_enabled' value='0' checked='checked' /> False</td></tr>"
+      
+        html += "<tr><td></td><td><input type='submit' value='submit' /></td></tr></table>"
+        
+        return html
+
