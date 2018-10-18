@@ -18,7 +18,7 @@ class WebViews:
         <div class="search-div">
         <form id="searchform" action="search" method="GET">
         <svg viewBox="0 0 512 512" class="search-font"><path fill="currentColor" d="M505 442.7L405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9 0 208 0S0 93.1 0 208s93.1 208 208 208c48.3 0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9 0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7 0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7 0 128 57.2 128 128 0 70.7-57.2 128-128 128z"></path></svg>
-        <input type="text" name="device" style="height:18px;width:120px;border-radius:3px;border: 1px solid #dfd7ca; font-size: 12px; color:#cccccc" />
+        <input type="text" name="device" class="text-input" style="width:120px" />
         <input type="button" class="search-button" value="Search" onclick="searchform.submit()" /></form>
         </div>
         <div class="mon-container">
@@ -85,13 +85,30 @@ class WebViews:
     def load_login():
         html = """<!DOCTYPE html>
         <html>
-        <head><title>Monitoring</title></head>
-        <body>
+        <head><title>Monitoring</title>
+        <link rel="stylesheet" href="/static/css/mon_app.css" />
+        </head>
+        <body style="background-color:#325D88">
+        <br />
+        <br />
+        <div style="display:flex;justify-content:center">
+        <table style="width:300px"><tr><td>
+        <div class="card-div">
+        <div class="card-header">Monitoring Login</div>
+        <table style="width:100%;">
+        <tr>
+        <td style="padding-left:10px">
         <form action="verify" method="POST">
-        Username<input type="text" name="username" />
-        Password<input type="password" name="password" />
-        <button type="submit" value="Log in">Log in</button>
+        <table>
+        <tr><td style="width:150px">Username</td><td style="width:150px"><input type="text" class="text-input" name="username" /></td></tr>
+        <tr><td>Password</td><td><input type="password" class="text-input" name="password" /></td></tr>
+        <tr><td></td><td style="text-align:right"><input type="submit" class="action-button" value="Login" /></td></tr>
+        </table>
         </form>
+        </td></tr></table> 
+        </div></td></tr></table>
+        </div>
+        </body>
         </html>"""
         return html
 
