@@ -18,7 +18,6 @@ class WebAuth:
         authuser = WebData.web_auth(username, encrypt_password)
         if not authuser is None:
             cherrypy.session['authenticated']=authuser
-            cherrypy.session['timeout']=10080
             raise cherrypy.HTTPRedirect("/")
         raise cherrypy.HTTPRedirect("/")
 
