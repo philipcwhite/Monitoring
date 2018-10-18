@@ -8,6 +8,7 @@ engine.SIGTERM: None
 [/]
 tools.sessions.on: True
 tools.staticdir.root: 'C:\\Progra~1\\monitoring\\website\\'
+tools.sessions.timeout = 10080
 
 [/static] 
 tools.staticdir.on: True
