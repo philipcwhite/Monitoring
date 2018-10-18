@@ -1,6 +1,7 @@
-﻿
+
 html{max-width: 1200px;}
 body{margin:0px;padding:0px;height:100%;width:100%;font:12px "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;color:#8E8C84;}
+
 
 .action-button{border-radius:2px;color:#FFF;font-size:10px;background:#D9534F;padding:3px 5px;text-decoration: none;font-weight:bold;border-style:none;transition: 0.5s;}
 .action-button:hover{background-color:#D23430;border-color: #C9302C;transition: 0.5s;}
@@ -38,6 +39,8 @@ body{margin:0px;padding:0px;height:100%;width:100%;font:12px "Segoe UI", "Helvet
 .search-font{color:#8E8C84;height:16px;width:16px;line-height:16px;vertical-align: text-top}
 .search-button{border-radius:3px;color:#FFF;font-size:11px;background:#93C54B;padding:5px 5px;text-decoration:none;font-weight:bold;border-style:none;transition: 0.5s;}
 .search-button:hover{background-color: #80b139;border-color: #79A736;transition: 0.5s;}
+
+.text-input{height:18px;border-radius:3px;border: 1px solid #dfd7ca; font-size: 12px; color:#8E8C84;padding-left:5px}
 
 .user-div{position:absolute;top:14px;left:74px;font-size:12px;padding-bottom: 4px;display: flex;align-items:center;}
 .user-font{color:#8E8C84;height:12px;width:12px;}
