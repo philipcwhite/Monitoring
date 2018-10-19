@@ -22,7 +22,7 @@ Device View
 
 ## Updates
 
-10/19/2018 - Created password reset page, updated login page, and updated some styling.  
+10/19/2018 - Created password reset page, updated login page, and updated some styling.  Also configured the site to use SSL however this is turned off by default.  Uncomment sections in server.conf to enable.
 
 10/17/2018 - Finished coding the Notification Rules page.  Also replaced the default CherryPy favicon with a generic M.  I'll probably update this to something custom later on.  I have a little work left to do with user and session management that I'll be tackling next.
 
