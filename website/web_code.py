@@ -429,7 +429,12 @@ class WebEvents:
 
 class WebSettings:
     def settings():
-        html = """<a href="/notify">Notification Rules</a><br />"""
+        html = """
+        <b>Site Settings</b><br />
+        <a href="/notify">Notification Rules</a><br />
+        <br />
+        <b>User Settings</b><br />
+        <a href="/password">Change Password</a><br />"""
         return html
 
 
@@ -444,9 +449,9 @@ class WebSearch:
 class WebNotify:
     def notify_rules():
         notifyrules = WebData.web_code_select_notifyrules()
-        html = "<table>"
+        html = "<table style='width:100%'>"
         for i in notifyrules:
-            html += "<tr><td>" + str(i["notify_name"]) + """</td><td> <input type="button" onclick="window.location.href='/notify_edit/""" + str(i["id"]) + """'" class="action-button" value="Edit" />
+            html += "<tr><td>" + str(i["notify_name"]) + """</td><td style='text-align:right;padding-right:10px'> <input type="button" onclick="window.location.href='/notify_edit/""" + str(i["id"]) + """'" class="action-button" value="Edit" />
             <input type="button" onclick="window.location.href='/notify_delete/""" + str(i["id"]) + """'" class="action-button" value="Delete" /></td></tr>"""
         html += """</table><br /><input type="button" onclick="window.location.href='/notify_add/'" class="action-button" value="Add Notification Rule" />"""
         return html
@@ -464,7 +469,7 @@ class WebNotify:
         html += "<tr><td>Status</td><td><input type='radio' name='agent_status' value='1' /> Open <input type='radio' name='agent_status' value='0' /> Closed</td></tr>"
         html += "<tr><td>Severity</td><td><select name='agent_severity'><option value='4'>Information</option><option value='3'>Warning</option><option value='2'>Major</option><option value='1'>Critical</option>"
         html += "<tr><td>Enabled</td><td><input type='radio' name='notify_enabled' value='1' /> True <input type='radio' name='notify_enabled' value='0' /> False</td></tr>"
-        html += "<tr><td></td><td><input type='submit' value='submit' /></td></tr></table>"
+        html += "<tr><td></td><td style='text-align:right'><input type='submit' class='action-button' value='submit' /></td></tr></table>"
 
         return html
     
@@ -494,7 +499,7 @@ class WebNotify:
         else:
             html += "<tr><td>Enabled</td><td><input type='radio' name='notify_enabled' value='1' /> True <input type='radio' name='notify_enabled' value='0' checked='checked' /> False</td></tr>"
       
-        html += "<tr><td></td><td><input type='submit' value='submit' /></td></tr></table>"
+        html += "<tr><td></td><td style='text-align:right'><input type='submit' class='action-button' value='submit' /></td></tr></table>"
         
         return html
 
