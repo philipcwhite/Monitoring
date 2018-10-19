@@ -91,9 +91,6 @@ class WebController:
             html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Add Notification Rule", WebNotify.notify_add()))
             return html
         else:
-            # process post
-            #html = notify_name + " " + notify_email + " " + agent_name + " " + agent_monitor + " " + str(agent_status) + " " + str(agent_severity) + " " + str(notify_enabled)
-            #return html
             WebData.web_code_insert_notifyrules(notify_name, notify_email, agent_name, agent_monitor, agent_status, agent_severity, notify_enabled)
             raise cherrypy.HTTPRedirect("/notify")
 
@@ -105,7 +102,6 @@ class WebController:
             html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Edit Notification Rule", WebNotify.notify_edit(id)))
             return html
         else:
-            # process post
             WebData.web_code_update_notifyrules(id, notify_name, notify_email, agent_name, agent_monitor, agent_status, agent_severity, notify_enabled)
             raise cherrypy.HTTPRedirect("/notify")
  
@@ -114,7 +110,7 @@ class WebController:
         user=WebAuth.check_auth()
         WebData.web_code_delete_notify_rule(id)
         raise cherrypy.HTTPRedirect("/notify")
-    
+          
     @cherrypy.expose
     def search(self, device=None):
         user=WebAuth.check_auth()
@@ -135,3 +131,19 @@ class WebController:
         cherrypy.session.delete()
         cherrypy.lib.sessions.expire()
         raise cherrypy.HTTPRedirect("/logon")
+
+    @cherrypy.expose
+    def password(self, pass1=None, pass2=None):
+        user=WebAuth.check_auth()
+        if pass1 is None and pass2 is None:
+            html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Change Password", WebViews.load_change_password()))
+            return html
+        else:
+            WebAuth.change_password(user, pass1, pass2)
+
+    @cherrypy.expose
+    def error(self):
+        user=WebAuth.check_auth()
+        html = WebViews.load_base(user, WebViews.load_bc_settings(),  WebViews.load_basic_page("Error", "Error"))
+        return html
+            
