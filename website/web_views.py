@@ -178,3 +178,14 @@ class WebViews:
         """ + events + """    
         </div></td></tr></table>"""
         return html
+
+    def load_change_password():
+        html = """
+        <form action="" method="POST">
+        <table>
+        <tr><td style="width:150px">Old Password</td><td style="width:150px"><input type="password" class="text-input" name="pass1" /></td></tr>
+        <tr><td>New Password</td><td><input type="password" class="text-input" name="pass2" /></td></tr>
+        <tr><td></td><td style="text-align:right"><input type="submit" class="action-button" value="Submit" /></td></tr>
+        </table>
+        </form>"""
+        return html
