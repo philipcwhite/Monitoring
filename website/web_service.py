@@ -31,7 +31,8 @@ class MonWebsite(win32serviceutil.ServiceFramework):
 
     def SvcDoRun(self):
         try:
-            cherrypy.tree.mount(WebController(), '/', config="C:\\Progra~1\\monitoring\\website\\config.txt")
+            cherrypy.tree.mount(WebController(), '/', config="C:\\Progra~1\\monitoring\\website\\server.conf")
+            cherrypy.config.update("C:\\Progra~1\\monitoring\\website\\server.conf")
             cherrypy.engine.start()
             cherrypy.engine.block()
         except:
