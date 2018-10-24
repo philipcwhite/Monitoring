@@ -25,6 +25,16 @@ class WebData:
         finally:
             connection.close()
 
+    def web_change_password(username, password):
+        connection = WebData.web_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = r"UPDATE users SET password='" + str(password) + "' WHERE username='" + str(username) + "'"
+                cursor.execute(sql)
+                connection.commit()
+        finally:
+            connection.close()
+
     def web_code_index_device_avail():
         connection = WebData.web_con()
         try:
@@ -218,3 +228,65 @@ class WebData:
                 connection.commit()
         finally:
             connection.close()
+
+    def web_code_select_users():
+        connection = WebData.web_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = r"SELECT id, username FROM users order by username" 
+                cursor.execute(sql)
+                result = cursor.fetchall()
+                return result
+        finally:
+            connection.close()
+
+    def web_code_select_user(id):
+        connection = WebData.web_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = r"SELECT id, username, role FROM users WHERE id=" + str(id) 
+                cursor.execute(sql)
+                result = cursor.fetchone()
+                return result
+        finally:
+            connection.close()
+
+    def web_code_create_user(username, encrypt_pass, role):
+        connection = WebData.web_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = r"INSERT INTO users (username, password, role) SELECT '" + username + "', '" + encrypt_pass + "', " + str(role)  + " FROM DUAL WHERE NOT EXISTS (SELECT * from users WHERE username='" + username + "') LIMIT 1"
+                cursor.execute(sql)
+                connection.commit()
+        finally:
+            connection.close()
+
+    def web_code_edit_user_role(id, role):
+        connection = WebData.web_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = r"UPDATE users set role=" + str(role) + " where id=" + str(id)
+                cursor.execute(sql)
+                connection.commit()
+        finally:
+            connection.close()
+
+    def web_code_edit_user_password(id, encrypt_pass):
+        connection = WebData.web_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = r"UPDATE users set password=" + str(encrypt_pass) + " where id=" + str(id)
+                cursor.execute(sql)
+                connection.commit()
+        finally:
+            connection.close()
+
+    def web_code_delete_user(id):
+        connection = WebData.web_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = r"DELETE FROM users where id=" + str(id)
+                cursor.execute(sql)
+                connection.commit()
+        finally:
+            connection.close()    
