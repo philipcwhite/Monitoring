@@ -110,6 +110,30 @@ class WebController:
         user=WebAuth.check_auth()
         WebData.web_code_delete_notify_rule(id)
         raise cherrypy.HTTPRedirect("/notify")
+
+    @cherrypy.expose
+    def users(self):
+        user=WebAuth.check_auth()
+        html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Users", "Users"))
+        return html
+
+    @cherrypy.expose
+    def users_add(self, username, password, role):
+        user=WebAuth.check_auth()
+        html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Users", "Users"))
+        return html
+
+    @cherrypy.expose
+    def users_edit(self, id, password, role):
+        user=WebAuth.check_auth()
+        html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Users", "Users"))
+        return html
+    
+    @cherrypy.expose
+    def users_delete(self, id):
+        user=WebAuth.check_auth()
+        WebData.web_code_delete_users(id)
+        raise cherrypy.HTTPRedirect("/users")
           
     @cherrypy.expose
     def search(self, device=None):
