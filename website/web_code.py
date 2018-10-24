@@ -433,8 +433,12 @@ class WebSettings:
         <b>Site Settings</b><br />
         <a href="/notify">Notification Rules</a><br />
         <br />
+        <b>User and Role Management</b><br />
+        <a href="/users">Manage Users</a><br />
+        <br />          
         <b>User Settings</b><br />
-        <a href="/password">Change Password</a><br />"""
+        <a href="/password">Change Password</a><br />
+        """
         return html
 
 
@@ -501,5 +505,18 @@ class WebNotify:
       
         html += "<tr><td></td><td style='text-align:right'><input type='submit' class='action-button' value='submit' /></td></tr></table>"
         
+        return html
+
+class WebUsers:
+    def users_list():
+        users = WebData.web_code_select_users()
+        html = "<table style='width:100%'>"
+        for i in users:
+            html += "<tr><td>" + str(i["username"]) + """</td><td style='text-align:right'><input type="button" onclick="window.location.href='/user_edit_pass/""" + str(i["id"]) + """'" class="action-button" value="Edit Password" />
+            <input type="button" onclick="window.location.href='/user_edit_role/""" + str(i["id"]) + """'" class="action-button" value="Edit Role" />
+            <input type="button" onclick="window.location.href='/user_delete/""" + str(i["id"]) + """'" class="action-button" value="Delete User" />
+            </td></tr>"""
+        html += "</table>"
+
         return html
 
