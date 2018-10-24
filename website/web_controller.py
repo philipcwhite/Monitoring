@@ -3,7 +3,7 @@ import web_views
 from web_auth import WebAuth
 from web_views import WebViews
 from web_data import WebData
-from web_code import WebIndex, WebDevice, WebDevices, WebEvents, WebNotify, WebSettings, WebSearch
+from web_code import WebIndex, WebDevice, WebDevices, WebEvents, WebNotify, WebSettings, WebSearch, WebUsers
 
 user=""
 
@@ -114,25 +114,32 @@ class WebController:
     @cherrypy.expose
     def users(self):
         user=WebAuth.check_auth()
+        html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Users", WebUsers.users_list()))
+        return html
+
+    @cherrypy.expose
+    def user_add(self, username, password, role):
+        user=WebAuth.check_auth()
         html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Users", "Users"))
         return html
 
     @cherrypy.expose
-    def users_add(self, username, password, role):
+    def user_edit_pass(self, id, password):
         user=WebAuth.check_auth()
         html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Users", "Users"))
         return html
 
     @cherrypy.expose
-    def users_edit(self, id, password, role):
+    def user_edit_role(self, id, role):
         user=WebAuth.check_auth()
         html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Users", "Users"))
         return html
-    
+
     @cherrypy.expose
-    def users_delete(self, id):
+    def user_delete(self, id):
         user=WebAuth.check_auth()
-        WebData.web_code_delete_users(id)
+        #Add confirmation Page
+        #WebData.web_code_delete_users(id)
         raise cherrypy.HTTPRedirect("/users")
           
     @cherrypy.expose
