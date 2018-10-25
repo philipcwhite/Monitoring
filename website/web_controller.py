@@ -118,19 +118,23 @@ class WebController:
         return html
 
     @cherrypy.expose
-    def user_add(self, username, password, role):
+    def user_add(self, username=None, password=None, role=None):
+        user=WebAuth.check_auth()
+        if not username is None and not password is None and not role is None:
+            WebUsers.user_add(username, password, role)
+            raise cherrypy.HTTPRedirect("/users")
+        else:
+            html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Users", WebViews.load_user_add()))
+            return html
+
+    @cherrypy.expose
+    def user_edit_pass(self, id, password=None):
         user=WebAuth.check_auth()
         html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Users", "Users"))
         return html
 
     @cherrypy.expose
-    def user_edit_pass(self, id, password):
-        user=WebAuth.check_auth()
-        html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Users", "Users"))
-        return html
-
-    @cherrypy.expose
-    def user_edit_role(self, id, role):
+    def user_edit_role(self, id, role=None):
         user=WebAuth.check_auth()
         html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page("Users", "Users"))
         return html
