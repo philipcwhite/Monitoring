@@ -1,4 +1,4 @@
-import time, datetime, socket, math
+import time, datetime, socket, math, hashlib
 from web_data import WebData
 from web_views import WebViews
 
@@ -436,8 +436,6 @@ class WebSettings:
         <b>User and Role Management</b><br />
         <a href="/users">Manage Users</a><br />
         <br />          
-        <b>User Settings</b><br />
-        <a href="/password">Change Password</a><br />
         """
         return html
 
@@ -517,6 +515,15 @@ class WebUsers:
             <input type="button" onclick="window.location.href='/user_delete/""" + str(i["id"]) + """'" class="action-button" value="Delete User" />
             </td></tr>"""
         html += "</table>"
-
+        html += """<input type="button" onclick="window.location.href='/user_add/'" class="action-button" value="Add User" />"""
         return html
+
+    def user_add(username, password, role):
+        encrypt_password = hashlib.sha224(password.encode()).hexdigest()
+        WebData.web_code_create_user(username, encrypt_password, role)
+    
+
+
+    
+
 
