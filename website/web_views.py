@@ -25,7 +25,7 @@ class WebViews:
         <div class="user-div">"""
         html += breadcrumbs + """| &nbsp;
         <svg class="user-font" viewBox="0 0 448 512"><path fill="currentColor" d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0 96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"></path></svg>
-        &nbsp; """ + user + """ (<a href="/logoff">Log Out</a>)</div>"""
+        &nbsp; <a href="/password">""" + user + """</a>&nbsp; (<a href="/logoff">Log Out</a>)</div>"""
         html += body + """</div></div><!--<script src="{% static 'mon_app/js/jquery.min.js' %}"></script>--></body></html>"""
         return html
 
@@ -185,6 +185,18 @@ class WebViews:
         <table>
         <tr><td style="width:150px">Old Password</td><td style="width:150px"><input type="password" class="text-input" name="pass1" /></td></tr>
         <tr><td>New Password</td><td><input type="password" class="text-input" name="pass2" /></td></tr>
+        <tr><td></td><td style="text-align:right"><input type="submit" class="action-button" value="Submit" /></td></tr>
+        </table>
+        </form>"""
+        return html
+
+    def load_user_add():
+        html = """
+        <form action="" method="POST">
+        <table>
+        <tr><td style="width:150px">Username</td><td style="width:150px"><input type="text" class="text-input" name="username" /></td></tr>
+        <tr><td>New Password</td><td><input type="password" class="text-input" name="password" /></td></tr>
+        <tr><td>Role</td><td><input type='radio' name='role' value='0' /> User <input type='radio' name='role' value='1' /> Admin</td></tr>
         <tr><td></td><td style="text-align:right"><input type="submit" class="action-button" value="Submit" /></td></tr>
         </table>
         </form>"""
