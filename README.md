@@ -22,6 +22,8 @@ Device View
 
 ## Updates
 
+11/7/2018 - I believe some of my async code is not compliant with Python 3.7.  I will update the project to 3.7.1 when I have time and correct this.  
+
 10/25/2018 - User management is almost complete.  I am still looking at possibly removing CherryPy and writing a custom webserver.  This would essentially remove all dependencies except pymysql.  It may not be the best idea however I do like the idea of knowing how all of the code is processed and this keeps me one step closer tho that.  Plus it's more exciting to write your own webserver than to use someone elses.  
 
 10/19/2018 - Created password reset page, updated login page, and updated some styling.  Also configured the site to use SSL however this is turned off by default.  Uncomment sections in server.conf to enable.
