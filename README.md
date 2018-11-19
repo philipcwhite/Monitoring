@@ -22,6 +22,8 @@ Device View
 
 ## Updates
 
+11/19/2018 - The code in question does work with Python 3.7 but it can be improved and will be.  I have been working on building a new async webserver which has pulled some of my time from this project.  If the webserver becomes a viable replacement for CherryPy then I will replace CherryPy with it in a future release.  
+
 11/7/2018 - I believe some of my async code is not compliant with Python 3.7.  I will update the project to 3.7.1 when I have time and correct this.  
 
 10/25/2018 - User management is almost complete.  I am still looking at possibly removing CherryPy and writing a custom webserver.  This would essentially remove all dependencies except pymysql.  It may not be the best idea however I do like the idea of knowing how all of the code is processed and this keeps me one step closer tho that.  Plus it's more exciting to write your own webserver than to use someone elses.  
