@@ -11,9 +11,10 @@ import sys
 import win32event
 import win32service
 import win32serviceutil
-import cherrypy
+import socket
+
 # User classes
-from web_controller import WebController
+import wsite, wserver
 
 class MonWebsite(win32serviceutil.ServiceFramework):
     _svc_name_ = "monitoringweb"
@@ -27,14 +28,17 @@ class MonWebsite(win32serviceutil.ServiceFramework):
     def SvcStop(self):
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.hWaitStop)
-        cherrypy.engine.exit()
+
+        wserver.app_vars.stop_loop = True
+        con = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        con.connect((wserver.app_vars.stop_ip, wserver.app_vars.server_port))
+        byte=str('Close').encode()
+        con.send(byte)
+        con.close()
 
     def SvcDoRun(self):
         try:
-            cherrypy.tree.mount(WebController(), '/', config="C:\\Progra~1\\monitoring\\website\\server.conf")
-            cherrypy.config.update("C:\\Progra~1\\monitoring\\website\\server.conf")
-            cherrypy.engine.start()
-            cherrypy.engine.block()
+            wsite.start_server()
         except:
             pass
                 

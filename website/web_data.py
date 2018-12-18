@@ -3,10 +3,10 @@ import pymysql.cursors
 
 class WebData:
     def web_con():
-        connection = pymysql.connect(host = cherrypy.request.app.config['database']['host'],
-                                     user = cherrypy.request.app.config['database']['user'],
-                                     password = cherrypy.request.app.config['database']['passwd'],
-                                     db = cherrypy.request.app.config['database']['db'],
+        connection = pymysql.connect(host = "localhost",
+                                     user = "test",
+                                     password = "test",
+                                     db = "monitoring",
                                      charset = 'utf8mb4',
                                      cursorclass = pymysql.cursors.DictCursor)
         return connection

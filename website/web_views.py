@@ -1,11 +1,12 @@
 
 class WebViews:
     def load_base(user, breadcrumbs, body):
-        html = """<!DOCTYPE html><html><title>Monitoring</title>
-        <link rel="stylesheet" href="/static/css/mon_app.css" />
+        html = """<!DOCTYPE html><html>        
         <head>
+        <title>Monitoring</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <link rel="shortcut icon" href="/static/images/favicon.ico" type="image/x-icon" />
+        <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="/static/mon_app.css" type="text/css" />
         </head>
         <body>
         <div><div class="nav-sidebar">
@@ -86,7 +87,7 @@ class WebViews:
         html = """<!DOCTYPE html>
         <html>
         <head><title>Monitoring</title>
-        <link rel="stylesheet" href="/static/css/mon_app.css" />
+        <link rel="stylesheet" href="/static/mon_app.css" />
         </head>
         <body style="background-color:#325D88">
         <br />
