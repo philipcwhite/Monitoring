@@ -148,7 +148,11 @@ class controller(object):
             html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page('Change Password', WebViews.load_change_password()))
             return html
         else:
-            WebAuth.change_password(user, pass1, pass2)
+            changepw = WebAuth.change_password(user, pass1, pass2)
+            if changepw is True:
+                self.redirect('/settings')
+            else:
+                self.redirect('/error')
 
     def error(self):
         user = self.get_auth()
