@@ -22,6 +22,8 @@ Device View
 
 ## Updates
 
+12/18/2018 - Lots of updates today and some new broken code.  It looks like Python 3.7 did actually break a few things.  I am working on fixing these.  The Collector now starts fine and receives data but it will not end via a Windows service Stop.  After revisiting some of my old code there is a lot of room for improvement so I'll try to do some cleanup while I'm working on the 3.7 issues.  Also I replaced CherryPy with my own custom web server.  Initial tests are good.  You should see updates more frequently now that things have settled a bit with my web server project.
+
 11/19/2018 - The code in question does work with Python 3.7 but it can be improved and will be.  I have been working on building a new async webserver which has pulled some of my time from this project.  If the webserver becomes a viable replacement for CherryPy then I will replace CherryPy with it in a future release.  
 
 11/7/2018 - I believe some of my async code is not compliant with Python 3.7.  I will update the project to 3.7.1 when I have time and correct this.  
