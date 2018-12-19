@@ -10,11 +10,11 @@ class WebAuth:
         else:
             return authuser
 
-    '''def change_password(username, pass1, pass2):
+    def change_password(username, pass1, pass2):
         encrypt_password1 = hashlib.sha224(pass1.encode()).hexdigest()
         encrypt_password2 = hashlib.sha224(pass2.encode()).hexdigest()
         authuser = WebData.web_auth(username, encrypt_password1)
         if not authuser is None:
             WebData.web_change_password(username, encrypt_password2)
-            raise cherrypy.HTTPRedirect("/settings")
-        raise cherrypy.HTTPRedirect("/error")'''
+            return True
+        return False
