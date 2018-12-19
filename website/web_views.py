@@ -213,3 +213,19 @@ class WebViews:
         </table>
         </form>"""
         return html
+    
+    def load_user_edit_role(role):
+        html = """
+        <form action="" method="POST">
+        <table>
+        <tr><td>Role</td>
+        <td>"""
+        if role == 0:
+            html += "<input type='radio' name='role' value='0' checked='checked' /> User<input type='radio' name='role' value='1' /> Admin" 
+        else:
+            html += "<input type='radio' name='role' value='0' /> User<input type='radio' name='role' value='1' checked='checked' /> Admin"
+        html += """</td></tr>
+        <tr><td></td><td style="text-align:right"><input type="submit" class="action-button" value="Submit" /></td></tr>
+        </table>
+        </form>"""
+        return html
