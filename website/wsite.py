@@ -128,10 +128,9 @@ class controller(object):
             html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page('Users', WebViews.load_user_edit_password()))
             return html
         else:
-            user_data = WebData.web_code_select_user(id)
-            print(id, user_data['username'], pass1, pass2)
-            changepw = WebAuth.change_password(user_data['username'], pass1, pass2)
-            if changepw is True:
+            encryptpw = WebAuth.set_password(pass1, pass2)
+            if not encryptpw is None:
+                WebData.web_code_edit_user_password(str(id), encryptpw)
                 self.redirect('/users')
             else:
                 self.redirect('/error')
