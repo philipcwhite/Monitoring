@@ -10,6 +10,60 @@ def mon_con():
                                  cursorclass = pymysql.cursors.DictCursor)
     return connection
 
+def agent_system(timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory):
+    connection = mon_con()
+    try:
+        with connection.cursor() as cursor:
+            sql = "SELECT name FROM agentsystem where name=%s"
+            cursor.execute(sql, (name))
+            result = cursor.fetchone()
+            qname = ""
+            
+            if not result is None:
+                qname = result['name']
+            if name == qname:
+                sql = "UPDATE agentsystem SET timestamp=%s, domain=%s, ipaddress=%s, platform=%s, buildnumber=%s, architecture=%s, processors=%s, memory=%s WHERE name=%s"
+                cursor.execute(sql, (timestamp, domain, ipaddress, platform, buildnumber, architecture, processors, memory, name))
+                connection.commit()
+            else:
+                sql = "INSERT INTO agentsystem (timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                cursor.execute(sql, (timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory))
+                connection.commit()
+ 
+    finally:
+        connection.close()
+
+def agent_data(timestamp, name, monitor, value):
+    connection = mon_con()
+    try:
+        with connection.cursor() as cursor:
+            sql = "INSERT INTO agentdata (timestamp, name, monitor, value) VALUES(%s,%s,%s,%s)"
+            cursor.execute(sql, (timestamp, name, monitor, value))
+            connection.commit()
+ 
+    finally:
+        connection.close()
+
+def agent_events_open(timestamp, name, monitor, message, status, severity):
+    connection = mon_con()
+    try:
+        with connection.cursor() as cursor:
+            sql = "INSERT INTO agentevents (timestamp, name, monitor, message, status, severity, processed) VALUES(%s,%s,%s,%s,%s,%s,%s)"
+            cursor.execute(sql, (timestamp, name, monitor, message, status, severity, 0))
+            connection.commit()
+    finally:
+        connection.close()
+
+def agent_events_close(name, monitor, severity):
+    connection = mon_con()
+    try:
+        with connection.cursor() as cursor:
+            sql = "UPDATE agentevents SET status=0 AND processed=0 WHERE name=%s AND monitor=%s AND severity=%s AND status=1"
+            cursor.execute(sql, (name, monitor, severity))
+            connection.commit()
+    finally:
+        connection.close()
+
 def parse_data(message):
     timestamp = 0
     name = '' 
@@ -70,59 +124,3 @@ def parse_data(message):
                 agent_events_open(timestamp, name, monitor, message, status, severity)
             elif int(status) == 0:
                 agent_events_close(name, monitor, severity)
-
-        
-
-def agent_system(timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory):
-    connection = mon_con()
-    try:
-        with connection.cursor() as cursor:
-            sql = "SELECT name FROM agentsystem where name=%s"
-            cursor.execute(sql, (name))
-            result = cursor.fetchone()
-            qname = ""
-            
-            if not result is None:
-                qname = result['name']
-            if name == qname:
-                sql = "UPDATE agentsystem SET timestamp=%s, domain=%s, ipaddress=%s, platform=%s, buildnumber=%s, architecture=%s, processors=%s, memory=%s WHERE name=%s"
-                cursor.execute(sql, (timestamp, domain, ipaddress, platform, buildnumber, architecture, processors, memory, name))
-                connection.commit()
-            else:
-                sql = "INSERT INTO agentsystem (timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                cursor.execute(sql, (timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory))
-                connection.commit()
- 
-    finally:
-        connection.close()
-
-def agent_data(timestamp, name, monitor, value):
-    connection = mon_con()
-    try:
-        with connection.cursor() as cursor:
-            sql = "INSERT INTO agentdata (timestamp, name, monitor, value) VALUES(%s,%s,%s,%s)"
-            cursor.execute(sql, (timestamp, name, monitor, value))
-            connection.commit()
- 
-    finally:
-        connection.close()
-
-def agent_events_open(timestamp, name, monitor, message, status, severity):
-    connection = mon_con()
-    try:
-        with connection.cursor() as cursor:
-            sql = "INSERT INTO agentevents (timestamp, name, monitor, message, status, severity, processed) VALUES(%s,%s,%s,%s,%s,%s,%s)"
-            cursor.execute(sql, (timestamp, name, monitor, message, status, severity, 0))
-            connection.commit()
-    finally:
-        connection.close()
-
-def agent_events_close(name, monitor, severity):
-    connection = mon_con()
-    try:
-        with connection.cursor() as cursor:
-            sql = "UPDATE agentevents SET status=0 AND processed=0 WHERE name=%s AND monitor=%s AND severity=%s AND status=1"
-            cursor.execute(sql, (name, monitor, severity))
-            connection.commit()
-    finally:
-        connection.close()

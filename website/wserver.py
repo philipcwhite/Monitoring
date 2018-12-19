@@ -141,9 +141,9 @@ class web_handle(asyncio.Protocol):
     def get_headers(self, request):
         # Process all incoming header requests
         request_list = []
-        request_list = request.split("\n")
-        self.method = request_list[0].split(" ")[0]
-        self.path = request_list[0].split(" ")[1]
+        request_list = request.split('\n')
+        self.method = request_list[0].split(' ')[0]
+        self.path = request_list[0].split(' ')[1]
         if '.' in self.path:
             ext = self.path.split('.')[-1]
             if ext in app_vars.content_type:
@@ -199,7 +199,7 @@ class web_handle(asyncio.Protocol):
         path_func = path_string.split('/')[1]
         if path_func is '':path_func='index'
         for i in dir(self.controller):
-            if not "__" in i:
+            if not '__' in i:
                 if i == path_func:
                     for x in path_string.split('/'):
                         if not x is '': 
@@ -235,7 +235,7 @@ class web_handle(asyncio.Protocol):
         if '/favicon.ico' in self.path or '/static/' in self.path:
             url=self.path[1:]
             if 'favicon.ico' in url: url = 'static/favicon.ico'
-            f = open(app_vars.app_path + url, "rb")
+            f = open(app_vars.app_path + url, 'rb')
             obj = f.read()
             self.response_length=str(len(obj))
             head = self.set_headers()
@@ -276,7 +276,6 @@ class web_server():
 class app:
     def start(controller):
         web_handle.controller = controller
-        app_vars.ssl_enabled = False
         try:
             asyncio.run(web_server.connection_loop())
         except:

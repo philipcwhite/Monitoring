@@ -1,54 +1,40 @@
 import asyncio
 import ssl, time
-import collect_data, collect_settings, collect_load
+import collect_load, collect_data, collect_settings
 
 class EchoServerClientProtocol(asyncio.Protocol):
     def connection_made(self, transport):
-        peername = transport.get_extra_info('peername')
+        #peername = transport.get_extra_info('peername')
         self.transport = transport
 
     def data_received(self, data):
+        if collect_settings.running == 0:
+            loop = asyncio.get_running_loop()
+            loop.call_soon_threadsafe(loop.stop)
         message = data.decode()
+        print(message)
         collect_data.parse_data(message)
         self.transport.write(b'Received')
         self.transport.close()
 
 class CollectServer():
-    def send_close():
+    async def connection_loop():
+        loop = asyncio.get_running_loop()
+        if collect_settings.secure == 1:
+            ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+            ssl_context.options |= ssl.PROTOCOL_TLSv1_2
+            ssl_context.load_cert_chain(certfile = collect_settings.application_path + "localhost.crt", keyfile = collect_settings.application_path + "localhost.pem")
+            server = await loop.create_server(lambda: EchoServerClientProtocol(), collect_settings.server, collect_settings.port, ssl=ssl_context)
+        else:
+            server = await loop.create_server(lambda: EchoServerClientProtocol(), collect_settings.server, collect_settings.port)
+        async with server: await server.serve_forever()
+
+    def server_start():
+        collect_load.load_config()
         try:
-            collect_settings.running = 0
-            sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-            context = ssl.create_default_context()
-            context.options |= ssl.PROTOCOL_TLSv1_2
-            context.check_hostname = False
-            context.verify_mode = ssl.CERT_NONE
-            con = context.wrap_socket(sock, server_hostname=collect_settings.server)
-            con.connect((collect_settings.server,collect_settings.port))
-            byte=str("Close").encode()
-            con.send(byte)
-            con.close()
+            asyncio.run(CollectServer.connection_loop())
         except:
             pass
 
-    def connection_loop():
-        try:
-            if collect_settings.secure == 1:
-                ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-                ssl_context.options |= ssl.PROTOCOL_TLSv1_2
-                ssl_context.load_cert_chain(certfile = collect_settings.application_path + "localhost.crt", keyfile = collect_settings.application_path + "localhost.pem")
-                loop = asyncio.new_event_loop()
-                coro = loop.create_server(EchoServerClientProtocol, collect_settings.server, collect_settings.port, ssl=ssl_context)
-                while True:
-                    if collect_settings.running == 0:break
-                    server = loop.run_until_complete(coro)
-                    time.sleep(1)
-            else:
-                loop = asyncio.new_event_loop()
-                coro = loop.create_server(EchoServerClientProtocol, collect_settings.server, collect_settings.port)
-                while True:
-                    if collect_settings.running == 0:break
-                    server = loop.run_until_complete(coro)
-                    time.sleep(1)
-        except:
-            pass
 
+#CollectServer.server_start()

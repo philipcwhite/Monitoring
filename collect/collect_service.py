@@ -13,7 +13,7 @@ import win32service
 import win32serviceutil
 import datetime
 # User classes
-import collect_load, collect_server, collect_settings
+import collect_server, collect_settings
 
 class CollectService(win32serviceutil.ServiceFramework):
     _svc_name_ = "CollectService"
@@ -27,14 +27,16 @@ class CollectService(win32serviceutil.ServiceFramework):
     def SvcStop(self):
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.hWaitStop)
-        collect_server.CollectServer.send_close()
+
+        collect_settings.running == 0
+        con = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        con.connect((collect_settings.server,collect_settings.port))
+        byte=str('Close').encode()
+        con.send(byte)
+        con.close()
 
     def SvcDoRun(self):
-        collect_load.load_config()
-        rc = None
-        while rc != win32event.WAIT_OBJECT_0:
-            collect_server.CollectServer.connection_loop()
-            rc = win32event.WaitForSingleObject(self.hWaitStop, 10000)
+        collect_server.CollectServer.server_start()
                 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
