@@ -122,10 +122,19 @@ class controller(object):
             html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page('Users', WebViews.load_user_add()))
             return html
 
-    def user_edit_pass(self, id, password=None):
+    def user_edit_pass(self, id, pass1=None, pass2=None):
         user = self.get_auth()
-        html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page('Users', 'Users'))
-        return html
+        if pass1 is None and pass2 is None:
+            html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page('Users', WebViews.load_user_edit_password()))
+            return html
+        else:
+            user_data = WebData.web_code_select_user(id)
+            print(id, user_data['username'], pass1, pass2)
+            changepw = WebAuth.change_password(user_data['username'], pass1, pass2)
+            if changepw is True:
+                self.redirect('/users')
+            else:
+                self.redirect('/error')
 
     def user_edit_role(self, id, role=None):
         user = self.get_auth()
