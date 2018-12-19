@@ -18,3 +18,7 @@ class WebAuth:
             WebData.web_change_password(username, encrypt_password2)
             return True
         return False
+    def set_password(pass1, pass2):
+        if pass1 == pass2:
+            encrypt_password = hashlib.sha224(pass1.encode()).hexdigest()
+            return encrypt_password
