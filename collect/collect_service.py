@@ -28,7 +28,7 @@ class CollectService(win32serviceutil.ServiceFramework):
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.hWaitStop)
 
-        collect_settings.running == 0
+        collect_settings.running = 0
         con = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         con.connect((collect_settings.server,collect_settings.port))
         byte=str('Close').encode()
