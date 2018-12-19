@@ -7,7 +7,7 @@ The goal of this project is to make a tool that provides good functionality and 
 This repository contains the code for the monitoring web server, collect and event engines, and a Windows agent.  It is a early beta at this point however most of the functionality is working.  
 
 ### The Monitoring Server
-The monitoring server is composed of three services: the website, the collect engine, and the event engine.  These services all connect to a MySQL (MariaDB) backend.  The website coded in pure Python and runs on CherryPy as a Windows service.  It's main purpose is for viewing the event data although it provides user, notification policy, and event administration.  The collect engine mainly acts as a gateway to translate TCP/SSL data from agents into SQL records.  It does some event management as well when it is processing incoming events.  The event engine takes care of agent down events and processes notifications.  Notifications are by default logged and can be sent to a SMTP server.  
+The monitoring server is composed of three services: the website, the collect engine, and the event engine.  These services all connect to a MySQL (MariaDB) backend.  The website coded in pure Python and runs on a custom server as a Windows service.  It's main purpose is for viewing the event data although it provides user, notification policy, and event administration.  The collect engine mainly acts as a gateway to translate TCP/SSL data from agents into SQL records.  It does some event management as well when it is processing incoming events.  The event engine takes care of agent down events and processes notifications.  Notifications are by default logged and can be sent to a SMTP server.  
 
 ### The Windows Agent
 The Windows agent collects data via WMIC and processes events locally.  It stores its data in a SQLite database which allows the agent to maintain state even after reboots and system crashes.  Data is transferred via TCP (or TCP/SSL) to the Collect Engine on the Monitoring Server.  All data transmissions require a response from the Collect Server to assure data has been transferred.  If the Agent does not receive a response it will keep trying to send the data until it succeeds.  Data is transferred via TCP over port 8888 (SSL by default).  Agent configuration and thresholds are maintained locally on the agent.  The agent receives no configuration or commands from above.  This is designed by default to allow agents to function in a secured environment.
@@ -21,6 +21,8 @@ Home View
 Device View
 
 ## Updates
+
+12/19/2018 - Fixed the issue with the collector not stopping.  
 
 12/18/2018 - Lots of updates today and some new broken code.  It looks like Python 3.7 did actually break a few things.  I am working on fixing these.  The Collector now starts fine and receives data but it will not end via a Windows service Stop.  After revisiting some of my old code there is a lot of room for improvement so I'll try to do some cleanup while I'm working on the 3.7 issues.  Also I replaced CherryPy with my own custom web server.  Initial tests are good.  You should see updates more frequently now that things have settled a bit with my web server project.
 
