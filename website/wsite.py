@@ -137,8 +137,14 @@ class controller(object):
 
     def user_edit_role(self, id, role=None):
         user = self.get_auth()
-        html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page('Users', 'Users'))
-        return html
+        if role == None: 
+            roleid = WebData.web_code_select_user(id)
+            print(roleid)
+            html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page('Users', WebViews.load_user_edit_role(roleid['role'])))
+            return html
+        else:
+            WebData.web_code_edit_user_role(id, role)
+            self.redirect('/users')
 
     def user_delete(self, id):
         user = self.get_auth()
