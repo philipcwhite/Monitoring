@@ -22,6 +22,8 @@ Device View
 
 ## Updates
 
+12/21/2018 - Updated the Wiki to include some installation and configuration notes.  While it seems like there are a lot of steps at this point it will be greatly simplified after it has been compiled and packaged.  
+
 12/19/2018 - Fixed the issue with the collector not stopping.  
 
 12/18/2018 - Lots of updates today and some new broken code.  It looks like Python 3.7 did actually break a few things.  I am working on fixing these.  The Collector now starts fine and receives data but it will not end via a Windows service Stop.  After revisiting some of my old code there is a lot of room for improvement so I'll try to do some cleanup while I'm working on the 3.7 issues.  Also I replaced CherryPy with my own custom web server.  Initial tests are good.  You should see updates more frequently now that things have settled a bit with my web server project.
