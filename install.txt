@@ -16,9 +16,7 @@ pip install pywin32
 
 sc create monitoringcollect displayname="Monitoring Collect Engine" binPath="python.exe C:\Progra~1\monitoring\collect\collect_service.py" type=own error=ignore start=auto
 
-
 sc create monitoringevent displayname="Monitoring Event Engine" binPath="python.exe C:\Progra~1\monitoring\event\event_service.py" type=own error=ignore start=auto
-
 
 sc create monitoringweb displayname="Monitoring Website" binPath="python.exe C:\Progra~1\monitoring\website\web_service.py" type=own error=ignore start=auto
  
