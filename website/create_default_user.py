@@ -31,6 +31,6 @@ def create_user(username, password):
 
 
 
-create_user("philwhite", "test")
+create_user("admin", "test")
 
 
