@@ -2,9 +2,7 @@ Install Notes
 
 Windows application installation directories: 
 C:\Progra~1\monitoring\
-
 C:\Progra~1\monitoring\collect
-
 C:\Progra~1\monitoring\event
 C:\Progra~1\monitoring\website
 
@@ -12,9 +10,9 @@ MySQL/MariaDB SQL install script included.
 
 If using Python (raw):  
 
-I am currently writing the app on Python 3.6.5.  You must also install pymysql and cherrypy.
+I am currently writing the app on Python 3.6.5.  You must also install pymysql and pywin32.
 pip install pymysql
-pip install cherrypy
+pip install pywin32
 
 sc create monitoringcollect displayname="Monitoring Collect Engine" binPath="python.exe C:\Progra~1\monitoring\collect\collect_service.py" type=own error=ignore start=auto
 
