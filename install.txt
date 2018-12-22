@@ -26,15 +26,11 @@ sc create monitoringweb displayname="Monitoring Website" binPath="python.exe C:\
 For PyInstaller: 
 
 Compile: pyinstaller -F --hidden-import=win32timezone collect_service.py
-
 Install: C:\Progra~1\monitoring\collect\collect_service.exe install
 
 Compile: pyinstaller -F --hidden-import=win32timezone event_service.py
-
 Install: C:\Progra~1\monitoring\event\event_service.exe install
 
 
 Compile: pyinstaller -F --hidden-import=win32timezone web_service.py
-
 Install: C:\Progra~1\monitoring\web\web_service.exe install
-
