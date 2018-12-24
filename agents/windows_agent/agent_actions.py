@@ -440,11 +440,11 @@ class AgentProcess():
         AgentSettings.agent_time = str(time.time()).split('.')[0]
         send_message = AgentProcess.data_process()
         event_message = AgentProcess.event_process()
-        print(send_message, event_message)
+        #print(send_message, event_message)
         message = send_message + event_message
         AgentProcess.send_data(message)
         AgentSQL.delete_agent_data()
         AgentSQL.delete_agent_events()
 
-AgentProcess.load_config()
-AgentProcess.run_process()
+#AgentProcess.load_config()
+#AgentProcess.run_process()
