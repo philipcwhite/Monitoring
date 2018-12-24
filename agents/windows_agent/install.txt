@@ -1,6 +1,6 @@
 Install Notes
 Application Installation directory: C:\Progra~1\monitoring\agent\
-Must include: thresholds.cfg and settings.cfg
+Must include: settings.cfg
 
 For PyInstaller: 
 Compile: pyinstaller -F --hidden-import=win32timezone agent_service.py

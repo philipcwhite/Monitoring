@@ -13,7 +13,7 @@ import win32service
 import win32serviceutil
 import datetime
 # User classes
-import agent_load, agent_actions
+import agent_actions
 
 class AgentService(win32serviceutil.ServiceFramework):
     _svc_name_ = "AgentService"
@@ -29,7 +29,7 @@ class AgentService(win32serviceutil.ServiceFramework):
         win32event.SetEvent(self.hWaitStop)
 
     def SvcDoRun(self):
-        agent_load.load_config()
+        agent_actions.AgentProcess.load_config()
         rc = None
         while rc != win32event.WAIT_OBJECT_0:
             a = datetime.datetime.now().second
