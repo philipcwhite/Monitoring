@@ -22,6 +22,8 @@ Device View
 
 ## Updates
 
+12/24/2018 - I reworked a lot of the agent today.  I reduced the number of files that it requires from 10 down to 3 and cleaned up a lot of code.  It still has room for improvement but I think this is a good change.  
+
 12/21/2018 - Updated the Wiki to include some installation and configuration notes.  While it seems like there are a lot of steps at this point it will be greatly simplified after it has been compiled and packaged.  
 
 12/19/2018 - Fixed the issue with the collector not stopping.  
