@@ -1,218 +1,193 @@
-import os, platform, socket, ssl, sqlite3, time
+# Copyright (C) 2018-2019 Phil White - All Rights Reserved
+# 
+# You may use, distribute and modify this code under the
+# terms of the Apache 2 license. You should have received a 
+# copy of the Apache 2 license with this file. If not, 
+# please visit:  https://github.com/philipcwhite/monitoring
+
+import os, platform, socket, sqlite3, ssl, time
 
 class AgentSettings:
-    agent_path = 'C:\\Progra~1\\monitoring\\agent\\'
-    agent_time = None
-    agent_name = None
-    server = '127.0.0.1'
+    log = None
+    name = None
+    path = 'C:\\Progra~1\\monitoring\\agent\\'
     port = 8888
     secure = 0
-    log = None
+    server = '127.0.0.1'
     services = []
-
+    time = None
+    
 class AgentSQL():
     def sql_con():
-        try:
-            database = AgentSettings.agent_path + 'agent_sqlite.db'
-            con = sqlite3.connect(database, isolation_level=None)
-            return con
-        except: pass
+        database = AgentSettings.path + 'agent_sqlite.db'
+        con = sqlite3.connect(database, isolation_level=None)
+        return con
 
     def create_tables():
-        try:
-            sql_create_agent_data = r"CREATE TABLE IF NOT EXISTS AgentData (time integer,name text,monitor text,value integer,sent integer);" 
-            sql_create_agent_events = r"CREATE TABLE IF NOT EXISTS AgentEvents (time integer,name text,monitor text,message text,status integer,severity integer, sent integer);"
-            sql_create_agent_thresholds = r"CREATE TABLE IF NOT EXISTS AgentThresholds (monitor text,severity integer,threshold integer, compare text,duration integer);"
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_create_agent_data)
-                c.execute(sql_create_agent_events)
-                c.execute(sql_create_agent_thresholds)
-            con.commit()
-            con.close()
-        except: pass
+        sql_create_agent_data = "CREATE TABLE IF NOT EXISTS AgentData (time integer,name text,monitor text,value integer,sent integer);"
+        sql_create_agent_events = "CREATE TABLE IF NOT EXISTS AgentEvents (time integer,name text,monitor text,message text,status integer,severity integer, sent integer);"
+        sql_create_agent_thresholds = "CREATE TABLE IF NOT EXISTS AgentThresholds (monitor text,severity integer,threshold integer, compare text,duration integer);"
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_create_agent_data)
+            c.execute(sql_create_agent_events)
+            c.execute(sql_create_agent_thresholds)
+        con.commit()
+        con.close()
 
     def delete_thresholds():
-        try:
-            sql_query = r"DELETE FROM AgentThresholds"
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-            con.commit()
-            con.close()
-        except: pass
+        sql_query = "DELETE FROM AgentThresholds"
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+        con.commit()
+        con.close()
 
     def insert_thresholds(monitor, severity, threshold, compare, duration):
-        try:
-            sql_query = r"INSERT INTO AgentThresholds(monitor, severity, threshold, compare, duration) VALUES('" + monitor + "'," + severity + "," + threshold + ",'" + compare +  "'," + duration + ")"
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-            con.commit()
-            con.close()
-        except: pass
+        sql_query = "INSERT INTO AgentThresholds(monitor, severity, threshold, compare, duration) VALUES('" + monitor + "'," + severity + "," + threshold + ",'" + compare +  "'," + duration + ")"
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+        con.commit()
+        con.close()
 
     def select_thresholds():
-        try:
-            output = ''
-            sql_query = r"SELECT monitor, severity, threshold, compare, duration FROM AgentThresholds"
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-                rows = c.fetchall()
-            con.commit()
-            con.close()
-            return rows
-        except: pass
+        rows = ''
+        sql_query = "SELECT monitor, severity, threshold, compare, duration FROM AgentThresholds"
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+            rows = c.fetchall()
+        con.commit()
+        con.close()
+        return rows
 
     def insert_agentdata(monitor, value):
-        try:
-            sql_query = r"INSERT INTO AgentData(time, name, monitor, value, sent) VALUES(" + AgentSettings.agent_time + ",'" + AgentSettings.agent_name + "','" + monitor + "','" + value +  "',0)"
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-            con.commit()
-            con.close()
-        except: pass
+        sql_query = r"INSERT INTO AgentData(time, name, monitor, value, sent) VALUES(" + AgentSettings.time + ",'" + AgentSettings.name + "','" + monitor + "','" + value +  "',0)"
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+        con.commit()
+        con.close()
 
     def select_agent_data():
-        try:
-            output = ""
-            sql_query = r"SELECT time, name, monitor, value FROM AgentData WHERE sent=0 AND monitor NOT LIKE '%perf.service%'"
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-                rows = c.fetchall()
-                for time, name, monitor, value in rows:
-                    output = output + str(time) + ";" + name + ";" + monitor + ";" + str(value) + "\n"
-            con.commit()
-            con.close()
-            return output
-        except: pass
+        output = ''
+        sql_query = r"SELECT time, name, monitor, value FROM AgentData WHERE sent=0 AND monitor NOT LIKE '%perf.service%'"
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+            rows = c.fetchall()
+            for time, name, monitor, value in rows:
+                output += str(time) + ';' + name + ';' + monitor + ';' + str(value) + '\n'
+        con.commit()
+        con.close()
+        return output
     
     def select_agent_data_events(time, monitor):
-        try:
-            sql_query = r"SELECT value FROM AgentData WHERE monitor='" + monitor + "' AND time > " + str(time) 
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-                rows = c.fetchall()
-            con.commit()
-            con.close()
-            return rows
-        except: pass
+        sql_query = "SELECT value FROM AgentData WHERE monitor='" + monitor + "' AND time > " + str(time) 
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+            rows = c.fetchall()
+        con.commit()
+        con.close()
+        return rows
 
     def update_agent_data():
-        try:
-            sql_query = r"UPDATE AgentData SET sent=1 WHERE sent=0"
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-            con.commit()
-            con.close()
-        except: pass
+        sql_query = "UPDATE AgentData SET sent=1 WHERE sent=0"
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+        con.commit()
+        con.close()
 
     def delete_agent_data():
-        try:
-            agent_time = str(time.time()-604800).split('.')[0]
-            sql_query = r"DELETE FROM AgentData WHERE time<" + agent_time
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-            con.commit()
-            con.close()
-        except: pass
+        agent_time = str(time.time()-604800).split('.')[0]
+        sql_query = "DELETE FROM AgentData WHERE time<" + agent_time
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+        con.commit()
+        con.close()
 
     def insert_agent_event(monitor, message, severity):
-        try:
-            sql_query = r"""UPDATE AgentEvents SET time=""" + str(AgentSettings.agent_time) + """, message='""" + message + """', severity=""" + str(severity) + """, sent=0 WHERE monitor='""" + monitor + """' AND """ + str(severity) + """ > 
-            (SELECT MAX(severity) FROM AgentEvents WHERE monitor='""" + monitor + """' AND status=1)"""
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-            con.commit()
-            con.close()
-            sql_query = r"""INSERT INTO AgentEvents(time, name, monitor, message, status, severity, sent) SELECT """ + str(AgentSettings.agent_time) + ",'" + AgentSettings.agent_name + "','" + monitor + "','" + message + "',1," + str(severity) + """,0
-            WHERE NOT EXISTS(SELECT 1 FROM AgentEvents WHERE monitor='""" + monitor + """' AND status=1)"""
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-            con.commit()
-            con.close()
-        except: pass
+        sql_query = r"""UPDATE AgentEvents SET time=""" + str(AgentSettings.time) + """, message='""" + message + """', severity=""" + str(severity) + """, sent=0 WHERE monitor='""" + monitor + """' AND """ + str(severity) + """ > 
+        (SELECT MAX(severity) FROM AgentEvents WHERE monitor='""" + monitor + """' AND status=1)"""
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+        con.commit()
+        con.close()
+        sql_query = r"""INSERT INTO AgentEvents(time, name, monitor, message, status, severity, sent) SELECT """ + str(AgentSettings.time) + ",'" + AgentSettings.name + "','" + monitor + "','" + message + "',1," + str(severity) + """,0
+        WHERE NOT EXISTS(SELECT 1 FROM AgentEvents WHERE monitor='""" + monitor + """' AND status=1)"""
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+        con.commit()
+        con.close()
     
     def select_agent_event(monitor):
-        try:
-            sql_query = r"SELECT monitor FROM AgentEvents WHERE monitor='" + monitor + "' AND status = 1" 
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-                monitor = c.fetchone()
-            con.commit()
-            con.close()
-            return monitor
-        except: pass
+        sql_query = "SELECT monitor FROM AgentEvents WHERE monitor='" + monitor + "' AND status=1" 
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+            monitor = c.fetchone()
+        con.commit()
+        con.close()
+        return monitor
 
     def close_agent_event(monitor, severity):
-        try:
-            sql_query =  r"UPDATE AgentEvents SET status=0, sent=0 WHERE monitor='" + monitor + "' AND severity = " + severity 
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-            con.commit()
-            con.close()
-        except: pass
+        sql_query =  "UPDATE AgentEvents SET status=0, sent=0 WHERE monitor='" + monitor + "' AND severity=" + str(severity) 
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+        con.commit()
+        con.close()
 
     def select_open_agent_events():
-        try:
-            output = None
-            sql_query = r"SELECT time, name, monitor, message, status, severity FROM AgentEvents WHERE sent = 0" 
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-                rows = c.fetchall()
-                for time, name, monitor, message, status, severity in rows:
-                    output = output + str(time) + ";" + name + ";event;" + monitor + ";" + message + ";" + str(status) + ";" + str(severity) + "\n"
-            con.commit()
-            con.close()
-            return output
-        except: pass
+        output = ''
+        sql_query = "SELECT time, name, monitor, message, status, severity FROM AgentEvents WHERE sent=0" 
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+            rows = c.fetchall()
+            for time, name, monitor, message, status, severity in rows:
+                output = output + str(time) + ';' + name + ';event;' + monitor + ';' + message + ';' + str(status) + ';' + str(severity) + '\n'
+        con.commit()
+        con.close()
+        return output
 
     def update_agent_events():
-        try:
-            sql_query = r"UPDATE AgentEvents SET sent=1 WHERE sent=0"
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-            con.commit()
-            con.close()
-        except: pass
+        sql_query = "UPDATE AgentEvents SET sent=1 WHERE sent=0"
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+        con.commit()
+        con.close()
 
     def delete_agent_events():
-        try:
-            sql_query = r"DELETE FROM AgentEvents WHERE status=0 AND sent=1"
-            con = AgentSQL.sql_con()
-            if con is not None:
-                c = con.cursor()
-                c.execute(sql_query)
-            con.commit()
-            con.close()
-        except: pass
+        sql_query = "DELETE FROM AgentEvents WHERE status=0 AND sent=1"
+        con = AgentSQL.sql_con()
+        if con is not None:
+            c = con.cursor()
+            c.execute(sql_query)
+        con.commit()
+        con.close()
 
 class AgentWindows():
     def conf_memory_total():
@@ -304,14 +279,12 @@ class AgentWindows():
 class AgentProcess():
     def load_config():
         #Set name and create SQL database
-        try:
-            AgentSettings.agent_name = socket.gethostname().lower()
-            AgentSQL.create_tables()
-            AgentSQL.delete_thresholds()
-        except: pass
+        AgentSettings.name = socket.gethostname().lower()
+        AgentSQL.create_tables()
+        AgentSQL.delete_thresholds()
         # Load configuration
         try:
-            f = open(AgentSettings.agent_path + 'settings.cfg', 'r')
+            f = open(AgentSettings.path + 'settings.cfg', 'r')
             fl = f.read().split('\n')
             for i in fl:
                 if i.startswith('server:'): AgentSettings.server = i[7:].replace(' ','')
@@ -325,89 +298,82 @@ class AgentProcess():
         except: pass
 
     def data_process():
-        try:
-            osplatform = platform.system()
-            osarchitecture = platform.architecture()[0]
-            osbuild = platform.win32_ver()[1]
-            ipaddress = socket.gethostbyname(socket.gethostname())
-            domain = socket.getfqdn().split('.', 1)[1]
-            processors = str(os.cpu_count())
-            AgentSQL.insert_agentdata('conf.os.name', osplatform)
-            AgentSQL.insert_agentdata('conf.os.architecture', osarchitecture)
-            AgentSQL.insert_agentdata('conf.os.build', osbuild)
-            AgentSQL.insert_agentdata('conf.ipaddress', ipaddress)
-            AgentSQL.insert_agentdata('conf.domain', domain)
-            AgentSQL.insert_agentdata('conf.processors', processors)
-            AgentWindows.conf_memory_total()
-            AgentWindows.perf_filesystem()
-            AgentWindows.perf_memory()
-            AgentWindows.perf_network()
-            AgentWindows.perf_pagefile()
-            AgentWindows.perf_processor()
-            AgentWindows.perf_uptime()
-            AgentWindows.perf_services()
-        except: pass
+        osplatform = platform.system()
+        osarchitecture = platform.architecture()[0]
+        osbuild = platform.win32_ver()[1]
+        ipaddress = socket.gethostbyname(socket.gethostname())
+        domain = socket.getfqdn().split('.', 1)[1]
+        processors = str(os.cpu_count())
+        AgentSQL.insert_agentdata('conf.os.name', osplatform)
+        AgentSQL.insert_agentdata('conf.os.architecture', osarchitecture)
+        AgentSQL.insert_agentdata('conf.os.build', osbuild)
+        AgentSQL.insert_agentdata('conf.ipaddress', ipaddress)
+        AgentSQL.insert_agentdata('conf.domain', domain)
+        AgentSQL.insert_agentdata('conf.processors', processors)
+        AgentWindows.conf_memory_total()
+        AgentWindows.perf_filesystem()
+        AgentWindows.perf_memory()
+        AgentWindows.perf_network()
+        AgentWindows.perf_pagefile()
+        AgentWindows.perf_processor()
+        AgentWindows.perf_uptime()
+        AgentWindows.perf_services()
         output = AgentSQL.select_agent_data()
         return output
-
+        
     def event_create(monitor, severity, threshold, compare, duration, status):
-        print('event create')
-        try:
-            message = monitor.replace('perf.', '').replace('.', ' ').capitalize()
-            message = message + ' ' + compare + ' ' + str(threshold) + ' for ' + str(round(duration/60)) + ' minutes'
-            # Check open messages
-            check_monitor = AgentSQL.select_agent_event(monitor)
-            if not check_monitor is None: check_monitor=check_monitor[0]
-            # Create, update, and queue events for dispatch
-            if check_monitor is None and status == 1:
-                AgentSQL.insert_agent_event(monitor, message, severity)
-            elif check_monitor == monitor and status == 0:
-                AgentSQL.close_agent_event(monitor, severity)
-            else: pass
-        except: pass
+        message = monitor.replace('perf.', '').replace('.', ' ').capitalize()
+        message = message + ' ' + compare + ' ' + str(threshold) + ' for ' + str(round(duration/60)) + ' minutes'
+        # Check open messages
+        check_monitor = AgentSQL.select_agent_event(monitor)
+        if not check_monitor is None: check_monitor=check_monitor[0]
+        # Create, update, and queue events for dispatch
+        if check_monitor is None and status == 1:
+            AgentSQL.insert_agent_event(monitor, message, severity)
+        elif check_monitor == monitor and status == 0:
+            AgentSQL.close_agent_event(monitor, severity)
+        else: pass
         
     def event_process():
-        try:
-            agent_time_int = int(AgentSettings.agent_time)
-            agent_thresholds = AgentSQL.select_thresholds()
+        agent_time_int = int(AgentSettings.time)
+        agent_thresholds = AgentSQL.select_thresholds()
+        a_val = 0
+        b_val = 0
+        for i in agent_thresholds:
+            monitor = i[0]
+            severity = i[1]
+            threshold = int(i[2])
+            compare = i[3]
+            duration = i[4]
+            time_window = agent_time_int - duration
+            agent_data = AgentSQL.select_agent_data_events(time_window, monitor)
             a_val = 0
             b_val = 0
-            for i in agent_thresholds:
-                monitor = i[0]
-                severity = i[1]
-                threshold = int(i[2])
-                compare = i[3]
-                duration = i[4]
-                time_window = agent_time_int - duration
-                agent_data = AgentSQL.select_agent_data_events(time_window, monitor)
-                a_val = 0
-                b_val = 0
-                for i in agent_data:
-                    value = i[0]
-                    if compare == '>':
-                        if value > threshold:
-                            a_val += 1
-                            b_val += 1
-                        else: b_val += 1
-                    elif compare == '<':
-                        if value < threshold:
-                            a_val += 1
-                            b_val += 1
-                        else: b_val += 1
-                    elif compare == '=':
-                        if value == 0 and threshold == 0:
-                            a_val += 1
-                            b_val += 1
-                        else: b_val += 1
-                if a_val == b_val and b_val != 0 :
-                    AgentProcess.event_create(monitor, severity, threshold, compare, duration, 1)
-                else:
-                    AgentProcess.event_create(monitor, severity, threshold, compare, duration, 0)
-            output = AgentSQL.select_open_agent_events()
-            if output is None: output = ''
-            return output
-        except: pass
-
+            for i in agent_data:
+                value = i[0]
+                if compare == '>':
+                    if value > threshold:
+                        a_val += 1
+                        b_val += 1
+                    else: b_val += 1
+                elif compare == '<':
+                    if value < threshold:
+                        a_val += 1
+                        b_val += 1
+                    else: b_val += 1
+                elif compare == '=':
+                    if value == 0 and threshold == 0:
+                        a_val += 1
+                        b_val += 1
+                    else: b_val += 1
+            if a_val == b_val and b_val != 0 :
+                AgentProcess.event_create(monitor, severity, threshold, compare, duration, 1)
+            else:
+                AgentProcess.event_create(monitor, severity, threshold, compare, duration, 0)
+        output = AgentSQL.select_open_agent_events()
+        if output is None: output = ''
+        return output
+        
     def send_data(message):
         sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         try:
@@ -437,7 +403,7 @@ class AgentProcess():
         except: pass
 
     def run_process():
-        AgentSettings.agent_time = str(time.time()).split('.')[0]
+        AgentSettings.time = str(time.time()).split('.')[0]
         send_message = AgentProcess.data_process()
         event_message = AgentProcess.event_process()
         #print(send_message, event_message)
