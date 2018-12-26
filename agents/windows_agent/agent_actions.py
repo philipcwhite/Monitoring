@@ -169,7 +169,7 @@ class AgentWindows():
         result = process.read()
         process.close()
         result = result.replace('\n','').replace('TotalPhysicalMemory=','')
-        result = round(int(result)  / 1024 / 1024, 0)
+        result = round(int(result)  / 1048576, 0)
         AgentSQL.insert_data('conf.memory.total', str(result))
 
     def perf_filesystem():
