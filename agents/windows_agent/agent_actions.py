@@ -251,7 +251,7 @@ class AgentWindows():
                 AgentSQL.insert_data(sname, str(result))
 
 class AgentProcess():
-    def load_config():
+    def initialize_agent():
         AgentSettings.name = socket.gethostname().lower()
         AgentSQL.create_tables()
         AgentSQL.delete_thresholds()
@@ -376,5 +376,5 @@ class AgentProcess():
         AgentSQL.delete_data()
         AgentSQL.delete_events()
 
-#AgentProcess.load_config()
+#AgentProcess.initialize_agent()
 #AgentProcess.run_process()
