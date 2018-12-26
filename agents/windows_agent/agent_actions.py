@@ -33,7 +33,7 @@ class AgentSQL():
         con.commit()
         con.close()
 
-    def delete_agent_data():
+    def delete_data():
         agent_time = str(time.time()-604800).split('.')[0]
         sql_query = "DELETE FROM AgentData WHERE time<" + agent_time
         con = AgentSQL.sql_con()
@@ -42,7 +42,7 @@ class AgentSQL():
         con.commit()
         con.close()
 
-    def delete_agent_events():
+    def delete_events():
         sql_query = "DELETE FROM AgentEvents WHERE status=0 AND sent=1"
         con = AgentSQL.sql_con()
         c = con.cursor()
@@ -58,7 +58,7 @@ class AgentSQL():
         con.commit()
         con.close()
 
-    def insert_agent_data(monitor, value):
+    def insert_data(monitor, value):
         sql_query = r"INSERT INTO AgentData(time, name, monitor, value, sent) VALUES(" + AgentSettings.time + ",'" + AgentSettings.name + "','" + monitor + "','" + value +  "',0)"
         con = AgentSQL.sql_con()
         c = con.cursor()
@@ -66,7 +66,7 @@ class AgentSQL():
         con.commit()
         con.close()
 
-    def insert_agent_event(monitor, message, severity):
+    def insert_event(monitor, message, severity):
         sql_query = "UPDATE AgentEvents SET time=" + str(AgentSettings.time) + ", message='" + message + "', severity=" + str(severity) + ", sent=0 WHERE monitor='" + monitor + "' AND " + str(severity)  
         sql_query += "> (SELECT MAX(severity) FROM AgentEvents WHERE monitor='" + monitor + "' AND status=1)"
         con = AgentSQL.sql_con()
@@ -90,7 +90,7 @@ class AgentSQL():
         con.commit()
         con.close()
 
-    def select_agent_data():
+    def select_data():
         output = ''
         sql_query = "SELECT time, name, monitor, value FROM AgentData WHERE sent=0 AND monitor NOT LIKE '%perf.service%'"
         con = AgentSQL.sql_con()
@@ -103,7 +103,7 @@ class AgentSQL():
         con.close()
         return output
     
-    def select_agent_data_events(time, monitor):
+    def select_data_events(time, monitor):
         sql_query = "SELECT value FROM AgentData WHERE monitor='" + monitor + "' AND time > " + str(time) 
         con = AgentSQL.sql_con()
         c = con.cursor()
@@ -113,7 +113,7 @@ class AgentSQL():
         con.close()
         return rows
 
-    def select_agent_event(monitor):
+    def select_event(monitor):
         sql_query = "SELECT monitor FROM AgentEvents WHERE monitor='" + monitor + "' AND status=1" 
         con = AgentSQL.sql_con()
         c = con.cursor()
@@ -123,7 +123,7 @@ class AgentSQL():
         con.close()
         return monitor
 
-    def select_open_agent_events():
+    def select_open_events():
         output = ''
         sql_query = "SELECT time, name, monitor, message, status, severity FROM AgentEvents WHERE sent=0" 
         con = AgentSQL.sql_con()
@@ -146,7 +146,7 @@ class AgentSQL():
         con.close()
         return rows    
     
-    def update_agent_data_events():
+    def update_close_data_events():
         sql_update_data = "UPDATE AgentData SET sent=1 WHERE sent=0"
         sql_update_events = "UPDATE AgentEvents SET sent=1 WHERE sent=0"
         con = AgentSQL.sql_con()
@@ -156,7 +156,7 @@ class AgentSQL():
         con.commit()
         con.close()
 
-    def update_agent_event(monitor, severity):
+    def update_event(monitor, severity):
         sql_query =  "UPDATE AgentEvents SET status=0, sent=0 WHERE monitor='" + monitor + "' AND severity=" + str(severity) 
         con = AgentSQL.sql_con()
         c = con.cursor()
@@ -171,7 +171,7 @@ class AgentWindows():
         process.close()
         result = result.replace('\n','').replace('TotalPhysicalMemory=','')
         result = round(int(result)  / 1024 / 1024, 0)
-        AgentSQL.insert_agent_data('conf.memory.total', str(result))
+        AgentSQL.insert_data('conf.memory.total', str(result))
 
     def perf_filesystem():
         process = os.popen('''wmic path Win32_PerfFormattedData_PerfDisk_LogicalDisk WHERE "Name LIKE '%:'" get Name,PercentFreeSpace,PercentIdleTime /format:csv''')
@@ -185,8 +185,8 @@ class AgentWindows():
                 ld_name = ld_list[1].replace(':','').lower()
                 ld_free = float(ld_list[2])
                 ld_at = 100 - float(ld_list[3])
-                AgentSQL.insert_agent_data('perf.filesystem.' + ld_name + '.percent.free', str(ld_free))
-                AgentSQL.insert_agent_data('perf.filesystem.' + ld_name + '.percent.active', str(ld_at))
+                AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.free', str(ld_free))
+                AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.active', str(ld_at))
 
     def perf_memory():
         process = os.popen('wmic path Win32_OperatingSystem get FreePhysicalMemory,TotalVisibleMemorySize /value')
@@ -198,7 +198,7 @@ class AgentWindows():
         TotalMem = int(result_list[1].replace('TotalVisibleMemorySize=',''))
         PercentMem = ((TotalMem-FreeMem)/TotalMem)*100
         PercentMem = round(PercentMem,2)
-        AgentSQL.insert_agent_data('perf.memory.percent.used', str(PercentMem))
+        AgentSQL.insert_data('perf.memory.percent.used', str(PercentMem))
 
     def perf_network():
         nw_br = 0
@@ -213,29 +213,29 @@ class AgentWindows():
                 nw_list = i.split(",")
                 nw_br = nw_br + int(nw_list[1])
                 nw_bs = nw_bs + int(nw_list[2])
-        AgentSQL.insert_agent_data('perf.network.bytes.received', str(nw_br))
-        AgentSQL.insert_agent_data('perf.network.bytes.sent', str(nw_bs))
+        AgentSQL.insert_data('perf.network.bytes.received', str(nw_br))
+        AgentSQL.insert_data('perf.network.bytes.sent', str(nw_bs))
 
     def perf_pagefile():
         process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_PagingFile where name="_Total" get PercentUsage /value')
         result = process.read()
         process.close()
         result = result.replace('\n','').replace('PercentUsage=','')
-        AgentSQL.insert_agent_data('perf.pagefile.percent.used', str(result))
+        AgentSQL.insert_data('perf.pagefile.percent.used', str(result))
     
     def perf_processor():
         process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_Processor where name="_Total" get PercentProcessorTime /value')
         result = process.read()
         process.close()
         result = result.replace('\n','').replace('PercentProcessorTime=','')
-        AgentSQL.insert_agent_data('perf.processor.percent.used', str(result))
+        AgentSQL.insert_data('perf.processor.percent.used', str(result))
     
     def perf_uptime():
         process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_System get SystemUptime /value')
         result = process.read()
         process.close()
         result = result.replace('\n','').replace('SystemUpTime=','')
-        AgentSQL.insert_agent_data('perf.system.uptime.seconds', str(result))
+        AgentSQL.insert_data('perf.system.uptime.seconds', str(result))
     
     def perf_services():
         if AgentSettings.services:
@@ -249,7 +249,7 @@ class AgentWindows():
                     result = 1
                 else:
                     result = 0
-                AgentSQL.insert_agent_data(sname, str(result))
+                AgentSQL.insert_data(sname, str(result))
 
 class AgentProcess():
     def load_config():
@@ -272,12 +272,12 @@ class AgentProcess():
 
     def data_process():
         try:
-            AgentSQL.insert_agent_data('conf.os.name', platform.system())
-            AgentSQL.insert_agent_data('conf.os.architecture', platform.architecture()[0])
-            AgentSQL.insert_agent_data('conf.os.build', platform.win32_ver()[1])
-            AgentSQL.insert_agent_data('conf.ipaddress', socket.gethostbyname(socket.gethostname()))
-            AgentSQL.insert_agent_data('conf.domain', socket.getfqdn().split('.', 1)[1])
-            AgentSQL.insert_agent_data('conf.processors', str(os.cpu_count()))
+            AgentSQL.insert_data('conf.os.name', platform.system())
+            AgentSQL.insert_data('conf.os.architecture', platform.architecture()[0])
+            AgentSQL.insert_data('conf.os.build', platform.win32_ver()[1])
+            AgentSQL.insert_data('conf.ipaddress', socket.gethostbyname(socket.gethostname()))
+            AgentSQL.insert_data('conf.domain', socket.getfqdn().split('.', 1)[1])
+            AgentSQL.insert_data('conf.processors', str(os.cpu_count()))
         except: pass
         try:
             AgentWindows.conf_memory_total()
@@ -289,16 +289,16 @@ class AgentProcess():
             AgentWindows.perf_uptime()
             AgentWindows.perf_services()
         except: pass
-        output = AgentSQL.select_agent_data()
+        output = AgentSQL.select_data()
         return output
         
     def event_create(monitor, severity, threshold, compare, duration, status):
         message = monitor.replace('perf.', '').replace('.', ' ').capitalize()
         message = message + ' ' + compare + ' ' + str(threshold) + ' for ' + str(round(duration/60)) + ' minutes'
-        check_monitor = AgentSQL.select_agent_event(monitor)
+        check_monitor = AgentSQL.select_event(monitor)
         if not check_monitor is None: check_monitor=check_monitor[0]
-        if check_monitor is None and status == 1: AgentSQL.insert_agent_event(monitor, message, severity)
-        elif check_monitor == monitor and status == 0: AgentSQL.update_agent_event(monitor, severity)
+        if check_monitor is None and status == 1: AgentSQL.insert_event(monitor, message, severity)
+        elif check_monitor == monitor and status == 0: AgentSQL.update_event(monitor, severity)
         else: pass
         
     def event_process():
@@ -313,7 +313,7 @@ class AgentProcess():
             compare = i[3]
             duration = i[4]
             time_window = agent_time_int - duration
-            agent_data = AgentSQL.select_agent_data_events(time_window, monitor)
+            agent_data = AgentSQL.select_data_events(time_window, monitor)
             a_val = 0
             b_val = 0
             for i in agent_data:
@@ -337,7 +337,7 @@ class AgentProcess():
                 AgentProcess.event_create(monitor, severity, threshold, compare, duration, 1)
             else:
                 AgentProcess.event_create(monitor, severity, threshold, compare, duration, 0)
-        output = AgentSQL.select_open_agent_events()
+        output = AgentSQL.select_open_events()
         if output is None: output = ''
         return output
         
@@ -355,7 +355,7 @@ class AgentProcess():
                 conn.send(byte)
                 data = conn.recv(1024).decode()
                 if data == 'Received':
-                    AgentSQL.update_agent_data_events()
+                    AgentSQL.update_close_data_events()
                 conn.close()
             else:
                 sock.connect((AgentSettings.server, AgentSettings.port))
@@ -363,7 +363,7 @@ class AgentProcess():
                 sock.send(byte)
                 data = sock.recv(1024)
                 if data == 'Received':
-                    AgentSQL.update_agent_data_events()
+                    AgentSQL.update_close_data_events()
                 sock.close()
         except: pass
 
@@ -374,8 +374,8 @@ class AgentProcess():
         #print(send_message, event_message)
         message = send_message + event_message
         AgentProcess.send_data(message)
-        AgentSQL.delete_agent_data()
-        AgentSQL.delete_agent_events()
+        AgentSQL.delete_data()
+        AgentSQL.delete_events()
 
 #AgentProcess.load_config()
 #AgentProcess.run_process()
