@@ -1,9 +1,7 @@
-# Copyright (C) 2018 Phil White - All Rights Reserved
-# You may use, distribute and modify this code under the
-# terms of the Apache 2 license.
-#
-# You should have received a copy of the Apache 2 license with
-# this file. If not, please visit : https://github.com/philipcwhite/monitoring2
+# Copyright (C) 2018-2019 Phil White - All Rights Reserved
+# 
+# You may use, distribute and modify this code under the terms of the Apache 2 license. You should have received a 
+# copy of the Apache 2 license with this file. If not, please visit:  https://github.com/philipcwhite/monitoring
 
 import servicemanager
 import socket
@@ -29,7 +27,7 @@ class AgentService(win32serviceutil.ServiceFramework):
         win32event.SetEvent(self.hWaitStop)
 
     def SvcDoRun(self):
-        agent_actions.AgentProcess.load_config()
+        agent_actions.AgentProcess.initialize_agent()
         rc = None
         while rc != win32event.WAIT_OBJECT_0:
             a = datetime.datetime.now().second
@@ -44,5 +42,4 @@ if __name__ == '__main__':
         servicemanager.StartServiceCtrlDispatcher()
     else:
         win32serviceutil.HandleCommandLine(AgentService)
-
 
