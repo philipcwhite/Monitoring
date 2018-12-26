@@ -59,7 +59,8 @@ class AgentSQL():
         con.close()
 
     def insert_data(monitor, value):
-        sql_query = r"INSERT INTO AgentData(time, name, monitor, value, sent) VALUES(" + AgentSettings.time + ",'" + AgentSettings.name + "','" + monitor + "','" + value +  "',0)"
+        sql_query = "INSERT INTO AgentData(time, name, monitor, value, sent) "
+        sql_query += "VALUES(" + AgentSettings.time + ",'" + AgentSettings.name + "','" + monitor + "','" + value +  "',0)"
         con = AgentSQL.sql_con()
         c = con.cursor()
         c.execute(sql_query)
@@ -67,23 +68,21 @@ class AgentSQL():
         con.close()
 
     def insert_event(monitor, message, severity):
-        sql_query = "UPDATE AgentEvents SET time=" + str(AgentSettings.time) + ", message='" + message + "', severity=" + str(severity) + ", sent=0 WHERE monitor='" + monitor + "' AND " + str(severity)  
-        sql_query += "> (SELECT MAX(severity) FROM AgentEvents WHERE monitor='" + monitor + "' AND status=1)"
+        sql_update = "UPDATE AgentEvents SET time=" + str(AgentSettings.time) + ", message='" + message + "', severity=" + str(severity) + ", sent=0 "
+        sql_update += "WHERE monitor='" + monitor + "' AND " + str(severity) + "> (SELECT MAX(severity) FROM AgentEvents WHERE monitor='" + monitor + "' AND status=1)"
+        sql_insert = "INSERT INTO AgentEvents(time, name, monitor, message, status, severity, sent) "
+        sql_insert += "SELECT " + str(AgentSettings.time) + ",'" + AgentSettings.name + "','" + monitor + "','" + message + "',1," + str(severity) + ",0 "
+        sql_insert += "WHERE NOT EXISTS(SELECT 1 FROM AgentEvents WHERE monitor='""" + monitor + """' AND status=1)"""
         con = AgentSQL.sql_con()
         c = con.cursor()
-        c.execute(sql_query)
-        con.commit()
-        con.close()
-        sql_query = "INSERT INTO AgentEvents(time, name, monitor, message, status, severity, sent) SELECT " + str(AgentSettings.time) + ",'" + AgentSettings.name + "','" + monitor + "','" + message + "',1," + str(severity) + """,0
-        WHERE NOT EXISTS(SELECT 1 FROM AgentEvents WHERE monitor='""" + monitor + """' AND status=1)"""
-        con = AgentSQL.sql_con()
-        c = con.cursor()
-        c.execute(sql_query)
+        c.execute(sql_update)
+        c.execute(sql_insert)
         con.commit()
         con.close()
 
     def insert_thresholds(monitor, severity, threshold, compare, duration):
-        sql_query = r"INSERT INTO AgentThresholds(monitor, severity, threshold, compare, duration) VALUES('" + monitor + "'," + severity + "," + threshold + ",'" + compare +  "'," + duration + ")"
+        sql_query = "INSERT INTO AgentThresholds(monitor, severity, threshold, compare, duration) "
+        sql_query += "VALUES('" + monitor + "'," + severity + "," + threshold + ",'" + compare +  "'," + duration + ")"
         con = AgentSQL.sql_con()
         c = con.cursor()
         c.execute(sql_query)
@@ -371,11 +370,11 @@ class AgentProcess():
         AgentSettings.time = str(time.time()).split('.')[0]
         send_message = AgentProcess.data_process()
         event_message = AgentProcess.event_process()
-        #print(send_message, event_message)
+        print(send_message, event_message)
         message = send_message + event_message
         AgentProcess.send_data(message)
         AgentSQL.delete_data()
         AgentSQL.delete_events()
 
-#AgentProcess.load_config()
-#AgentProcess.run_process()
+AgentProcess.load_config()
+AgentProcess.run_process()
