@@ -1,10 +1,7 @@
-# Copyright (C) 2018 Phil White - All Rights Reserved
-# You may use, distribute and modify this code under the
-# terms of the Apache 2 license.
-#
-# You should have received a copy of the Apache 2 license with
-# this file. If not, please visit : 
-# https://github.com/philipcwhite/webserver
+# Copyright (C) 2018-2019 Phil White - All Rights Reserved
+# 
+# You may use, distribute and modify this code under the terms of the Apache 2 license. You should have received a 
+# copy of the Apache 2 license with this file. If not, please visit: https://github.com/philipcwhite/webserver
 
 import asyncio
 import ssl
@@ -116,8 +113,7 @@ class web_handle(asyncio.Protocol):
                         break
         if not user is None and expires > datetime.datetime.now():
             return user
-        else:
-            return None
+        else: return None
 
     def get_auth(self):
         authorized = False
@@ -126,8 +122,7 @@ class web_handle(asyncio.Protocol):
         if authorized == False:
             self.redirect(app_vars.app_login)
             return 'Not Authorized'
-        else:
-            return user
+        else: return user
 
     def error_404(self):
         self.response_code = 404
@@ -146,19 +141,15 @@ class web_handle(asyncio.Protocol):
         self.path = request_list[0].split(' ')[1]
         if '.' in self.path:
             ext = self.path.split('.')[-1]
-            if ext in app_vars.content_type:
-                self.extension = ext
-            else:
-                self.extension = 'html'
-        else:
-            self.extension = 'html'
+            if ext in app_vars.content_type: self.extension = ext
+            else: self.extension = 'html'
+        else: self.extension = 'html'
         self.arguments = urllib.parse.unquote(request_list[-1])
         for i in request_list:
             if 'Cookie:' in i: 
                 self.get_cookie = i.replace('Cookie: ','')
                 session_id = self.get_cookie.split(';')[0].replace('session_id=','')
-                if not session_id == '':
-                    self.session_id = session_id
+                if not session_id == '': self.session_id = session_id
         print('METHOD:' + self.method)
         print('PATH:' + self.path)
         print('EXT:' + self.extension)
@@ -202,10 +193,8 @@ class web_handle(asyncio.Protocol):
             if not '__' in i:
                 if i == path_func:
                     for x in path_string.split('/'):
-                        if not x is '': 
-                            args.append(x)
-                    if args:
-                        del args[0]
+                        if not x is '': args.append(x)
+                    if args: del args[0]
                     if '?' in self.path:
                         parsed_args = parsed_url[1].split('&')
                         for x in parsed_args:
@@ -213,18 +202,14 @@ class web_handle(asyncio.Protocol):
                     # Handle POST
                     if self.method == 'POST':
                         parsed_args = self.arguments.split('&')
-                        for x in parsed_args:
-                            args.append(x.split('=')[1])
+                        for x in parsed_args: args.append(x.split('=')[1])
                     self.arguments = args
                     func = getattr(self.controller, i)
                     proc = None
                     try:
-                        if args:
-                            proc = func(self, *args)
-                        else:
-                            proc = func(self)
-                    except:
-                        proc = self.error_404()
+                        if args: proc = func(self, *args)
+                        else: proc = func(self)
+                    except: proc = self.error_404()
                     if proc is None: proc = ''
                     self.response_length=str(len(proc))
                     head = self.set_headers()
@@ -251,7 +236,6 @@ class web_handle(asyncio.Protocol):
         if app_vars.stop_loop == True:
             loop = asyncio.get_running_loop()
             loop.call_soon_threadsafe(loop.stop)
-        
         # Parse headers, route request, return data
         message = data.decode('utf-8', 'ignore')
         self.get_headers(message)
@@ -269,14 +253,11 @@ class web_server():
             ssl_context.options |= ssl.PROTOCOL_TLSv1_2
             ssl_context.load_cert_chain(certfile = app_vars.cert_path + app_vars.cert_name, keyfile = app_vars.cert_path + app_vars.cert_key)
             server = await loop.create_server(lambda: web_handle(), app_vars.server_ip, app_vars.server_port, ssl=ssl_context)
-        else:
-            server = await loop.create_server(lambda: web_handle(), app_vars.server_ip, app_vars.server_port)
+        else: server = await loop.create_server(lambda: web_handle(), app_vars.server_ip, app_vars.server_port)
         async with server: await server.serve_forever()
         
 class app:
     def start(controller):
         web_handle.controller = controller
-        try:
-            asyncio.run(web_server.connection_loop())
-        except:
-            pass
+        try: asyncio.run(web_server.connection_loop())
+        except: pass

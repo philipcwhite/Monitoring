@@ -12,10 +12,8 @@ class WebIndex:
         agentsystem = WebData.web_code_index_device_avail()
         for i in agentsystem:
             timestamp = int(i['timestamp'])
-            if (timestamp + uptime_check) >= currenttime:
-                ok += 1
-            else:
-                down += 1
+            if (timestamp + uptime_check) >= currenttime: ok += 1
+            else: down += 1
         total = ok + down
         if total == 0:total = 1
         ok_perc = (ok / total) * 100
@@ -40,14 +38,10 @@ class WebIndex:
         for i in agentevents:
             sev = int(i['severity'])
             sev_tot = int(i['total'])
-            if sev == 1:
-                crit = sev_tot
-            elif sev == 2:
-                majr = sev_tot
-            elif sev == 3:
-                warn = sev_tot
-            elif sev == 4:
-                info = sev_tot
+            if sev == 1: crit = sev_tot
+            elif sev == 2: majr = sev_tot
+            elif sev == 3: warn = sev_tot
+            elif sev == 4: info = sev_tot
         total = info + warn + majr + crit
         if total == 0:total = 1
         info_perc = (info / total) * 100
@@ -91,8 +85,7 @@ class WebIndex:
             agent_timestamp = agentsystem['timestamp']
             agent_processors = agentsystem['processors']
             agent_memory = agentsystem['memory']
-        except:
-            pass
+        except: pass
         try:
             agent_perf = WebData.web_code_device_data_latest(name)
             cpu_perc = 0
@@ -100,8 +93,7 @@ class WebIndex:
             for i in agent_perf:
                 if i['monitor'] == 'perf.processor.percent.used' : cpu_perc = float(i['value'])
                 if i['monitor'] == 'perf.memory.percent.used' : mem_perc = float(i['value'])
-        except:
-            pass
+        except: pass
         html = """<table style="width:100%;height:105px"><tr><td style="width:50%;padding-left:25px;vertical-align:top;padding-top:10px">
         Name: """ + name + """<br />
         Processors: """ + str(agent_processors) + """<br />
@@ -115,9 +107,8 @@ class WebIndex:
             if cpu_perc >= 90 : cpu_color = "D9534F"
             html = html + """<svg width="10" height="10"><rect width="10" height="10" style="fill:#""" + cpu_color + """" /></svg> """ + str(cpu_perc)[:-2] + """% CPU<br />"""
             if mem_perc >= 90: mem_color = "D9534F"
-            html = html + """<svg width="10" height="10"><rect width="10" height="10" style="fill:#""" + mem_color + """" /></svg> """ + str(mem_perc)[:-3] + """% Memory<br />"""
-        else:
-            html = html + "Agent Not Reporting"
+            html = html + """<svg width="10" height="10"><rect width="10" height="10" style="fill:#""" + mem_color + """" /></svg> """ + str(mem_perc)[:-2] + """% Memory<br />"""
+        else: html = html + "Agent Not Reporting"
         html = html + "</td></tr></table>"
         return html
 
@@ -151,12 +142,9 @@ class WebIndex:
         html = ""
         if page_count > 1:
             for i in range(1,page_count + 1):
-                if i == page:
-                    html += """<td style="width:10px">""" + str(i) + "</td>"
-                elif i == 1:
-                    html += """<td style="width:10px"><a href="/">""" + str(i) + """</a></td>"""
-                else:
-                    html += """<td style="width:10px"><a href="/""" + str(i) + """">""" + str(i) + """</a></td>"""
+                if i == page: html += """<td style="width:10px">""" + str(i) + "</td>"
+                elif i == 1: html += """<td style="width:10px"><a href="/">""" + str(i) + """</a></td>"""
+                else: html += """<td style="width:10px"><a href="/""" + str(i) + """">""" + str(i) + """</a></td>"""
         return html
 
     def index_content(qstring="page=1"):
@@ -211,7 +199,6 @@ class WebDevice:
             if 'filesystem' in i['monitor'] and 'active' in i['monitor']:
                 fs_name = i['monitor'].replace('perf.filesystem.','').replace('.percent.active','')
                 fs_list.append(fs_name)
-        
         html_fs = """<tr><td  style="padding-bottom:4px;text-align:left">
                   <div class="card-div">
                   <div class="card-header">Filesystem Monitors</div>
@@ -232,8 +219,7 @@ class WebDevice:
                         <td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.free">Free Space: """ + fs_free + """</a></td>
                         <td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.active">Filesystem Activity: """ + fs_active + """</a></td>
                         </tr></table>"""
-            except:
-                pass
+            except: pass
         html_fs += """</div></div></td></tr>""" 
         html = """<tr><td style="padding-right:4px;text-align:center">
             <div class="card-div" style="height:70px">
@@ -266,7 +252,6 @@ class WebDevice:
             <td style="width:33%"><a href="/devices/""" + name + """/graph/perf.network.bytes.received">Bytes Received: """ + str(net_br) + """</a></td>
             </tr></table></div></div></td></tr>"""
         html += html_fs
-
         return html
 
     def device_content(name):
@@ -291,10 +276,8 @@ class WebDevice:
             time_short = datetime.datetime.fromtimestamp(int(i['timestamp'])).strftime('%H:%M')
             for i in data_list:
                 if i.time == time_short:
-                    if device_value == 0:
-                        i.dvalue = 0
-                    else:
-                        i.dvalue = (device_value / max_value)*100
+                    if device_value == 0: i.dvalue = 0
+                    else: i.dvalue = (device_value / max_value)*100
         device_polyline = ""
         device_polyline_data = ""
         device_time = ""
@@ -356,14 +339,10 @@ class WebEvents:
         for i in agentevents:
             sev = int(i['severity'])
             sev_tot = int(i['total'])
-            if sev == 1:
-                crit = sev_tot
-            elif sev == 2:
-                majr = sev_tot
-            elif sev == 3:
-                warn = sev_tot
-            elif sev == 4:
-                info = sev_tot
+            if sev == 1: crit = sev_tot
+            elif sev == 2: majr = sev_tot
+            elif sev == 3: warn = sev_tot
+            elif sev == 4: info = sev_tot
         total = info + warn + majr + crit
         status_text = ""
         change_status = abs(int(status) - 1)
@@ -411,16 +390,13 @@ class WebEvents:
             elif int(i['severity']) == 1:
                 color = "#D9534F"
                 sev_text = "Critical"
-            
             html = html + """<tr><td style="text-align:left;padding-left:10px">""" + date + """</td>
             <td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" style="fill:""" + color + """" /></svg> """ + sev_text + """</td>
             <td><a href="/device/""" + i['name'] + """">""" + i['name'] + """</a></td>
             <td>""" + i['message'] + """</td>
             <td style="text-align:right;padding-right:12px"><input type="button" onclick="window.location.href='/event_change/""" + str(i['id']) + """/""" + str(change_status) + """'" class="action-button" value='""" + change_status_text +"""'  /></td>
             </tr>"""
-
         html = html + "</table>"
-
         return html
 
     def events_content(status):
@@ -438,7 +414,6 @@ class WebSettings:
         <br />          
         """
         return html
-
 
 class WebSearch:
     def search_devices(device):
@@ -486,7 +461,6 @@ class WebNotify:
             html += "<tr><td>Status</td><td><input type='radio' name='agent_status' value='1' checked='checked' /> Open <input type='radio' name='agent_status' value='0' /> Closed</td></tr>"
         else:
             html += "<tr><td>Status</td><td><input type='radio' name='agent_status' value='1' /> Open <input type='radio' name='agent_status' value='0' checked='checked' /> Closed</td></tr>"
-        
         html += "<tr><td>Severity</td><td><select name='agent_severity'>"
         if int(rule['agent_severity']) == 4: 
             html += "<option value='4' selected>Information</option><option value='3'>Warning</option><option value='2'>Major</option><option value='1'>Critical</option>"
@@ -502,7 +476,6 @@ class WebNotify:
             html += "<tr><td>Enabled</td><td><input type='radio' name='notify_enabled' value='1' /> True <input type='radio' name='notify_enabled' value='0' checked='checked' /> False</td></tr>"
       
         html += "<tr><td></td><td style='text-align:right'><input type='submit' class='action-button' value='submit' /></td></tr></table>"
-        
         return html
 
 class WebUsers:
@@ -521,9 +494,3 @@ class WebUsers:
     def user_add(username, password, role):
         encrypt_password = hashlib.sha224(password.encode()).hexdigest()
         WebData.web_code_create_user(username, encrypt_password, role)
-    
-
-
-    
-
-
