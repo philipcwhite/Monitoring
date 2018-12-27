@@ -3,7 +3,7 @@
 # You may use, distribute and modify this code under the terms of the Apache 2 license. You should have received a 
 # copy of the Apache 2 license with this file. If not, please visit:  https://github.com/philipcwhite/monitoring
 
-import os, platform, socket, sqlite3, ssl, time
+import os, platform, re, socket, sqlite3, ssl, time
 
 class AgentSettings:
     log = None
@@ -33,20 +33,14 @@ class AgentSQL():
         con.commit()
         con.close()
 
-    def delete_data():
+    def delete_data_events():
         agent_time = str(time.time()-604800).split('.')[0]
-        sql_query = "DELETE FROM AgentData WHERE time<" + agent_time
+        sql_delete_data = "DELETE FROM AgentData WHERE time<" + agent_time
+        sql_delete_events = "DELETE FROM AgentEvents WHERE status=0 AND sent=1"
         con = AgentSQL.sql_con()
         c = con.cursor()
-        c.execute(sql_query)
-        con.commit()
-        con.close()
-
-    def delete_events():
-        sql_query = "DELETE FROM AgentEvents WHERE status=0 AND sent=1"
-        con = AgentSQL.sql_con()
-        c = con.cursor()
-        c.execute(sql_query)
+        c.execute(sql_delete_data)
+        c.execute(sql_delete_events)
         con.commit()
         con.close()
 
@@ -168,7 +162,7 @@ class AgentWindows():
         process = os.popen('wmic path Win32_ComputerSystem get TotalPhysicalMemory /value')
         result = process.read()
         process.close()
-        result = result.replace('\n','').replace('TotalPhysicalMemory=','')
+        result = re.search(r'(?m)(?<=\bTotalPhysicalMemory=).*$', result).group()
         result = round(int(result)  / 1048576, 0)
         AgentSQL.insert_data('conf.memory.total', str(result))
 
@@ -176,27 +170,22 @@ class AgentWindows():
         process = os.popen('''wmic path Win32_PerfFormattedData_PerfDisk_LogicalDisk WHERE "Name LIKE '%:'" get Name,PercentFreeSpace,PercentIdleTime /format:csv''')
         result = process.read()
         process.close()
-        result = result.replace('\n\n','\n')
-        result_list = list(filter(None, result.split('\n')))
+        result_list = result.split('\n')
         for i in result_list:
-            if not 'PercentFreeSpace' in i:
+            if not 'PercentFreeSpace' in i and ',' in i:
                 ld_list = i.split(',')
                 ld_name = ld_list[1].replace(':','').lower()
-                ld_free = float(ld_list[2])
-                ld_at = 100 - float(ld_list[3])
-                AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.free', str(ld_free))
-                AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.active', str(ld_at))
+                AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.free', str(ld_list[2]))
+                AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.active', str(100 - float(ld_list[3])))
 
     def perf_memory():
         process = os.popen('wmic path Win32_OperatingSystem get FreePhysicalMemory,TotalVisibleMemorySize /value')
         result = process.read()
-        process.close()
-        result = result.replace('\n\n\n\n','').replace('\n\n',';')
-        result_list = result.split(";")     
-        FreeMem = int(result_list[0].replace('FreePhysicalMemory=',''))
-        TotalMem = int(result_list[1].replace('TotalVisibleMemorySize=',''))
+        process.close()    
+        FreeMem = int(re.search(r'(?m)(?<=\bFreePhysicalMemory=).*$', result).group())
+        TotalMem = int(re.search(r'(?m)(?<=\bTotalVisibleMemorySize=).*$', result).group())
         PercentMem = ((TotalMem-FreeMem)/TotalMem)*100
-        PercentMem = round(PercentMem,2)
+        PercentMem = round(PercentMem, 0)
         AgentSQL.insert_data('perf.memory.percent.used', str(PercentMem))
 
     def perf_network():
@@ -205,13 +194,12 @@ class AgentWindows():
         process = os.popen('wmic path Win32_PerfFormattedData_Tcpip_NetworkInterface get BytesReceivedPersec,BytesSentPersec /format:csv')
         result = process.read()
         process.close()
-        result = result.replace('\n\n','\n')
-        result_list = list(filter(None, result.split('\n')))
+        result_list = result.split('\n')
         for i in result_list:
-            if not 'BytesReceivedPersec' in i:
+            if not 'BytesReceivedPersec' in i and ',' in i:
                 nw_list = i.split(",")
-                nw_br = nw_br + int(nw_list[1])
-                nw_bs = nw_bs + int(nw_list[2])
+                nw_br += int(nw_list[1])
+                nw_bs += int(nw_list[2])
         AgentSQL.insert_data('perf.network.bytes.received', str(nw_br))
         AgentSQL.insert_data('perf.network.bytes.sent', str(nw_bs))
 
@@ -219,22 +207,22 @@ class AgentWindows():
         process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_PagingFile where name="_Total" get PercentUsage /value')
         result = process.read()
         process.close()
-        result = result.replace('\n','').replace('PercentUsage=','')
-        AgentSQL.insert_data('perf.pagefile.percent.used', str(result))
+        result = str(re.search(r'(?m)(?<=\bPercentUsage=).*$', result).group())
+        AgentSQL.insert_data('perf.pagefile.percent.used', result)
     
     def perf_processor():
         process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_Processor where name="_Total" get PercentProcessorTime /value')
         result = process.read()
         process.close()
-        result = result.replace('\n','').replace('PercentProcessorTime=','')
-        AgentSQL.insert_data('perf.processor.percent.used', str(result))
+        result = str(re.search(r'(?m)(?<=\bPercentProcessorTime=).*$', result).group())
+        AgentSQL.insert_data('perf.processor.percent.used', result)
     
     def perf_uptime():
         process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_System get SystemUptime /value')
         result = process.read()
         process.close()
-        result = result.replace('\n','').replace('SystemUpTime=','')
-        AgentSQL.insert_data('perf.system.uptime.seconds', str(result))
+        result = str(re.search(r'(?m)(?<=\bSystemUpTime=).*$', result).group())
+        AgentSQL.insert_data('perf.system.uptime.seconds', result)
     
     def perf_services():
         if AgentSettings.services:
@@ -242,12 +230,10 @@ class AgentWindows():
                 process = os.popen('wmic path Win32_Service where name="' + service + '" get State /value')
                 result = process.read()
                 process.close()
-                result = result.replace('\n','').replace('State=','')
+                result = str(re.search(r'(?m)(?<=\bState=).*$', result).group())
                 sname = 'perf.service.' + service.replace(' ','').lower() + '.state'
-                if result == 'Running':
-                    result = 1
-                else:
-                    result = 0
+                if result == 'Running': result = 1
+                else: result = 0
                 AgentSQL.insert_data(sname, str(result))
 
 class AgentProcess():
@@ -353,16 +339,14 @@ class AgentProcess():
                 byte=str(message).encode()
                 conn.send(byte)
                 data = conn.recv(1024).decode()
-                if data == 'Received':
-                    AgentSQL.update_close_data_events()
+                if data == 'Received': AgentSQL.update_close_data_events()
                 conn.close()
             else:
                 sock.connect((AgentSettings.server, AgentSettings.port))
                 byte = str(message).encode()
                 sock.send(byte)
                 data = sock.recv(1024)
-                if data == 'Received':
-                    AgentSQL.update_close_data_events()
+                if data == 'Received': AgentSQL.update_close_data_events()
                 sock.close()
         except: pass
 
@@ -373,8 +357,7 @@ class AgentProcess():
         #print(send_message, event_message)
         message = send_message + event_message
         AgentProcess.send_data(message)
-        AgentSQL.delete_data()
-        AgentSQL.delete_events()
+        AgentSQL.delete_data_events()
 
 #AgentProcess.initialize_agent()
 #AgentProcess.run_process()
