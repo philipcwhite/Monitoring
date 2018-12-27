@@ -22,6 +22,10 @@ Device View
 
 ## Updates
 
+12/27/2018 - Minor code changes to the Webserver and website.
+
+12/26/2018 - I changed some of the code to use regex instead of string replace.  It's probably a bit of overkill on some of the queries but it removes some of the double string replaces as well.  I also combined another of the SQL queries reducing some additional overhead.
+
 12/26/2018 - I continued to clean up the agent.  I combined a few function calls and removed a lot of unnecessary code.  I also renamed and reordered (alphabetical for the most part) a lot of the functions to give them a better description.  I'm almost done with the code cleanup on the agent.  There are still a few things with WMIC that I'd like to tweak if possible since the output and parsing are kind of ugly.  I'll probably clean the collector and event engine next before enhancing the website.  I think these two have far less code to clean up.  
 
 12/24/2018 - I reworked a lot of the agent today.  I reduced the number of files that it requires from 10 down to 3 and cleaned up a lot of code.  It still has room for improvement but I think this is a good change.  
