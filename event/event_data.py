@@ -89,4 +89,3 @@ def agent_avail_select_event_open(timestamp):
                     connection.commit()
     finally:
         connection.close()
-

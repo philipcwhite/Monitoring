@@ -1,2 +1,0 @@
-1538452620:philwhite1978@gmail.com:All Open Info:white00:perf.processor.percent.used:Processor percent used > 0 for 15 minutes:info:open:2018-10-01 22:56:00
-1538452620:philwhite1978@gmail.com:All Open Info 2:white00:perf.processor.percent.used:Processor percent used > 0 for 15 minutes:info:open:2018-10-01 22:56:00

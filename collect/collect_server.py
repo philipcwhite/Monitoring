@@ -31,10 +31,7 @@ class CollectServer():
 
     def server_start():
         collect_load.load_config()
-        try:
-            asyncio.run(CollectServer.connection_loop())
-        except:
-            pass
-
+        try: asyncio.run(CollectServer.connection_loop())
+        except: pass
 
 #CollectServer.server_start()

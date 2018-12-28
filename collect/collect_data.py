@@ -17,8 +17,7 @@ def agent_system(timestamp, name, domain, ipaddress, platform, buildnumber, arch
             sql = "SELECT name FROM agentsystem where name=%s"
             cursor.execute(sql, (name))
             result = cursor.fetchone()
-            qname = ""
-            
+            qname = ""            
             if not result is None:
                 qname = result['name']
             if name == qname:
@@ -29,7 +28,6 @@ def agent_system(timestamp, name, domain, ipaddress, platform, buildnumber, arch
                 sql = "INSERT INTO agentsystem (timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
                 cursor.execute(sql, (timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory))
                 connection.commit()
- 
     finally:
         connection.close()
 
@@ -39,8 +37,7 @@ def agent_data(timestamp, name, monitor, value):
         with connection.cursor() as cursor:
             sql = "INSERT INTO agentdata (timestamp, name, monitor, value) VALUES(%s,%s,%s,%s)"
             cursor.execute(sql, (timestamp, name, monitor, value))
-            connection.commit()
- 
+            connection.commit() 
     finally:
         connection.close()
 
@@ -74,7 +71,6 @@ def parse_data(message):
     architecture = '' 
     processors = 0 
     memory = 0
-
     for i in message.splitlines():
         if 'conf.ipaddress' in i:
             line = i.split(';')
@@ -99,9 +95,7 @@ def parse_data(message):
         if 'conf.memory.total' in i:
             line = i.split(';')
             memory = line[3]
-
     agent_system(timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory)
-
     for i in message.splitlines():
         if ';perf' in i and i.count(";") == 3:
             line = i.split(';')
@@ -110,7 +104,6 @@ def parse_data(message):
             monitor = line[2]
             value = float(line[3])
             agent_data(timestamp, name, monitor, value)
-
     for i in message.splitlines():
         if ';event;' in i:
             line = i.split(';')

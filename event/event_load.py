@@ -31,5 +31,4 @@ def load_config():
                 event_settings.availability_check = int(i[19:].replace("\n",""))
             if 'availability_severity:' in i:
                 event_settings.availability_severity = i[22:].replace("\n","")
-    except:
-        pass
+    except: pass

@@ -42,13 +42,11 @@ class ServerEvent():
                     s.send_message(msg)
                     s.quit()
 
-                print(str(time.time()).split('.')[0] + ":" + notify_email + ":" + notify_name + ":" + name + ":" + monitor + ":" + message + ":" + severity + ":" +status + ":" + str(date) + "\n")
-
+                #print(str(time.time()).split('.')[0] + ":" + notify_email + ":" + notify_name + ":" + name + ":" + monitor + ":" + message + ":" + severity + ":" +status + ":" + str(date) + "\n")
                 f = open(event_settings.application_path + "output.txt","a")
                 f.write(str(time.time()).split('.')[0] + ":" + notify_email + ":" + notify_name + ":" + name + ":" + monitor + ":" + message + ":" + severity + ":" +status + ":" + str(date) + "\n")
                 f.close()
-        except:
-            pass
+        except: pass
 
 #event_load.load_config()
 #ServerEvent.process_events()

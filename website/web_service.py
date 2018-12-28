@@ -1,9 +1,7 @@
-# Copyright (C) 2018 Phil White - All Rights Reserved
-# You may use, distribute and modify this code under the
-# terms of the Apache 2 license.
-#
-# You should have received a copy of the Apache 2 license with
-# this file. If not, please visit : https://github.com/philipcwhite/monitoring2
+# Copyright (C) 2018-2019 Phil White - All Rights Reserved
+# 
+# You may use, distribute and modify this code under the terms of the Apache 2 license. You should have received a 
+# copy of the Apache 2 license with this file. If not, please visit:  https://github.com/philipcwhite/monitoring
 
 import servicemanager
 import socket

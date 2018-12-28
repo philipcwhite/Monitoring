@@ -1,4 +1,3 @@
-import cherrypy
 import pymysql.cursors
 
 class WebData:
