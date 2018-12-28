@@ -20,6 +20,9 @@ Home View
 ![WebSite](https://raw.githubusercontent.com/philipcwhite/Monitoring/master/images/device.png)
 Device View
 
+![WebSite](https://raw.githubusercontent.com/philipcwhite/Monitoring/master/images/graph.png)
+Graph View
+
 ## Updates
 
 12/27/2018 - Minor code changes to the Webserver and website.
