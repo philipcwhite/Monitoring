@@ -25,7 +25,7 @@ Graph View
 
 ## Updates
 
-12/27/2018 - Minor code changes to the Webserver and website.
+12/27/2018 - Minor code changes to the Webserver, collector, event engine, and website.  I'm going to start building a few basic reports and then I plan on packaging an initial beta release.  
 
 12/26/2018 - I changed some of the code to use regex instead of string replace.  It's probably a bit of overkill on some of the queries but it removes some of the double string replaces as well.  I also combined another of the SQL queries reducing some additional overhead.
 
