@@ -11,7 +11,4 @@ dbuser = "test"
 mailactive = 0
 mailadmin = "monitoring@monitoring"
 mailserver = "localhost"
-port = 8888
 running = 1
-secure = 1
-server = "0.0.0.0"

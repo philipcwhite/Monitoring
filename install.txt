@@ -1,34 +1,43 @@
 Install Notes
 
-Windows application installation directories: 
+1. Uninstall the zip files to Program Files\monitoring.  Your installation directory should look like the paths below.
 C:\Progra~1\monitoring\
+C:\Progra~1\monitoring\agent
 C:\Progra~1\monitoring\collect
 C:\Progra~1\monitoring\event
 C:\Progra~1\monitoring\website
+C:\Progra~1\monitoring\database
 
-MySQL/MariaDB SQL install script included.
+2.  Install Python 3.7.1 for AMD64.  This can be obtained from http://python.org.  When installing, install as all users and include python in the path.
+path=C:\Progra~1\Python\;C:\Progra~1\Python\Scripts\;
 
-If using Python (raw):  
-
-I am currently writing the app on Python 3.6.5.  You must also install pymysql and pywin32.
+3.  You need to install two modules (pymysql and pywin32).  Open an administrator cmd prompt and enter:
 pip install pymysql
 pip install pywin32
 
+4.  You then need to install the python scripts as services.
+sc create monitoringcollect displayname="Monitoring Agent" binPath="python.exe C:\Progra~1\monitoring\agent\agent_service.py" type=own error=ignore start=auto
 sc create monitoringcollect displayname="Monitoring Collect Engine" binPath="python.exe C:\Progra~1\monitoring\collect\collect_service.py" type=own error=ignore start=auto
-
 sc create monitoringevent displayname="Monitoring Event Engine" binPath="python.exe C:\Progra~1\monitoring\event\event_service.py" type=own error=ignore start=auto
-
 sc create monitoringweb displayname="Monitoring Website" binPath="python.exe C:\Progra~1\monitoring\website\web_service.py" type=own error=ignore start=auto
- 
 
-For PyInstaller: 
+5.  You will need to set IPs for the agent and the collector
+For the agent open settings.cfg and change server: to the IP address of the monitoring server.
+For the collector open settings.cfg and change mon_server: to the IP of the monitoring server.
 
-Compile: pyinstaller -F --hidden-import=win32timezone collect_service.py
-Install: C:\Progra~1\monitoring\collect\collect_service.exe install
+6.  You need to install MySQL or MariaDB.  
+After one of these is installed you need to create the monitoring database with the included script.
+The configs assume a user named test with a password of test.  
+You will either have to create a sql user with these credentials or change the config files to account for this.
 
-Compile: pyinstaller -F --hidden-import=win32timezone event_service.py
-Install: C:\Progra~1\monitoring\event\event_service.exe install
+7.  Start the 4 services from services.msc
 
+8.  You will have to create a default user.  Open an administrative cmd prompt and go to C:\Progra~1\monitoring\website
+python create_default_user.py
+This will create the user admin with the password test.  You can change this once in the GUI.
+To access the website go to http://localhost/ and enter your username and password.
 
-Compile: pyinstaller -F --hidden-import=win32timezone web_service.py
-Install: C:\Progra~1\monitoring\web\web_service.exe install
+9.  The application is not set to use SSL by default.  To enable SSL
+For the agent open settings.cfg and change secure from 0 to 1.  Restart the agent
+For the web server open wserver.py and change the server_port to 443 and set ssl_enabled = True.  You must also have SSL files (localhost.pem and localhost.cer) present in the webserver directory.  
+For the collector open settings.cfg and change secure from 0 to 1.  You must also have SSL files (localhost.pem and localhost.cer) present in the collector directory. 
