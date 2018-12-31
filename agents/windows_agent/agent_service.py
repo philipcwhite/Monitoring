@@ -14,8 +14,8 @@ import datetime
 import agent_actions
 
 class AgentService(win32serviceutil.ServiceFramework):
-    _svc_name_ = "AgentService"
-    _svc_display_name_ = "Agent Service"
+    _svc_name_ = "MonitoringAgent"
+    _svc_display_name_ = "Monitoring Agent"
 
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
@@ -42,4 +42,3 @@ if __name__ == '__main__':
         servicemanager.StartServiceCtrlDispatcher()
     else:
         win32serviceutil.HandleCommandLine(AgentService)
-
