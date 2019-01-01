@@ -1,4 +1,4 @@
-# Monitoring ver. 0.01b
+# Monitoring ver. 0.02b
 Monitoring Server and Agents written in Python
 
 ## About
@@ -24,6 +24,12 @@ Device View
 Graph View
 
 ## Updates
+
+12/31/2018 - If you missed it I did publish a very beta release this morning (0.01b).  It is essentially just a snapshot of the library code at the point of (pre) release.  While that may seem boring, I think it helps keep things on track as it forced me to look into code freezing, updating installation notes, and addressing a few open issues.  I've been working on the project for nearly a year here and have had it live on Github since August.  I hope to have a real release sometime in 2019 but in the mean time I will try to release a few pre-release betas to keep things in check.  
+
+Since 0.01b has been released, all code changes going forward will fall under 0.02b.  And yes there are already a few new updates.  I updated the agent to include the timer in the agent.py script (formerly agent_actions.py) and removed it from the agent_service.py file.  It can now be run independently from agent_service.py if necessary.  
+
+And lastly thanks to everyone who has stopped by to see the project.  If you find it useful please make sure to star or share a link to the page.  I do appreciate it.  
 
 12/31/2018 - I made some minor changes to configurations in preperation for a beta release.  The application was changed to non-SSL by default however it is quite easy to enable SSL.  Install instructions have been improved.  Much of this will eventually be simpilfied and scripted.
 

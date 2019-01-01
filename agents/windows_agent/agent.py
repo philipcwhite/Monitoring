@@ -3,13 +3,14 @@
 # You may use, distribute and modify this code under the terms of the Apache 2 license. You should have received a 
 # copy of the Apache 2 license with this file. If not, please visit:  https://github.com/philipcwhite/monitoring
 
-import os, platform, re, socket, sqlite3, ssl, time
+import datetime, os, platform, re, socket, sqlite3, ssl, time
 
 class AgentSettings:
     log = None
     name = None
     path = 'C:\\Progra~1\\monitoring\\agent\\'
     port = 8888
+    running = True
     secure = 0
     server = '127.0.0.1'
     services = []
@@ -351,13 +352,17 @@ class AgentProcess():
         except: pass
 
     def run_process():
-        AgentSettings.time = str(time.time()).split('.')[0]
-        send_message = AgentProcess.data_process()
-        event_message = AgentProcess.event_process()
-        #print(send_message, event_message)
-        message = send_message + event_message
-        AgentProcess.send_data(message)
-        AgentSQL.delete_data_events()
+        while AgentSettings.running == True:
+            a = datetime.datetime.now().second
+            if a == 0:
+                AgentSettings.time = str(time.time()).split('.')[0]
+                send_message = AgentProcess.data_process()
+                event_message = AgentProcess.event_process()
+                #print(send_message, event_message)
+                message = send_message + event_message
+                AgentProcess.send_data(message)
+                AgentSQL.delete_data_events()
+            time.sleep(1)
 
 #AgentProcess.initialize_agent()
 #AgentProcess.run_process()

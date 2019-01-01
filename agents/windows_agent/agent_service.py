@@ -9,9 +9,8 @@ import sys
 import win32event
 import win32service
 import win32serviceutil
-import datetime
 # User classes
-import agent_actions
+import agent
 
 class AgentService(win32serviceutil.ServiceFramework):
     _svc_name_ = "MonitoringAgent"
@@ -23,17 +22,13 @@ class AgentService(win32serviceutil.ServiceFramework):
         socket.setdefaulttimeout(60)
         
     def SvcStop(self):
+        agent.AgentSettings.running = False
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.hWaitStop)
 
     def SvcDoRun(self):
-        agent_actions.AgentProcess.initialize_agent()
-        rc = None
-        while rc != win32event.WAIT_OBJECT_0:
-            a = datetime.datetime.now().second
-            if a == 0:
-                agent_actions.AgentProcess.run_process()
-            rc = win32event.WaitForSingleObject(self.hWaitStop, 1000)
+        agent.AgentProcess.initialize_agent()
+        agent.AgentProcess.run_process()
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
