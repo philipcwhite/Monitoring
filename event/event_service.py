@@ -1,9 +1,7 @@
-# Copyright (C) 2018 Phil White - All Rights Reserved
-# You may use, distribute and modify this code under the
-# terms of the Apache 2 license.
-#
-# You should have received a copy of the Apache 2 license with
-# this file. If not, please visit : https://github.com/philipcwhite/monitoring2
+# Copyright (C) 2018-2019 Phil White - All Rights Reserved
+# 
+# You may use, distribute and modify this code under the terms of the Apache 2 license. You should have received a 
+# copy of the Apache 2 license with this file. If not, please visit:  https://github.com/philipcwhite/monitoring
 
 import servicemanager
 import socket
@@ -13,7 +11,7 @@ import win32service
 import win32serviceutil
 import datetime
 # User classes
-import event_available, event_load, event_server, event_settings
+import event
 
 class EventService(win32serviceutil.ServiceFramework):
     _svc_name_ = "EventService"
@@ -35,9 +33,9 @@ class EventService(win32serviceutil.ServiceFramework):
         while rc != win32event.WAIT_OBJECT_0:
             a = datetime.datetime.now().second
             if a == 0:
-                event_available.EventAvailable.check_available()
-                event_available.EventAvailable.check_open()
-                event_server.ServerEvent.process_events()
+                event.EventAvailable.check_available()
+                event.EventAvailable.check_open()
+                event.ServerEvent.process_events()
             rc = win32event.WaitForSingleObject(self.hWaitStop, 1000)
                 
 if __name__ == '__main__':
