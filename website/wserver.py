@@ -24,7 +24,7 @@ class app_vars:
     ssl_enabled = False
     cert_key = 'localhost.pem'
     cert_name = 'localhost.crt'
-    cert_path = 'C:\\Progra~1\\monitoring\\website\\'
+    cert_path = 'C:\\Progra~1\\monitoring\\certificates\\'
 
     # Service shutdown settings
     stop_ip = '127.0.0.1'
