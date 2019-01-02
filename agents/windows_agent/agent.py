@@ -346,7 +346,7 @@ class AgentProcess():
                 sock.connect((AgentSettings.server, AgentSettings.port))
                 byte = str(message).encode()
                 sock.send(byte)
-                data = sock.recv(1024)
+                data = sock.recv(1024).decode()
                 if data == 'Received': AgentSQL.update_close_data_events()
                 sock.close()
         except: pass
