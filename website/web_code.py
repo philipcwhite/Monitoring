@@ -19,7 +19,6 @@ class WebIndex:
         ok_perc = (ok / total) * 100
         down_perc = (down / total) * 100
         total_perc = str(ok_perc) + ' ' + str(down_perc)
-
         html = """<table style="width:100%;height:105px"><tr><td style="width:50%;text-align:center;">
         <svg width="95" height="95" viewBox="0 0 42 42" class="donut">
         <circle class="donut-ring" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#d9534f" stroke-width="5"></circle>
@@ -184,18 +183,12 @@ class WebDevice:
         net_bs = 0
         fs_list = []
         for i in agent_query:
-            if i['monitor'] == 'perf.processor.percent.used':
-                cpu_perc = round(float(i['value']), 0)
-            if i['monitor'] == 'perf.memory.percent.used':
-                mem_perc = round(float(i['value']), 0)
-            if i['monitor'] == 'perf.pagefile.percent.used':
-                pagefile_perc = round(float(i['value']), 0)
-            if i['monitor'] == 'perf.system.uptime.seconds':
-                uptime_days = round(float(i['value']) / 86400, 0)
-            if i['monitor'] == 'perf.network.bytes.received':
-                net_br = round(float(i['value']), 0)
-            if i['monitor'] == 'perf.network.bytes.sent':
-                net_bs = round(float(i['value']), 0)
+            if i['monitor'] == 'perf.processor.percent.used': cpu_perc = round(float(i['value']), 0)
+            if i['monitor'] == 'perf.memory.percent.used': mem_perc = round(float(i['value']), 0)
+            if i['monitor'] == 'perf.pagefile.percent.used': pagefile_perc = round(float(i['value']), 0)
+            if i['monitor'] == 'perf.system.uptime.seconds': uptime_days = round(float(i['value']) / 86400, 0)
+            if i['monitor'] == 'perf.network.bytes.received': net_br = round(float(i['value']), 0)
+            if i['monitor'] == 'perf.network.bytes.sent': net_bs = round(float(i['value']), 0)
             if 'filesystem' in i['monitor'] and 'active' in i['monitor']:
                 fs_name = i['monitor'].replace('perf.filesystem.','').replace('.percent.active','')
                 fs_list.append(fs_name)
@@ -214,8 +207,7 @@ class WebDevice:
                     fs_name = "Windows " + i + " drive"
                 elif agentsystem['platform'] == 'Linux':
                     fs_name = "Linux Filesystem: " + i             
-                html_fs += """<table style="width:100%"><tr>
-                        <td style="width:33%">""" + fs_name + """ drive</td>
+                html_fs += """<table style="width:100%"><tr><td style="width:33%">""" + fs_name + """ drive</td>
                         <td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.free">Free Space: """ + fs_free + """</a></td>
                         <td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.active">Filesystem Activity: """ + fs_active + """</a></td>
                         </tr></table>"""
@@ -255,7 +247,7 @@ class WebDevice:
         return html
 
     def device_content(name):
-        html=""
+        html = ''
         html = WebViews.load_device_content(WebDevice.device_content_system(name), WebDevice.device_content_data(name))
         return html
 
@@ -278,12 +270,11 @@ class WebDevice:
                 if i.time == time_short:
                     if device_value == 0: i.dvalue = 0
                     else: i.dvalue = (device_value / max_value)*100
-        device_polyline = ""
-        device_polyline_data = ""
-        device_time = ""
+        device_polyline = ''
+        device_polyline_data = ''
+        device_time = ''
         xvalue = 55
         time_x = 0
-
         for i in data_list:
             dvalue = str(round(110 - i.dvalue))
             device_polyline_data += str(xvalue) + "," + dvalue + " "
@@ -293,8 +284,7 @@ class WebDevice:
             if time_x == 5:
                 time_x = 0            
             xvalue += 14 
-        device_polyline = '<polyline points="' + device_polyline_data + '" style="fill:none;stroke:#29ABE0;stroke-width:1" />'
-                
+        device_polyline = '<polyline points="' + device_polyline_data + '" style="fill:none;stroke:#29ABE0;stroke-width:1" />'                
         html =  """<svg xmlns="http://www.w3.org/2000/svg" style="color:#8E8C84;" height=150 width=990>
 	    <rect x=52 y=10 width=855 height=1 fill=#ddd />
         <rect x=55 y=35 width=855 height=1 fill=#ddd />
@@ -321,10 +311,8 @@ class WebDevices:
         html = ""
         icon = ""
         for i in agentsystem:
-            if (i['timestamp'] + uptime_check) >= currenttime:
-                icon = """<svg width="10" height="10"><rect width="10" height="10" style="fill:#93C54B" /></svg>"""
-            else:
-                icon =  """<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg>"""
+            if (i['timestamp'] + uptime_check) >= currenttime: icon = """<svg width="10" height="10"><rect width="10" height="10" style="fill:#93C54B" /></svg>"""
+            else: icon =  """<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg>"""
             html = html + """<tr><td style="padding-left:10px">""" + icon + "</td><td><a href='/devices/" + str(i['name']) + "'>" + str(i['name']) + "</td><td>" + str(i['domain']) + "</td><td>" + str(i['ipaddress']) + "</td><td>" + str(i['platform']) + "</td></tr>"
         return html
 
@@ -344,9 +332,9 @@ class WebEvents:
             elif sev == 3: warn = sev_tot
             elif sev == 4: info = sev_tot
         total = info + warn + majr + crit
-        status_text = ""
+        status_text = ''
         change_status = abs(int(status) - 1)
-        change_status_text = ""
+        change_status_text = ''
         if change_status == 0:
             status_text = "Open Events"
             change_status_text = "Closed Events"
@@ -370,11 +358,8 @@ class WebEvents:
         color = "#CCCCCC"
         change_status = abs(int(status) - 1)
         change_status_text = ""
-        if change_status == 0:
-            change_status_text="Close Event"
-        else:
-            change_status_text = "Open Event"
-
+        if change_status == 0: change_status_text="Close Event"
+        else: change_status_text = "Open Event"
         for i in agentevents:
             date = str(datetime.datetime.fromtimestamp(int(i['timestamp'])))
             sev_text = ""
@@ -473,8 +458,7 @@ class WebNotify:
         if int(rule['notify_enabled']) == 1:
             html += "<tr><td>Enabled</td><td><input type='radio' name='notify_enabled' value='1' checked='checked' /> True <input type='radio' name='Notify_Enabled' value='0' /> False</td></tr>"
         else:
-            html += "<tr><td>Enabled</td><td><input type='radio' name='notify_enabled' value='1' /> True <input type='radio' name='notify_enabled' value='0' checked='checked' /> False</td></tr>"
-      
+            html += "<tr><td>Enabled</td><td><input type='radio' name='notify_enabled' value='1' /> True <input type='radio' name='notify_enabled' value='0' checked='checked' /> False</td></tr>"      
         html += "<tr><td></td><td style='text-align:right'><input type='submit' class='action-button' value='submit' /></td></tr></table>"
         return html
 
