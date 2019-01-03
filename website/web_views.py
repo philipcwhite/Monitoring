@@ -1,4 +1,3 @@
-
 class WebViews:
     def load_base(user, breadcrumbs, body):
         html = """<!DOCTYPE html><html>        
@@ -32,20 +31,8 @@ class WebViews:
 
     def load_refresh(url):
         html = """<div id="refresh"></div>
-        <script>
-        function refresh() {
-        $.ajax({
-            url: '""" + url + """',
-            success: function(data) {
-            $('#refresh').html(data);
-            }
-        });
-        setTimeout(refresh, 60000);
-        }    
-        $(function(){
-            refresh();
-        });
-        </script>"""
+        <script>function refresh() {$.ajax({url: '""" + url + """', success: function(data) {$('#refresh').html(data);}});setTimeout(refresh, 60000);}    
+        $(function(){refresh();});</script>"""
         return html
 
     def load_bc_home():
@@ -111,36 +98,6 @@ class WebViews:
         </div>
         </body>
         </html>"""
-        return html
-
-    def load_index_content(index_block_1, index_block_2, index_block_3, index_block_4, index_block_pager):
-        html = """<table style="width:100%;">
-        <tr><td style="padding-right:4px">
-        <div class="card-div">
-        <div class="card-header">Host Availability</div>
-        """ + index_block_1 + """
-        </div></td>
-        <td style="padding-left:4px;padding-right:4px">
-        <div class="card-div">
-        <div class="card-header">Open Events</div>
-        """ + index_block_2 + """
-        </div></td>
-        <td style="padding-left:4px">
-        <div class="card-div">
-        <div class="card-header">Monitoring Server</div>
-        """ + index_block_3 + """
-        </div></td></tr>
-        <tr><td colspan="3" style="padding-top:8px">
-        <div class="card-div">
-        <div class="card-header">Host Summary</div>
-        <table style="width:100%;table-layout:fixed;"> 
-        """ + index_block_4 + """
-        </table> 
-        <table style="width:100%;table-layout:fixed;">
-        <tr><td></td>
-        """ + index_block_pager + """
-        <td style="width:10px"></td></tr>
-        </table></div></td></tr></table>"""
         return html
 
     def load_basic_page(title, content):
@@ -220,10 +177,8 @@ class WebViews:
         <table>
         <tr><td>Role</td>
         <td>"""
-        if role == 0:
-            html += "<input type='radio' name='role' value='0' checked='checked' /> User<input type='radio' name='role' value='1' /> Admin" 
-        else:
-            html += "<input type='radio' name='role' value='0' /> User<input type='radio' name='role' value='1' checked='checked' /> Admin"
+        if role == 0: html += "<input type='radio' name='role' value='0' checked='checked' /> User<input type='radio' name='role' value='1' /> Admin" 
+        else: html += "<input type='radio' name='role' value='0' /> User<input type='radio' name='role' value='1' checked='checked' /> Admin"
         html += """</td></tr>
         <tr><td></td><td style="text-align:right"><input type="submit" class="action-button" value="Submit" /></td></tr>
         </table>

@@ -2,6 +2,26 @@ import time, datetime, socket, math, hashlib
 from web_data import WebData
 from web_views import WebViews
 
+class WebAuth:
+    def verify_auth(username, password):
+        encrypt_password = hashlib.sha224(password.encode()).hexdigest()
+        authuser = WebData.web_auth(username, encrypt_password)
+        if authuser is None: return None
+        else: return authuser
+
+    def change_password(username, pass1, pass2):
+        encrypt_password1 = hashlib.sha224(pass1.encode()).hexdigest()
+        encrypt_password2 = hashlib.sha224(pass2.encode()).hexdigest()
+        authuser = WebData.web_auth(username, encrypt_password1)
+        if not authuser is None:
+            WebData.web_change_password(username, encrypt_password2)
+            return True
+        return False
+    def set_password(pass1, pass2):
+        if pass1 == pass2:
+            encrypt_password = hashlib.sha224(pass1.encode()).hexdigest()
+            return encrypt_password
+
 class WebIndex:
     def index_block_1():
         ok = 0
@@ -15,7 +35,7 @@ class WebIndex:
             if (timestamp + uptime_check) >= currenttime: ok += 1
             else: down += 1
         total = ok + down
-        if total == 0:total = 1
+        if total == 0: total = 1
         ok_perc = (ok / total) * 100
         down_perc = (down / total) * 100
         total_perc = str(ok_perc) + ' ' + str(down_perc)
@@ -42,7 +62,7 @@ class WebIndex:
             elif sev == 3: warn = sev_tot
             elif sev == 4: info = sev_tot
         total = info + warn + majr + crit
-        if total == 0:total = 1
+        if total == 0: total = 1
         info_perc = (info / total) * 100
         warn_perc = (warn / total) * 100
         majr_perc = (majr / total) * 100
@@ -70,8 +90,8 @@ class WebIndex:
         name = socket.gethostname().lower()
         uptime_check = 300
         currenttime = time.time()
-        agent_platform = ""
-        agent_architecture = ""
+        agent_platform = ''
+        agent_architecture = ''
         agent_timestamp = 0
         agent_processors = 0
         agent_memory = 0
@@ -84,11 +104,7 @@ class WebIndex:
             agent_timestamp = agentsystem['timestamp']
             agent_processors = agentsystem['processors']
             agent_memory = agentsystem['memory']
-        except: pass
-        try:
             agent_perf = WebData.web_code_device_data_latest(name)
-            cpu_perc = 0
-            mem_perc = 0
             for i in agent_perf:
                 if i['monitor'] == 'perf.processor.percent.used' : cpu_perc = float(i['value'])
                 if i['monitor'] == 'perf.memory.percent.used' : mem_perc = float(i['value'])
@@ -99,7 +115,6 @@ class WebIndex:
         Memory: """ + str(agent_memory)[:-3] + """ MB <br />
         Platform: """ + agent_platform + """ (""" + agent_architecture + """) <br />
         </td><td style="width:50%;padding-left:10px;vertical-align:top;padding-top:10px">"""
-
         if (agent_timestamp + uptime_check) >= currenttime:
             cpu_color = "93C54B"
             mem_color = "93C54B"
@@ -117,7 +132,6 @@ class WebIndex:
         agentsystem = WebData.web_code_index_devices(page_start, page_end)
         uptime_check = 300
         currenttime = time.time()
-        os = ""
         html = ""
         icon = ""
         for i in agentsystem:
@@ -138,7 +152,6 @@ class WebIndex:
         currenttime = time.time()
         html = ""
         icon = ""
-        html = ""
         if page_count > 1:
             for i in range(1,page_count + 1):
                 if i == page: html += """<td style="width:10px">""" + str(i) + "</td>"
@@ -146,11 +159,28 @@ class WebIndex:
                 else: html += """<td style="width:10px"><a href="/""" + str(i) + """">""" + str(i) + """</a></td>"""
         return html
 
+    def index_page(index_block_1, index_block_2, index_block_3, index_block_4, index_block_pager):
+        html = """<table style="width:100%;">
+        <tr><td style="padding-right:4px">
+        <div class="card-div"><div class="card-header">Host Availability</div>""" + index_block_1 + """</div></td>
+        <td style="padding-left:4px;padding-right:4px">
+        <div class="card-div"><div class="card-header">Open Events</div>""" + index_block_2 + """</div></td>
+        <td style="padding-left:4px">
+        <div class="card-div"><div class="card-header">Monitoring Server</div>""" + index_block_3 + """</div></td></tr>
+        <tr><td colspan="3" style="padding-top:8px">
+        <div class="card-div"><div class="card-header">Host Summary</div>
+        <table style="width:100%;table-layout:fixed;">""" + index_block_4 + """</table> 
+        <table style="width:100%;table-layout:fixed;"><tr><td></td>
+        """ + index_block_pager + """
+        <td style="width:10px"></td></tr>
+        </table></div></td></tr></table>"""
+        return html
+
     def index_content(qstring="page=1"):
         html=""
         pstring=str(qstring)
         page = int(pstring.replace("page=", ""))
-        html += WebViews.load_index_content(WebIndex.index_block_1(), WebIndex.index_block_2(), WebIndex.index_block_3(), WebIndex.index_block_4(page), WebIndex.index_block_pager(page))
+        html += WebIndex.index_page(WebIndex.index_block_1(), WebIndex.index_block_2(), WebIndex.index_block_3(), WebIndex.index_block_4(page), WebIndex.index_block_pager(page))
         return html
 
 class WebDeviceGraph:
@@ -396,8 +426,7 @@ class WebSettings:
         <br />
         <b>User and Role Management</b><br />
         <a href="/users">Manage Users</a><br />
-        <br />          
-        """
+        <br /> """
         return html
 
 class WebSearch:
@@ -432,7 +461,6 @@ class WebNotify:
         html += "<tr><td>Severity</td><td><select name='agent_severity'><option value='4'>Information</option><option value='3'>Warning</option><option value='2'>Major</option><option value='1'>Critical</option>"
         html += "<tr><td>Enabled</td><td><input type='radio' name='notify_enabled' value='1' /> True <input type='radio' name='notify_enabled' value='0' /> False</td></tr>"
         html += "<tr><td></td><td style='text-align:right'><input type='submit' class='action-button' value='submit' /></td></tr></table>"
-
         return html
     
     def notify_edit(id):
@@ -442,23 +470,15 @@ class WebNotify:
                <tr><td>Email Address</td><td><input type='text' name='notify_email'  value='""" + str(rule['notify_email']) + """' /></td></tr>"""
         html += "<tr><td>Hostname</td><td><input type='text' name='agent_name' value='" + str(rule['agent_name']) + "' /></td></tr>"
         html += "<tr><td>Monitor</td><td><input type='text' name='agent_monitor' value='" + str(rule['agent_monitor']) + "' /></td></tr>"
-        if int(rule['agent_status']) == 1:
-            html += "<tr><td>Status</td><td><input type='radio' name='agent_status' value='1' checked='checked' /> Open <input type='radio' name='agent_status' value='0' /> Closed</td></tr>"
-        else:
-            html += "<tr><td>Status</td><td><input type='radio' name='agent_status' value='1' /> Open <input type='radio' name='agent_status' value='0' checked='checked' /> Closed</td></tr>"
+        if int(rule['agent_status']) == 1: html += "<tr><td>Status</td><td><input type='radio' name='agent_status' value='1' checked='checked' /> Open <input type='radio' name='agent_status' value='0' /> Closed</td></tr>"
+        else: html += "<tr><td>Status</td><td><input type='radio' name='agent_status' value='1' /> Open <input type='radio' name='agent_status' value='0' checked='checked' /> Closed</td></tr>"
         html += "<tr><td>Severity</td><td><select name='agent_severity'>"
-        if int(rule['agent_severity']) == 4: 
-            html += "<option value='4' selected>Information</option><option value='3'>Warning</option><option value='2'>Major</option><option value='1'>Critical</option>"
-        elif int(rule['agent_severity']) == 3:
-            html += "<option value='4'>Information</option><option value='3' selected>Warning</option><option value='2'>Major</option><option value='1'>Critical</option>"
-        elif int(rule['agent_severity']) == 2:
-            html += "<option value='4'>Information</option><option value='3'>Warning</option><option value='2' selected>Major</option><option value='1'>Critical</option>"
-        elif int(rule['agent_severity']) == 1:
-            html += "<option value='4'>Information</option><option value='3'>Warning</option><option value='2'>Major</option><option value='1' selected>Critical</option>"
-        if int(rule['notify_enabled']) == 1:
-            html += "<tr><td>Enabled</td><td><input type='radio' name='notify_enabled' value='1' checked='checked' /> True <input type='radio' name='Notify_Enabled' value='0' /> False</td></tr>"
-        else:
-            html += "<tr><td>Enabled</td><td><input type='radio' name='notify_enabled' value='1' /> True <input type='radio' name='notify_enabled' value='0' checked='checked' /> False</td></tr>"      
+        if int(rule['agent_severity']) == 4: html += "<option value='4' selected>Information</option><option value='3'>Warning</option><option value='2'>Major</option><option value='1'>Critical</option>"
+        elif int(rule['agent_severity']) == 3: html += "<option value='4'>Information</option><option value='3' selected>Warning</option><option value='2'>Major</option><option value='1'>Critical</option>"
+        elif int(rule['agent_severity']) == 2: html += "<option value='4'>Information</option><option value='3'>Warning</option><option value='2' selected>Major</option><option value='1'>Critical</option>"
+        elif int(rule['agent_severity']) == 1: html += "<option value='4'>Information</option><option value='3'>Warning</option><option value='2'>Major</option><option value='1' selected>Critical</option>"
+        if int(rule['notify_enabled']) == 1: html += "<tr><td>Enabled</td><td><input type='radio' name='notify_enabled' value='1' checked='checked' /> True <input type='radio' name='Notify_Enabled' value='0' /> False</td></tr>"
+        else: html += "<tr><td>Enabled</td><td><input type='radio' name='notify_enabled' value='1' /> True <input type='radio' name='notify_enabled' value='0' checked='checked' /> False</td></tr>"      
         html += "<tr><td></td><td style='text-align:right'><input type='submit' class='action-button' value='submit' /></td></tr></table>"
         return html
 
@@ -471,8 +491,7 @@ class WebUsers:
             <input type="button" onclick="window.location.href='/user_edit_role/""" + str(i["id"]) + """'" class="action-button" value="Roles" />
             <input type="button" onclick="window.location.href='/user_delete/""" + str(i["id"]) + """'" class="action-button" value="Delete" />
             </td></tr>"""
-        html += "</table>"
-        html += """<input type="button" onclick="window.location.href='/user_add/'" class="action-button" value="Add User" />"""
+        html += """</table><input type="button" onclick="window.location.href='/user_add/'" class="action-button" value="Add User" />"""
         return html
 
     def user_add(username, password, role):

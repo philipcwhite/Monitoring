@@ -1,19 +1,15 @@
 from wserver import app
-from web_auth import WebAuth
 from web_views import WebViews
 from web_data import WebData
-from web_code import WebIndex, WebDevice, WebDevices, WebEvents, WebNotify, WebSettings, WebSearch, WebUsers
-
+from web_code import WebAuth, WebIndex, WebDevice, WebDevices, WebEvents, WebNotify, WebSettings, WebSearch, WebUsers
 
 class controller(object):
-  
     def verify(self,username=None,password=None):
         user = WebAuth.verify_auth(username, password)
         if not user is None:
             self.login(username)
             self.redirect('/')
-        else:
-            self.redirect('/login')
+        else: self.redirect('/login')
 
     def login(self):
         html = WebViews.load_login()
@@ -132,14 +128,12 @@ class controller(object):
             if not encryptpw is None:
                 WebData.web_code_edit_user_password(str(id), encryptpw)
                 self.redirect('/users')
-            else:
-                self.redirect('/error')
+            else: self.redirect('/error')
 
     def user_edit_role(self, id, role=None):
         user = self.get_auth()
         if role == None: 
             roleid = WebData.web_code_select_user(id)
-            print(roleid)
             html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page('Users', WebViews.load_user_edit_role(roleid['role'])))
             return html
         else:
@@ -163,10 +157,8 @@ class controller(object):
             return html
         else:
             changepw = WebAuth.change_password(user, pass1, pass2)
-            if changepw is True:
-                self.redirect('/settings')
-            else:
-                self.redirect('/error')
+            if changepw is True: self.redirect('/settings')
+            else: self.redirect('/error')
 
     def error(self):
         user = self.get_auth()
@@ -175,6 +167,3 @@ class controller(object):
 
 def start_server():
     app.start(controller)
-
-
-    
