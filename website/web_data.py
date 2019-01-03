@@ -217,7 +217,7 @@ class WebData:
         con = WebData.web_con()
         try:
             with con.cursor() as cursor:
-                sql = r"SELECT id, username, role FROM users WHERE id=" + str(id) 
+                sql = r"SELECT id, username, admin FROM users WHERE id=" + str(id) 
                 cursor.execute(sql)
                 result = cursor.fetchone()
                 return result
@@ -227,7 +227,7 @@ class WebData:
         con = WebData.web_con()
         try:
             with con.cursor() as cursor:
-                sql = r"INSERT INTO users (username, password, role) SELECT '" + username + "', '" + encrypt_pass + "', " + str(role)  + " FROM DUAL WHERE NOT EXISTS (SELECT * from users WHERE username='" + username + "') LIMIT 1"
+                sql = r"INSERT INTO users (username, password, admin) SELECT '" + username + "', '" + encrypt_pass + "', " + str(role)  + " FROM DUAL WHERE NOT EXISTS (SELECT * from users WHERE username='" + username + "') LIMIT 1"
                 cursor.execute(sql)
                 con.commit()
         finally: con.close()
@@ -236,7 +236,7 @@ class WebData:
         con = WebData.web_con()
         try:
             with con.cursor() as cursor:
-                sql = r"UPDATE users set role=" + str(role) + " where id=" + str(id)
+                sql = r"UPDATE users set admin=" + str(role) + " where id=" + str(id)
                 cursor.execute(sql)
                 con.commit()
         finally: con.close()

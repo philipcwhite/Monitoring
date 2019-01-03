@@ -167,3 +167,5 @@ class controller(object):
 
 def start_server():
     app.start(controller)
+
+#start_server()
