@@ -25,10 +25,10 @@ class EventService(win32serviceutil.ServiceFramework):
     def SvcStop(self):
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.hWaitStop)
-        event_collect.CollectServer.send_close()
+        event.CollectServer.send_close()
 
     def SvcDoRun(self):
-        event_load.load_config()
+        event.EventConfig.load_config()
         rc = None
         while rc != win32event.WAIT_OBJECT_0:
             a = datetime.datetime.now().second
