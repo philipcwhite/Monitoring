@@ -128,7 +128,7 @@ class WebIndex:
         return html
 
     def index_block_4(page):
-        page_start = (page * 100) - 100
+        page_start = (int(page) * 100) - 100
         page_end = page_start + 100
         agentsystem = WebData.web_code_index_devices(page_start, page_end)
         uptime_check = 300
@@ -145,7 +145,7 @@ class WebIndex:
         return html
 
     def index_block_pager(page):
-        page_start = (page * 100) - 100
+        page_start = (int(page) * 100) - 100
         page_end = page_start + 100
         agent_count = WebData.web_code_index_device_count()
         page_count = int(math.ceil(int(agent_count['total']) / 100))
@@ -177,10 +177,8 @@ class WebIndex:
         </table></div></td></tr></table>"""
         return html
 
-    def index_content(qstring="page=1"):
+    def index_content(page):
         html=""
-        pstring=str(qstring)
-        page = int(pstring.replace("page=", ""))
         html += WebIndex.index_page(WebIndex.index_block_1(), WebIndex.index_block_2(), WebIndex.index_block_3(), WebIndex.index_block_4(page), WebIndex.index_block_pager(page))
         return html
 
