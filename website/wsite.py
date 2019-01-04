@@ -5,7 +5,7 @@ from web_data import WebData
 from web_code import WebAuth, WebIndex, WebDevice, WebDevices, WebEvents, WebNotify, WebSettings, WebSearch, WebUsers
 
 class controller(object):
-    def verify(self,username=None,password=None):
+    def verify(self, username=None, password=None):
         user = WebAuth.verify_auth(username, password)
         if not user is None:
             self.login(username)
@@ -176,11 +176,15 @@ def load_config():
             f = open(app_vars.app_path + 'settings.cfg', "r")
             fl = f.readlines()
             for i in fl:
-                if 'server_port:' in i: app_vars.server_port = int(i[12:].replace("\n",""))
-                if 'session_expire:' in i: app_vars.session_expire = int(i[12:].replace("\n",""))
+                if 'server_port:' in i: app_vars.server_port = int(i[12:].replace(" ","").replace("\n",""))
+                if 'session_expire:' in i: app_vars.session_expire = int(i[12:].replace(" ","").replace("\n",""))
                 if 'ssl_enabled:' in i and 'True' in i: app_vars.ssl_enabled = True
-                if 'cert_key:' in i: app_vars.cert_key = i[9:].replace("\n","")
-                if 'cert_name:' in i: app_vars.cert_name = i[10:].replace("\n","")
+                if 'cert_key:' in i: app_vars.cert_key = i[9:].replace(" ","").replace("\n","")
+                if 'cert_name:' in i: app_vars.cert_name = i[10:].replace(" ","").replace("\n","")
+                if 'db_host:' in i: WebData.host = i[8:].replace(" ","").replace("\n","")
+                if 'db_name:' in i: WebData.db = i[8:].replace(" ","").replace("\n","")
+                if 'db_user:' in i: WebData.user = i[8:].replace(" ","").replace("\n","")
+                if 'db_password:' in i: WebData.password = i[12:].replace(" ","").replace("\n","")
         except: pass
 
 def start_server():
