@@ -176,8 +176,8 @@ def load_config():
             f = open(app_vars.app_path + 'settings.cfg', "r")
             fl = f.readlines()
             for i in fl:
-                if 'server_port:' in i: app_vars.server_port = i[12:].replace("\n","")
-                if 'session_expire:' in i: app_vars.session_expire = i[12:].replace("\n","")
+                if 'server_port:' in i: app_vars.server_port = int(i[12:].replace("\n",""))
+                if 'session_expire:' in i: app_vars.session_expire = int(i[12:].replace("\n",""))
                 if 'ssl_enabled:' in i and 'True' in i: app_vars.ssl_enabled = True
                 if 'cert_key:' in i: app_vars.cert_key = i[9:].replace("\n","")
                 if 'cert_name:' in i: app_vars.cert_name = i[10:].replace("\n","")
