@@ -106,7 +106,7 @@ class controller(object):
 
     def users(self):
         user = self.get_auth()
-        html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page('Users', WebUsers.users_list()))
+        html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page('Users', WebUsers.user_list()))
         return html
 
     def user_add(self, username=None, password=None, role=None):
@@ -143,6 +143,11 @@ class controller(object):
     def user_delete(self, id):
         user = self.get_auth()
         #Add confirmation Page
+        html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page('Users', WebViews.load_confirm_delete(id)))
+        return html
+
+    def user_delete_confirm(self, id):
+        WebUsers.user_delete(id)
         self.redirect('/users')
           
     def search(self, device=None):
@@ -166,6 +171,8 @@ class controller(object):
         return html
 
 def start_server():
+    # Comment out 'WebUsers.user_initialize()' to prevent the admin user from being created.
+    WebUsers.user_initialize()
     app.start(controller)
 
 #start_server()

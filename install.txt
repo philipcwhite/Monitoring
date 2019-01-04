@@ -1,4 +1,4 @@
-Install Notes
+Install Notes (0.02b)
 
 1. Uninstall the zip files to Program Files\monitoring.  Your installation directory should look like the paths below.
 C:\Progra~1\monitoring\
@@ -32,10 +32,7 @@ You will either have to create a sql user with these credentials or change the c
 
 7.  Start the 4 services from services.msc
 
-8.  You will have to create a default user.  Open an administrative cmd prompt and go to C:\Progra~1\monitoring\website
-python create_default_user.py
-This will create the user admin with the password test.  You can change this once in the GUI.
-To access the website go to http://localhost/ and enter your username and password.
+8.  To access the website go to http://localhost/ and enter admin and password.  You can change this in the GUI
 
 9.  The application is not set to use SSL by default.  To enable SSL
 For the agent open settings.cfg and change secure from 0 to 1.  Restart the agent

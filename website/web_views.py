@@ -184,3 +184,13 @@ class WebViews:
         </table>
         </form>"""
         return html
+
+    def load_confirm_delete(id):
+        html = """
+        <table>
+        <tr><td>Are you sure you want to delete this user? &nbsp;
+        <input type="button" onclick="window.location.href='/user_delete_confirm/""" + str(id) + """'" class="action-button" value="Yes" /> 
+        <input type="button" onclick="window.location.href='/users/'" class="action-button" value="No" />
+        </td></tr>
+        </table>"""
+        return html

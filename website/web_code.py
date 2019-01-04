@@ -17,6 +17,7 @@ class WebAuth:
             WebData.web_change_password(username, encrypt_password2)
             return True
         return False
+
     def set_password(pass1, pass2):
         if pass1 == pass2:
             encrypt_password = hashlib.sha224(pass1.encode()).hexdigest()
@@ -483,7 +484,15 @@ class WebNotify:
         return html
 
 class WebUsers:
-    def users_list():
+    def user_initialize():
+        #Check if admin user exists. If not create it
+        username = 'admin'
+        password = 'password'
+        role = 1
+        encrypt_password = hashlib.sha224(password.encode()).hexdigest()
+        WebData.web_code_create_user(username, encrypt_password, role)
+
+    def user_list():
         users = WebData.web_code_select_users()
         html = "<table style='width:100%'>"
         for i in users:
@@ -497,3 +506,6 @@ class WebUsers:
     def user_add(username, password, role):
         encrypt_password = hashlib.sha224(password.encode()).hexdigest()
         WebData.web_code_create_user(username, encrypt_password, role)
+
+    def user_delete(id):
+        WebData.web_code_delete_user(id)
