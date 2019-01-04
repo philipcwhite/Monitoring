@@ -1,4 +1,5 @@
 from wserver import app
+from wserver import app_vars
 from web_views import WebViews
 from web_data import WebData
 from web_code import WebAuth, WebIndex, WebDevice, WebDevices, WebEvents, WebNotify, WebSettings, WebSearch, WebUsers
@@ -26,7 +27,7 @@ class controller(object):
     
     def index_content(self, page=1):
         user = self.get_auth()
-        html = WebIndex.index_content(str(page))
+        html = WebIndex.index_content(page)
         return html
 
     def events(self, status=1):
@@ -170,9 +171,21 @@ class controller(object):
         html = WebViews.load_base(user, WebViews.load_bc_settings(),  WebViews.load_basic_page('Error', 'Error'))
         return html
 
+def load_config():
+        try:
+            f = open(app_vars.app_path + 'settings.cfg', "r")
+            fl = f.readlines()
+            for i in fl:
+                if 'server_port:' in i: app_vars.server_port = i[12:].replace("\n","")
+                if 'session_expire:' in i: app_vars.session_expire = i[12:].replace("\n","")
+                if 'ssl_enabled:' in i and 'True' in i: app_vars.ssl_enabled = True
+                if 'cert_key:' in i: app_vars.cert_key = i[9:].replace("\n","")
+                if 'cert_name:' in i: app_vars.cert_name = i[10:].replace("\n","")
+        except: pass
+
 def start_server():
-    # Comment out 'WebUsers.user_initialize()' to prevent the admin user from being created.
-    WebUsers.user_initialize()
+    load_config()
+    WebUsers.user_initialize() # Comment out to prevent the admin user from being created.
     app.start(controller)
 
 #start_server()
