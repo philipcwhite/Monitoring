@@ -25,6 +25,8 @@ Graph View
 
 ## Updates
 
+1/4/2019 - I removed the DB, re-ran the creation script and noticed some odd behavior with pages that must have been cached.  I changed the paging variable to an int and now everything appears to be working fine.  
+
 1/4/2019 - Fixed a lot of issues with user creation and deletion.  Now a default admin user with the password password is created by default when the website is started.  Also users can now be deleted.  There is a confirmation screen as well.  I will add some role permissions soon to differentiate between users and admins.  
 
 1/2/2019 - Fixed an issue with the agent not recording data being sent in non-ssl mode.  Reorganized code for the collector and event engine.  Changed ssl paths in the collector and website to use the certificates directory.
