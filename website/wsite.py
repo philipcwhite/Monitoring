@@ -67,7 +67,7 @@ class controller(object):
     
     def reports(self):
         user = self.get_auth()
-        html = WebViews.load_base(user, WebViews.load_bc_reports(), 'reports')
+        html = WebViews.load_base(user, WebViews.load_bc_reports(), WebViews.load_basic_page('Reports', 'Reports'))
         return html
 
     def settings(self):
