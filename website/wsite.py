@@ -74,7 +74,12 @@ class controller(object):
         user = self.get_auth()
         html = WebViews.load_base(user, WebViews.load_bc_settings(),  WebViews.load_basic_page('Settings', WebSettings.settings()))
         return html
-    
+
+    def about(self):
+        user = self.get_auth()
+        html = WebViews.load_base(user, WebViews.load_bc_settings(),  WebViews.load_basic_page('About', WebSettings.about()))
+        return html
+
     def notify(self):
         user = self.get_auth()
         html = WebViews.load_base(user, WebViews.load_bc_settings(), WebViews.load_basic_page('Notification Rules', WebNotify.notify_rules()))

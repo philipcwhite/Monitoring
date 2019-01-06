@@ -425,8 +425,21 @@ class WebSettings:
         <br />
         <b>User and Role Management</b><br />
         <a href="/users">Manage Users</a><br />
+        <br />
+        <b>Documentation</b><br />
+        User Guide (Coming Soon)<br />
+        <a href="/about">About</a><br />
         <br /> """
         return html
+    
+    def about():
+        html = """
+        Copyright (C) 2018-2019 Phil White - All Rights Reserved <br />
+        You may use, distribute and modify this application under the terms of the Apache 2 license. You should have received a 
+        copy of the Apache 2 license with this application. If not, please visit: 
+        <a href='https://github.com/philipcwhite/monitoring'>https://github.com/philipcwhite/monitoring</a>"""
+        return html
+
 
 class WebSearch:
     def search_devices(device):
