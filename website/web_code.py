@@ -427,7 +427,7 @@ class WebSettings:
         <a href="/users">Manage Users</a><br />
         <br />
         <b>Documentation</b><br />
-        User Guide (Coming Soon)<br />
+        <a href='/help'>User Guide</a><br />
         <a href="/about">About</a><br />
         <br /> """
         return html

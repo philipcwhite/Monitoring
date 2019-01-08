@@ -155,6 +155,11 @@ class controller(object):
     def user_delete_confirm(self, id):
         WebUsers.user_delete(id)
         self.redirect('/users')
+
+    def help(self):
+        user = self.get_auth()
+        html = WebViews.load_base(user, WebViews.load_bc_settings(),  WebViews.load_basic_page('Help', WebViews.load_help()))
+        return html
           
     def search(self, device=None):
         user = self.get_auth()

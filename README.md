@@ -25,6 +25,8 @@ Graph View
 
 ## Updates
 
+1/7/2019 - I created the Help page for the website.  It details what all of the configuration files do and then some.  It could probably use some clean up but it's a step in the right direction.  And yes I still need to build reports... 
+
 1/5/2019  - Some minor changes today.  Added an about page and styled the reports page.  I still need to actually build some reports.  So much to do...  I've been contemplating how to best package the app.  I'll probably use pyinstaller and pack the app with inno setup.  This should make it so that the only outside step needed will be setting up MariaDB/MySQL.  I would prefer to not use freezing tools but they do make things easier for distrobution.  
 
 1/4/2019 - I added a settings.cfg file for the website.  Now all 4 applications have settings files for overrides.  
