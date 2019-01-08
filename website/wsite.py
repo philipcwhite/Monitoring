@@ -2,7 +2,7 @@ from wserver import app
 from wserver import app_vars
 from web_views import WebViews
 from web_data import WebData
-from web_code import WebAuth, WebIndex, WebDevice, WebDevices, WebEvents, WebNotify, WebSettings, WebSearch, WebUsers
+from web_code import WebAuth, WebIndex, WebDevice, WebDevices, WebEvents, WebNotify, WebReports, WebSettings, WebSearch, WebUsers
 
 class controller(object):
     def verify(self, username=None, password=None):
@@ -67,7 +67,17 @@ class controller(object):
     
     def reports(self):
         user = self.get_auth()
-        html = WebViews.load_base(user, WebViews.load_bc_reports(), WebViews.load_basic_page('Reports', 'Reports'))
+        html = WebViews.load_base(user, WebViews.load_bc_reports(), WebViews.load_basic_page('Reports', WebViews.load_reports()))
+        return html
+    
+    def report(self, filename):
+        user = self.get_auth()
+        html = ''
+        ext = filename.split('.')[1]
+        if ext == 'csv': self.extension = 'csv'
+        else: self.extension = 'html'
+        if 'devices.' in filename : html = WebReports.report_devices(ext)
+        if 'events.' in filename : html = WebReports.report_events(ext)
         return html
 
     def settings(self):
@@ -202,4 +212,4 @@ def start_server():
     WebUsers.user_initialize() # Comment out to prevent the admin user from being created.
     app.start(controller)
 
-#start_server()
+start_server()
