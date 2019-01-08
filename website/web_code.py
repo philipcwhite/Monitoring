@@ -520,3 +520,27 @@ class WebUsers:
 
     def user_delete(id):
         WebData.web_code_delete_user(id)
+
+class WebReports:
+    def report_devices(ext):
+        cr = ''
+        if ext == 'html': cr = '<br />'
+        elif ext == 'csv': cr = '\r\n'
+        devices = WebData.web_code_device_all()
+        output = 'Last Reported,Name,IP Address,Platform,Build Number,Architecture,Domain,Processors,Memory' + cr
+        for i in devices:
+            last_reported = str(datetime.datetime.fromtimestamp(int(i['timestamp'])))
+            output += last_reported + ',' + i['name'] + ',' + i['ipaddress'] + ',' + i['platform'] + ',' + str(i['buildnumber']) + ',' + i['architecture']
+            output +=  ',' + i['domain'] + ',' + str(i['processors']) + ',' + str(i['memory']) + cr
+        return output
+
+    def report_events(ext):
+        cr = ''
+        if ext == 'html': cr = '<br />'
+        elif ext == 'csv': cr = '\r\n'
+        events = WebData.web_code_events(1)
+        output = 'Date, Name, Monitor, Message, Severity' + cr
+        for i in events:
+            last_reported = str(datetime.datetime.fromtimestamp(int(i['timestamp'])))
+            output += last_reported + ',' + i['name'] + ',' + i['monitor'] + ',' + i['message'] + ',' + str(i['severity']) + cr
+        return output
