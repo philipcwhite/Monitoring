@@ -195,6 +195,23 @@ class WebViews:
         </table>"""
         return html
 
+    def load_reports():
+        html = """
+        <table style='width:100%'>
+        <tr><td><b>Device Report:</b> An overview of all device configuration data.</td>
+        <td style='text-align:right'>
+        <input type="button" onclick="window.location.href='/report/devices.html'" class="action-button" value="html" />&nbsp;
+        <input type="button" onclick="window.location.href='/report/devices.csv'" class="action-button" value="csv" />
+        </td></tr>
+        <tr><td><b>Event Report:</b> An export of all open events.</td>
+        <td style='text-align:right'>
+        <input type="button" onclick="window.location.href='/report/events.html'" class="action-button" value="html" />&nbsp;
+        <input type="button" onclick="window.location.href='/report/events.csv'" class="action-button" value="csv" />
+        </td></tr>
+        </table>
+        """
+        return html
+
     def load_help():
         html = r"""
         <h2 id='top'>Table of Contents</h2>
@@ -325,7 +342,6 @@ class WebViews:
         The last setting controls the application session timeout in seconds.  This determines how long a user's session is live. 
         User sessions are also controlled via cookies.  The cookie duration is the same as the session.<br />
         session_expire: 7200
-        <br /><br /><b><a href='#top'>top</a></b></br />  
+        <br /><br /><b><a href='#top'>top</a></b></br />"""
 
-        """
         return html
