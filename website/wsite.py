@@ -212,4 +212,4 @@ def start_server():
     WebUsers.user_initialize() # Comment out to prevent the admin user from being created.
     app.start(controller)
 
-start_server()
+#start_server()
