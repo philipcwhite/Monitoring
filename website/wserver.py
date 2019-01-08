@@ -32,13 +32,14 @@ class app_vars:
 
     # Content settings
     content_type = {'css': 'text/css',
+                    'csv': 'text/csv',
                     'gif': 'image/gif',
                     'htm': 'text/html',
                     'html': 'text/html',
+                    'ico': 'image/x-icon',
                     'jpeg': 'image/jpeg',
                     'jpg': 'image/jpg',
                     'js': 'text/javascript',
-                    'ico': 'image/x-icon',
                     'png': 'image/png',
                     'text': 'text/plain',
                     'txt': 'text/plain'}
