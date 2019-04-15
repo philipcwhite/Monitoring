@@ -12,6 +12,9 @@ The monitoring server is composed of three services: the website, the collect en
 ### The Windows Agent
 The Windows agent collects data via WMIC and processes events locally.  It stores its data in a SQLite database which allows the agent to maintain state even after reboots and system crashes.  Data is transferred via TCP (or TCP/SSL) to the Collect Engine on the Monitoring Server.  All data transmissions require a response from the Collect Server to assure data has been transferred.  If the Agent does not receive a response it will keep trying to send the data until it succeeds.  Data is transferred via TCP over port 8888 (non-SSL by default).  Agent configuration and thresholds are maintained locally on the agent.  The agent receives no configuration or commands from above.  This is designed by default to allow agents to function in a secured environment.
 
+### MacOS/NIX
+I've started working on converting some of the server code to be less platform dependent.  I would like to make the application accessible on multiple platforms (Windows/Mac/Linux).  As of now, the application only works on Windows.  Once the server is working on my Mac, I will start writing a new Agent.
+
 ## Screenshots
 
 ![WebSite](https://raw.githubusercontent.com/philipcwhite/Monitoring/master/images/home.png)
@@ -24,6 +27,8 @@ Device View
 Graph View
 
 ## Updates
+
+4/15/2019 - I installed MySQL and Python on my Mac and caught a few errors in the code today.  I have a lot of code to review/fix in order to make this platform independent but I think I can do it.  
 
 4/15/2019 - Release 0.02b.  This is a minor update with all changes since the last release.  Also I installed Python 3 on my Mac so I plan on doing some testing to see if the apps will run on MacOS.  
 
