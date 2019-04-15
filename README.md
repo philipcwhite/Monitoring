@@ -25,6 +25,8 @@ Graph View
 
 ## Updates
 
+4/15/2019 - Release 0.02b.  This is a minor update with all changes since the last release.  Also I installed Python 3 on my Mac so I plan on doing some testing to see if the apps will run on MacOS.  
+
 1/8/2019 - I added some basic reports for device config and open events.  Both can be displayed as HTML or CSV.
 
 1/7/2019 - I created the Help page for the website.  It details what all of the configuration files do and then some.  It could probably use some clean up but it's a step in the right direction.  And yes I still need to build reports... 
