@@ -12,8 +12,8 @@ The monitoring server is composed of three services: the website, the collect en
 ### The Windows Agent
 The Windows agent collects data via WMIC and processes events locally.  It stores its data in a SQLite database which allows the agent to maintain state even after reboots and system crashes.  Data is transferred via TCP (or TCP/SSL) to the Collect Engine on the Monitoring Server.  All data transmissions require a response from the Collect Server to assure data has been transferred.  If the Agent does not receive a response it will keep trying to send the data until it succeeds.  Data is transferred via TCP over port 8888 (non-SSL by default).  Agent configuration and thresholds are maintained locally on the agent.  The agent receives no configuration or commands from above.  This is designed by default to allow agents to function in a secured environment.
 
-### MacOS/NIX
-I've started working on converting some of the server code to be less platform dependent.  I would like to make the application accessible on multiple platforms (Windows/Mac/Linux).  As of now, the application only works on Windows.  Once the server is working on my Mac, I will start writing a new Agent.
+### Linux
+I've started working on converting some of the server code to be less platform dependent.  I would like to make the application accessible on multiple platforms (Windows/Linux).  As of now, the application only works on Windows.  Once the server is working on Linux, I will start writing a new Agent.
 
 ## Screenshots
 
@@ -27,6 +27,10 @@ Device View
 Graph View
 
 ## Updates
+
+4/28/2019 - I had some issues with my Mac being able to process POST commands between Safari and Python. Everything worked when processing from Chrome.  Safari actually worked when the server was on my Windows VM so I'm a bit lost to where the error was.  Safari was basically sending packets without the body so arguments were not present but it only occured when Python was running on my Mac.  
+
+I've since switched testing to an Ubuntu based Linux VM where the webserver is working fine so far. There are a few things that need to be fixed in the existing code (website doesn't fully load the configuration, etc.).  I hope to get a few of these issues fixed this week.  After I finish testing the server components, I plan on starting on the Agent.    
 
 4/15/2019 - I installed MySQL and Python on my Mac and caught a few errors in the code today.  I have a lot of code to review/fix in order to make this platform independent but I think I can do it.  
 
