@@ -1,8 +1,14 @@
 import pymysql.cursors
 
 class WebData:
+    def __init__(host, db, user, password):
+        self.host=  host
+        self.db = db
+        self.user = user
+        self.password = password
+
     def web_con():
-        con = pymysql.connect(host = 'localhost', user = 'test', password = 'test', db = 'monitoring', charset = 'utf8mb4', cursorclass = pymysql.cursors.DictCursor)
+        con = pymysql.connect(host = WebData.host, user = WebData.user, password = WebData.password, db = WebData.db, charset = 'utf8mb4', cursorclass = pymysql.cursors.DictCursor)
         return con
 
     def web_auth(username, encrypt_password):
