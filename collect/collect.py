@@ -1,7 +1,7 @@
 import asyncio, os, ssl, time, pymysql.cursors
 
 class CollectSettings:
-    application_path = 'C:\\Progra~1\\monitoring\\'
+    application_path = './'
     config_file = "settings.cfg"
     server = "0.0.0.0"
     port = 8888
@@ -16,16 +16,16 @@ class CollectLoad:
     def load_config():
         try:
             CollectSettings.running = 1 
-            f = open(CollectSettings.application_path + 'collect\\' + CollectSettings.config_file, "r")
+            f = open(CollectSettings.application_path + 'collect/' + CollectSettings.config_file, "r")
             fl = f.readlines()
             for i in fl:
-                if 'mon_server:' in i: CollectSettings.server = i[11:].replace("\n","")
-                if 'mon_port:' in i: CollectSettings.port = int(i[9:].replace("\n",""))
-                if 'secure:' in i: CollectSettings.secure = int(i[7:].replace("\n",""))
-                if 'dbhost:' in i: CollectSettings.dbhost = i[7:].replace("\n","")
-                if 'dbuser:' in i: CollectSettings.dbuser = i[7:].replace("\n","")
-                if 'dbpassword:' in i: CollectSettings.dbpassword = i[11:].replace("\n","")
-                if 'database:' in i: CollectSettings.database = i[9:].replace("\n","")
+                if 'mon_server:' in i: CollectSettings.server = i[12:].replace("\n","")
+                if 'mon_port:' in i: CollectSettings.port = int(i[10:].replace("\n",""))
+                if 'secure:' in i: CollectSettings.secure = int(i[8:].replace("\n",""))
+                if 'dbhost:' in i: CollectSettings.dbhost = i[8:].replace("\n","")
+                if 'dbuser:' in i: CollectSettings.dbuser = i[8:].replace("\n","")
+                if 'dbpassword:' in i: CollectSettings.dbpassword = i[12:].replace("\n","")
+                if 'database:' in i: CollectSettings.database = i[10:].replace("\n","")
         except: pass
 
 class CollectData:
@@ -173,4 +173,6 @@ class CollectServer():
         try: asyncio.run(CollectServer.connection_loop())
         except: pass
 
-#CollectServer.server_start()
+# Uncomment for use with Linux systems.  Run the command below to execute.
+# sudo python3.7 collect.py
+CollectServer.server_start()
