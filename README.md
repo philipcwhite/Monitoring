@@ -28,6 +28,10 @@ Graph View
 
 ## Updates
 
+4/28/2019 - I fixed the website code for loading the database connection.  I believe the collector will work fine under Linux with a few tweaks as well.  The Event engine may need to be rewritten since its loop is currently maintained by the Windows service.  Most of these are easy fixes.  I'm going to tackle all of these before moving on to the Linux agent.  Right now for Linux I am just running the Python scripts directly.  If someone knows of a better way to do this please let me know.  
+
+I finally have a decent testing environment on Linux.  I set up Elementary OS with MySQL, Python 3.7.3, and Visual Studio Code.  It may not be a hardcore Linux environment but the interface is nice and simple which works for me.  The desktop performance is pretty good under Parallels but Parallels seems to waste a ton of CPU for Linux VMs which kind of sucks.  I had the same issues in Virtualbox so it could just be that my Mac is too old.
+
 4/28/2019 - I had some issues with my Mac being able to process POST commands between Safari and Python. Everything worked when processing from Chrome.  Safari actually worked when the server was on my Windows VM so I'm a bit lost to where the error was.  Safari was basically sending packets without the body so arguments were not present but it only occured when Python was running on my Mac.  
 
 I've since switched testing to an Ubuntu based Linux VM where the webserver is working fine so far. There are a few things that need to be fixed in the existing code (website doesn't fully load the configuration, etc.).  I hope to get a few of these issues fixed this week.  After I finish testing the server components, I plan on starting on the Agent.    
