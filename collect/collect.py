@@ -175,4 +175,4 @@ class CollectServer():
 
 # Uncomment for use with Linux systems.  Run the command below to execute.
 # sudo python3.7 collect.py
-CollectServer.server_start()
+#CollectServer.server_start()
