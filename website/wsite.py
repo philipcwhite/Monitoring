@@ -212,4 +212,6 @@ def start_server():
     WebUsers.user_initialize() # Comment out to prevent the admin user from being created.
     app.start(controller)
 
+# Uncomment for use with Linux systems.  Run the command below to execute.
+# sudo python3.7 wsite.py
 #start_server()
