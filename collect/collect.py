@@ -8,8 +8,8 @@ class CollectSettings:
     secure = 0
     running = 1
     dbhost = "localhost"
-    dbuser = "test"
-    dbpassword = "test"
+    dbuser = "monitoring"
+    dbpassword = "password"
     database = "monitoring"
 
 class CollectLoad:
