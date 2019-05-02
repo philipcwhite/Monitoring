@@ -210,7 +210,7 @@ class AgentLinux():
     def perf_processor():
         # Updated for Linux
         cpu_avg = ''
-        process = os.popen('top -b -n2 -p1| grep -oP "(?<=ni, ).[0-9]*.[0-9]" | tail -1')
+        process = os.popen('top -b -n2 -p1 -d.1| grep -oP "(?<=ni, ).[0-9]*.[0-9]" | tail -1')
         result = process.read()
         process.close()
         cpu_avg = round(100 - float(result.replace('\n','')),0)
