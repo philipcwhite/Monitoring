@@ -28,6 +28,8 @@ Graph View
 
 ## Updates
 
+5/1/2019 - We have a partially working linux agent.  It collects some basic system settings and CPU and Memory.  I still have some testing to do on other Linux platforms for the CPU/Memory stats but it should work on most newer systems.  I'll probably test on Centos and Elementary OS (basically Ubuntu).  I still have to rewrite the event engine and I believe the collector isn't picking up the settings.cfg file so I'll have to look into that.  I think I'll probably write some better code for parsing config files when I have time as well.  Thanks to Jaren for the Linux help this week.  
+
 4/28/2019 - I fixed the website code for loading the database connection.  I believe the collector will work fine under Linux with a few tweaks as well.  The Event engine may need to be rewritten since its loop is currently maintained by the Windows service.  Most of these are easy fixes.  I'm going to tackle all of these before moving on to the Linux agent.  Right now for Linux I am just running the Python scripts directly.  If someone knows of a better way to do this please let me know.  
 
 I finally have a decent testing environment on Linux.  I set up Elementary OS with MySQL, Python 3.7.3, and Visual Studio Code.  It may not be a hardcore Linux environment but the interface is nice and simple which works for me.  The desktop performance is pretty good under Parallels but Parallels seems to waste a ton of CPU for Linux VMs which kind of sucks.  I had the same issues in Virtualbox so it could just be that my Mac is too old.
