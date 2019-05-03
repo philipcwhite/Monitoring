@@ -3,7 +3,7 @@
 # You may use, distribute and modify this code under the terms of the Apache 2 license. You should have received a 
 # copy of the Apache 2 license with this file. If not, please visit:  https://github.com/philipcwhite/monitoring
 
-import datetime, os, platform, re, socket, sqlite3, ssl, time
+import datetime, os, platform, socket, sqlite3, ssl, subprocess, time
 
 class AgentSettings:
     log = None
@@ -173,59 +173,41 @@ class AgentLinux():
 
     def perf_memory():
         # Updated for Linux
-        mem_list = os.popen('free -m').readlines()[1].split()[1:]
-        memory_used = round( (((float(mem_list[0])-float(mem_list[5]))/float(mem_list[0])))*100,0)
-        AgentSQL.insert_data('conf.memory.total', str(mem_list[0]))
+        output = subprocess.run('free -m', shell=True, capture_output=True, text=True).stdout.split('\n')[1].split()[1:]
+        memory_used = round( (((float(output[0])-float(output[5]))/float(output[0])))*100,0)
+        AgentSQL.insert_data('conf.memory.total', str(output[0]))
         AgentSQL.insert_data('perf.memory.percent.used', str(memory_used))
 
     def perf_network():
         nw_br = 0
         nw_bs = 0
-        process = os.popen('wmic path Win32_PerfFormattedData_Tcpip_NetworkInterface get BytesReceivedPersec,BytesSentPersec /format:csv')
-        result = process.read()
-        process.close()
-        result_list = result.split('\n')
-        for i in result_list:
-            if not 'BytesReceivedPersec' in i and ',' in i:
-                nw_list = i.split(",")
-                nw_br += int(nw_list[1])
-                nw_bs += int(nw_list[2])
+        # WIP
         AgentSQL.insert_data('perf.network.bytes.received', str(nw_br))
         AgentSQL.insert_data('perf.network.bytes.sent', str(nw_bs))
 
     def perf_pagefile():
-        process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_PagingFile where name="_Total" get PercentUsage /value')
-        result = process.read()
-        process.close()
-        result = str(re.search(r'(?m)(?<=\bPercentUsage=).*$', result).group())
+        # WIP
         AgentSQL.insert_data('perf.pagefile.percent.used', result)
     
     def perf_processor():
         # Updated for Linux
-        process = os.popen('top -b -n2 -p1 -d.1| grep -oP "(?<=ni, ).[0-9]*.[0-9]" | tail -1')
-        result = process.read()
-        process.close()
-        cpu_avg = round(100 - float(result.replace('\n','')),0)
+        output = subprocess.run('top -b -n2 -p1 -d.1| grep -oP "(?<=ni, ).[0-9]*.[0-9]" | tail -1', shell=True, capture_output=True, text=True).stdout
+        cpu_avg = round(100 - float(output.replace('\n','')),0)
         AgentSQL.insert_data('perf.processor.percent.used', str(cpu_avg))
     
     def perf_uptime():
         # Updated for Linux
-        process = os.popen('cat /proc/uptime')
-        result = process.read().split('.')
-        process.close()
-        uptime = result[0]
+        output = subprocess.run('cat /proc/uptime', shell=True, capture_output=True, text=True).stdout.split()[0]
+        uptime = int(round(float(output),0))
         AgentSQL.insert_data('perf.system.uptime.seconds', str(uptime))
     
     def perf_services():
+        # Updated for Linux
         if AgentSettings.services:
             for service in AgentSettings.services:
-                process = os.popen('wmic path Win32_Service where name="' + service + '" get State /value')
-                result = process.read()
-                process.close()
-                result = str(re.search(r'(?m)(?<=\bState=).*$', result).group())
+                #service = 'systemd'
+                output = subprocess.run('ps -C ' + service + ' >/dev/null && echo 1 || echo 0', shell=True, capture_output=True, text=True).stdout.replace('\n','')
                 sname = 'perf.service.' + service.replace(' ','').lower() + '.state'
-                if result == 'Running': result = 1
-                else: result = 0
                 AgentSQL.insert_data(sname, str(result))
 
 class AgentProcess():
@@ -251,8 +233,8 @@ class AgentProcess():
         try:
             domain_name = socket.getfqdn()
             if domain_name == AgentSettings.name: domain_name = 'Stand Alone'
-            build_name = os.popen('cat /etc/os-release|grep -oP "(?<=^NAME=).*"').readlines()[0].replace('"','').replace('\n','')
-            build_version = os.popen('cat /etc/os-release|grep -oP "(?<=^VERSION_ID=).*"').readlines()[0].replace('"','').replace('\n','')
+            build_name = subprocess.run('cat /etc/os-release|grep -oP "(?<=^NAME=).*"', shell=True, capture_output=True, text=True).stdout.replace('"','').replace('\n','')
+            build_version = subprocess.run('cat /etc/os-release|grep -oP "(?<=^VERSION_ID=).*"', shell=True, capture_output=True, text=True).stdout.replace('"','').replace('\n','')
 
             AgentSQL.insert_data('conf.os.name', platform.system())
             AgentSQL.insert_data('conf.os.architecture', platform.architecture()[0])
@@ -269,7 +251,7 @@ class AgentProcess():
             #AgentLinux.perf_pagefile()
             AgentLinux.perf_processor()
             AgentLinux.perf_uptime()
-            #AgentLinux.perf_services()
+            AgentLinux.perf_services()
         except: pass
         output = AgentSQL.select_data()
         return output
