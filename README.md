@@ -27,6 +27,7 @@ Device View
 Graph View
 
 ## Updates
+5/2/2019 - Lots of updates to the Linux Agent today.  I added uptime, improved memory and CPU functions, and set the build to the distrobution name and version.
 
 5/1/2019 - We have a partially working linux agent.  It collects some basic system settings and CPU and Memory.  I still have some testing to do on other Linux platforms for the CPU/Memory stats but it should work on most newer systems.  I'll probably test on Centos and Elementary OS (basically Ubuntu).  I still have to rewrite the event engine and I believe the collector isn't picking up the settings.cfg file so I'll have to look into that.  I think I'll probably write some better code for parsing config files when I have time as well.  Thanks to Jaren for the Linux help this week.  
 
