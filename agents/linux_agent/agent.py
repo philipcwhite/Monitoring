@@ -159,14 +159,6 @@ class AgentSQL():
         con.close()
 
 class AgentLinux():
-    def conf_memory_total():
-        # Updated for Linux
-        process_a = os.popen("dmesg | grep -oP '(?<=Memory: ).[0-9]*'")
-        result_a = float(process_a.read())
-        process_a.close()
-        memory = round((result_a/1024),0)
-        AgentSQL.insert_data('conf.memory.total', str(memory))
-
     def perf_filesystem():
         process = os.popen('''wmic path Win32_PerfFormattedData_PerfDisk_LogicalDisk WHERE "Name LIKE '%:'" get Name,PercentFreeSpace,PercentIdleTime /format:csv''')
         result = process.read()
@@ -181,8 +173,9 @@ class AgentLinux():
 
     def perf_memory():
         # Updated for Linux
-        tot_m, used_m, free_m, shared, buff_cache, available = map(int, os.popen('free -m').readlines()[1].split()[1:])
-        memory_used = round( (((float(tot_m)-float(available))/float(tot_m)))*100,0)
+        mem_list = os.popen('free -m').readlines()[1].split()[1:]
+        memory_used = round( (((float(mem_list[0])-float(mem_list[5]))/float(mem_list[0])))*100,0)
+        AgentSQL.insert_data('conf.memory.total', str(mem_list[0]))
         AgentSQL.insert_data('perf.memory.percent.used', str(memory_used))
 
     def perf_network():
@@ -209,7 +202,6 @@ class AgentLinux():
     
     def perf_processor():
         # Updated for Linux
-        cpu_avg = ''
         process = os.popen('top -b -n2 -p1 -d.1| grep -oP "(?<=ni, ).[0-9]*.[0-9]" | tail -1')
         result = process.read()
         process.close()
@@ -217,11 +209,12 @@ class AgentLinux():
         AgentSQL.insert_data('perf.processor.percent.used', str(cpu_avg))
     
     def perf_uptime():
-        process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_System get SystemUptime /value')
-        result = process.read()
+        # Updated for Linux
+        process = os.popen('cat /proc/uptime')
+        result = process.read().split('.')
         process.close()
-        result = str(re.search(r'(?m)(?<=\bSystemUpTime=).*$', result).group())
-        AgentSQL.insert_data('perf.system.uptime.seconds', result)
+        uptime = result[0]
+        AgentSQL.insert_data('perf.system.uptime.seconds', str(uptime))
     
     def perf_services():
         if AgentSettings.services:
@@ -256,22 +249,26 @@ class AgentProcess():
 
     def data_process():
         try:
+            domain_name = socket.getfqdn()
+            if domain_name == AgentSettings.name: domain_name = 'Stand Alone'
+            build_name = os.popen('cat /etc/os-release|grep -oP "(?<=^NAME=).*"').readlines()[0].replace('"','').replace('\n','')
+            build_version = os.popen('cat /etc/os-release|grep -oP "(?<=^VERSION_ID=).*"').readlines()[0].replace('"','').replace('\n','')
+
             AgentSQL.insert_data('conf.os.name', platform.system())
             AgentSQL.insert_data('conf.os.architecture', platform.architecture()[0])
-            #AgentSQL.insert_data('conf.os.build', platform.version()[1])
+            AgentSQL.insert_data('conf.os.build', build_name + ' ' + build_version)
             AgentSQL.insert_data('conf.ipaddress', socket.gethostbyname(socket.gethostname()))
-            AgentSQL.insert_data('conf.domain', socket.getfqdn())
+            AgentSQL.insert_data('conf.domain', domain_name)
             AgentSQL.insert_data('conf.processors', str(os.cpu_count()))
 
         except: pass
         try:
-            AgentLinux.conf_memory_total()
             #AgentLinux.perf_filesystem()
             AgentLinux.perf_memory()
             #AgentLinux.perf_network()
             #AgentLinux.perf_pagefile()
             AgentLinux.perf_processor()
-            #AgentLinux.perf_uptime()
+            AgentLinux.perf_uptime()
             #AgentLinux.perf_services()
         except: pass
         output = AgentSQL.select_data()
