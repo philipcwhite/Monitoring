@@ -13,7 +13,7 @@ class AgentSettings:
     running = True
     secure = 0
     server = '127.0.0.1'
-    services = []
+    processes = []
     time = None
     
 class AgentSQL():
@@ -160,19 +160,17 @@ class AgentSQL():
 
 class AgentLinux():
     def perf_filesystem():
-        process = os.popen('''wmic path Win32_PerfFormattedData_PerfDisk_LogicalDisk WHERE "Name LIKE '%:'" get Name,PercentFreeSpace,PercentIdleTime /format:csv''')
-        result = process.read()
-        process.close()
-        result_list = result.split('\n')
-        for i in result_list:
-            if not 'PercentFreeSpace' in i and ',' in i:
-                ld_list = i.split(',')
-                ld_name = ld_list[1].replace(':','').lower()
-                AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.free', str(ld_list[2]))
-                AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.active', str(100 - float(ld_list[3])))
+        output = subprocess.run('df -x tmpfs -x devtmpfs | tail -n +2', shell=True, capture_output=True, text=True).stdout.split('\n')
+        for i in output:
+            if '%' in i:
+                fs = i.split()
+                fs = i.split()
+                fs_name = 'perf.filesystem.' + fs[0] + '.percent.used'
+                fs_name = fs_name.replace('/','.').replace('..','.')
+                fs_used = str(fs[4].replace('%',''))
+                AgentSQL.insert_data(fs_name, fs_used)
 
     def perf_memory():
-        # Updated for Linux
         output = subprocess.run('free -m', shell=True, capture_output=True, text=True).stdout.split('\n')[1].split()[1:]
         memory_used = round( (((float(output[0])-float(output[5]))/float(output[0])))*100,0)
         AgentSQL.insert_data('conf.memory.total', str(output[0]))
@@ -188,27 +186,24 @@ class AgentLinux():
     def perf_pagefile():
         # WIP
         AgentSQL.insert_data('perf.pagefile.percent.used', result)
+
+    def perf_processes():
+        if AgentSettings.processes:
+            for i in AgentSettings.processes:
+                output = subprocess.run('ps -C ' + i + ' >/dev/null && echo 1 || echo 0', shell=True, capture_output=True, text=True).stdout.replace('\n','')
+                sname = 'perf.process.' + i.replace(' ','').lower() + '.state'
+                AgentSQL.insert_data(sname, str(output))
     
     def perf_processor():
-        # Updated for Linux
         output = subprocess.run('top -b -n2 -p1 -d.1| grep -oP "(?<=ni, ).[0-9]*.[0-9]" | tail -1', shell=True, capture_output=True, text=True).stdout
         cpu_avg = round(100 - float(output.replace('\n','')),0)
         AgentSQL.insert_data('perf.processor.percent.used', str(cpu_avg))
     
     def perf_uptime():
-        # Updated for Linux
         output = subprocess.run('cat /proc/uptime', shell=True, capture_output=True, text=True).stdout.split()[0]
         uptime = int(round(float(output),0))
         AgentSQL.insert_data('perf.system.uptime.seconds', str(uptime))
     
-    def perf_services():
-        # Updated for Linux
-        if AgentSettings.services:
-            for service in AgentSettings.services:
-                #service = 'systemd'
-                output = subprocess.run('ps -C ' + service + ' >/dev/null && echo 1 || echo 0', shell=True, capture_output=True, text=True).stdout.replace('\n','')
-                sname = 'perf.service.' + service.replace(' ','').lower() + '.state'
-                AgentSQL.insert_data(sname, str(result))
 
 class AgentProcess():
     def initialize_agent():
@@ -223,7 +218,7 @@ class AgentProcess():
                 if i.startswith('port:'): AgentSettings.port = int(i[5:].replace(' ',''))
                 if i.startswith('secure:'): AgentSettings.secure = int(i[7:].replace(' ',''))
                 if i.startswith('log:'): AgentSettings.log = i[4:].replace(' ','')
-                if i.startswith('services:'): AgentSettings.services = i[9:].replace(' ','').split(',')
+                if i.startswith('processes:'): AgentSettings.processes = i[10:].replace(' ','').split(',')
                 if i.startswith('thresh:'):
                     thresh = i[7:].replace(' ','').split(',')
                     AgentSQL.insert_thresholds(thresh[0], thresh[1], thresh[2], thresh[3], thresh[4])
@@ -245,13 +240,13 @@ class AgentProcess():
 
         except: pass
         try:
-            #AgentLinux.perf_filesystem()
+            AgentLinux.perf_filesystem()
             AgentLinux.perf_memory()
             #AgentLinux.perf_network()
             #AgentLinux.perf_pagefile()
             AgentLinux.perf_processor()
             AgentLinux.perf_uptime()
-            AgentLinux.perf_services()
+            AgentLinux.perf_processes()
         except: pass
         output = AgentSQL.select_data()
         return output
