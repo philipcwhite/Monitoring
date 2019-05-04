@@ -176,7 +176,7 @@ class AgentWindows():
             if not 'PercentFreeSpace' in i and ',' in i:
                 ld_list = i.split(',')
                 ld_name = ld_list[1].replace(':','').lower()
-                AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.free', str(ld_list[2]))
+                AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.used', str(100 - float(ld_list[2])))
                 AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.active', str(100 - float(ld_list[3])))
 
     def perf_memory():
