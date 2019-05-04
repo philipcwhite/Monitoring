@@ -218,8 +218,8 @@ class WebDevice:
             if i['monitor'] == 'perf.system.uptime.seconds': uptime_days = round(float(i['value']) / 86400, 0)
             if i['monitor'] == 'perf.network.bytes.received': net_br = round(float(i['value']), 0)
             if i['monitor'] == 'perf.network.bytes.sent': net_bs = round(float(i['value']), 0)
-            if 'filesystem' in i['monitor'] and 'active' in i['monitor']:
-                fs_name = i['monitor'].replace('perf.filesystem.','').replace('.percent.active','')
+            if 'filesystem' in i['monitor'] and 'percent.used' in i['monitor']:
+                fs_name = i['monitor'].replace('perf.filesystem.','').replace('.percent.used','')
                 fs_list.append(fs_name)
         html_fs = """<tr><td  style="padding-bottom:4px;text-align:left">
                   <div class="card-div">
@@ -227,19 +227,20 @@ class WebDevice:
                   <div style="padding-left: 10px">"""
         for i in fs_list:
             try:
-                fs_query_free = WebData.web_code_device_filesystem(name, 'perf.filesystem.' + i + '.percent.free')
-                fs_query_active = WebData.web_code_device_filesystem(name,'perf.filesystem.' + i + '.percent.active')
-                fs_free = str(round(float(fs_query_free['value']),0))
-                fs_active = str(round(float(fs_query_active['value']),0))
+                fs_query_used = WebData.web_code_device_filesystem(name, 'perf.filesystem.' + i + '.percent.used')
+                #fs_query_active = WebData.web_code_device_filesystem(name,'perf.filesystem.' + i + '.percent.active')
+                fs_used = str(round(float(fs_query_used['value']),0))
+                #fs_active = str(round(float(fs_query_active['value']),0))
                 fs_name = ""
                 if agentsystem['platform'] == 'Windows':
                     fs_name = "Windows " + i + " drive"
                 elif agentsystem['platform'] == 'Linux':
                     fs_name = "Linux Filesystem: " + i             
-                html_fs += """<table style="width:100%"><tr><td style="width:33%">""" + fs_name + """ drive</td>
-                        <td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.free">Free Space: """ + fs_free + """</a></td>
-                        <td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.active">Filesystem Activity: """ + fs_active + """</a></td>
+                html_fs += """<table style="width:100%"><tr><td style="width:33%">""" + fs_name + """ </td>
+                        <td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.used">Space Used: """ + fs_used + """</a></td>
+                        <td style="width:33%"></td>
                         </tr></table>"""
+                #<td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.active">Filesystem Activity: """ + fs_active + """</a></td>
             except: pass
         html_fs += """</div></div></td></tr>""" 
         html = """<tr><td style="padding-right:4px;text-align:center">
