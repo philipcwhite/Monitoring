@@ -13,7 +13,7 @@ The monitoring server is composed of three services: the website, the collect en
 The Windows agent collects data via WMIC and processes events locally.  It stores its data in a SQLite database which allows the agent to maintain state even after reboots and system crashes.  Data is transferred via TCP (or TCP/SSL) to the Collect Engine on the Monitoring Server.  All data transmissions require a response from the Collect Server to assure data has been transferred.  If the Agent does not receive a response it will keep trying to send the data until it succeeds.  Data is transferred via TCP over port 8888 (non-SSL by default).  Agent configuration and thresholds are maintained locally on the agent.  The agent receives no configuration or commands from above.  This is designed by default to allow agents to function in a secured environment.
 
 ### Linux
-I've started working on converting some of the server code to be less platform dependent.  I would like to make the application accessible on multiple platforms (Windows/Linux).  As of now, the application only works on Windows.  Once the server is working on Linux, I will start writing a new Agent.
+I am currently rewriting the server to work on most modern Linux varients.  As of now, the server and collector are working.  The Event engine needs to be rewritten with an internal counter.  I have also written a Linux agent which is 90% complete.  It works but is still lacking a few statistics.  As many linux distrobutions are slightly different, I will probably find a lot of bugs when I ramp up testing.  As of now I've run most of my queries on both Elementary OS (Ubuntu) and Centos. 
 
 ## Screenshots
 
