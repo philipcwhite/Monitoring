@@ -88,7 +88,7 @@ class AgentSQL():
 
     def select_data():
         output = ''
-        sql_query = "SELECT time, name, monitor, value FROM AgentData WHERE sent=0 AND monitor NOT LIKE '%perf.service%'"
+        sql_query = "SELECT time, name, monitor, value FROM AgentData WHERE sent=0 AND monitor NOT LIKE '%perf.process.%'"
         con = AgentSQL.sql_con()
         c = con.cursor()
         c.execute(sql_query)
@@ -204,8 +204,9 @@ class AgentLinux():
             AgentSQL.insert_data('perf.network.bytes.sent', '0')
 
     def perf_pagefile():
-        # WIP
-        AgentSQL.insert_data('perf.pagefile.percent.used', result)
+        output = subprocess.run('free -m', shell=True, capture_output=True, text=True).stdout.split('\n')[2].split()[1:]
+        swap_used = round((float(output[1])/float(output[0]))*100,0)
+        AgentSQL.insert_data('perf.pagefile.percent.used', str(swap_used))
 
     def perf_processes():
         if AgentSettings.processes:
@@ -263,7 +264,7 @@ class AgentProcess():
             AgentLinux.perf_filesystem()
             AgentLinux.perf_memory()
             AgentLinux.perf_network()
-            #AgentLinux.perf_pagefile()
+            AgentLinux.perf_pagefile()
             AgentLinux.perf_processor()
             AgentLinux.perf_uptime()
             AgentLinux.perf_processes()
