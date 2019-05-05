@@ -15,6 +15,8 @@ class AgentSettings:
     server = '127.0.0.1'
     processes = []
     time = None
+    net_bytes_received = 0
+    net_bytes_sent = 0
     
 class AgentSQL():
     def sql_con():
@@ -177,11 +179,29 @@ class AgentLinux():
         AgentSQL.insert_data('perf.memory.percent.used', str(memory_used))
 
     def perf_network():
-        nw_br = 0
-        nw_bs = 0
-        # WIP
-        AgentSQL.insert_data('perf.network.bytes.received', str(nw_br))
-        AgentSQL.insert_data('perf.network.bytes.sent', str(nw_bs))
+        check_bytes_received = 0
+        check_bytes_sent = 0
+        bytes_received = 0
+        bytes_sent = 0
+        output = subprocess.run('cat /proc/net/dev | tail -n +3', shell=True, capture_output=True, text=True).stdout.split('\n')
+        for i in output:
+            if ':' in i and not 'lo:' in i:
+                net = i.split()
+                #Receive/Transmit
+                check_bytes_received += int(net[1])
+                check_bytes_sent += int(net[9])
+        if AgentSettings.net_bytes_received != 0:
+            bytes_received = round((check_bytes_received - AgentSettings.net_bytes_received)/60, 0)
+            bytes_sent = round((check_bytes_sent - AgentSettings.net_bytes_sent)/60, 0)
+            AgentSQL.insert_data('perf.network.bytes.received', str(bytes_received))
+            AgentSQL.insert_data('perf.network.bytes.sent', str(bytes_sent))
+            AgentSettings.net_bytes_received = check_bytes_received
+            AgentSettings.net_bytes_sent = check_bytes_sent
+        if AgentSettings.net_bytes_received == 0:
+            AgentSettings.net_bytes_received = check_bytes_received
+            AgentSettings.net_bytes_sent = check_bytes_sent
+            AgentSQL.insert_data('perf.network.bytes.received', '0')
+            AgentSQL.insert_data('perf.network.bytes.sent', '0')
 
     def perf_pagefile():
         # WIP
@@ -242,7 +262,7 @@ class AgentProcess():
         try:
             AgentLinux.perf_filesystem()
             AgentLinux.perf_memory()
-            #AgentLinux.perf_network()
+            AgentLinux.perf_network()
             #AgentLinux.perf_pagefile()
             AgentLinux.perf_processor()
             AgentLinux.perf_uptime()
