@@ -28,6 +28,8 @@ Graph View
 
 ## Updates
 
+5/5/2019 - Linux agent is now working for all monitors except disk activity.  
+
 5/4/2019 - I added network monitoring to the Linux agent.  Total bytes sent and received per second.  It's more or less an average of 60 seconds but it is what it is.  Linux agent is almost complete.  I still have pagefile and disk activity to add.  Pagefile will be easy but I'm not sure I will be able to do disk activity though.  After this I have to update the event engine and the Windows agent.  When all of this is done, I'll do some cleanup and publish the 0.03b.
 
 5/3/2019 - The Linux development effort is progressing well.  I switched Linux agent to use subprocess today.  Most basic monitors are done on this agent as well.  I will have to update the Windows agent to bring the changes inline with the Linux agent.  I changed filesystem.free to used.  I also made some minor changes to the website to correct issues with Chromium on Linux and other display issues for Linux systems.  
