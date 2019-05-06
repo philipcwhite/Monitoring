@@ -28,6 +28,8 @@ Graph View
 
 ## Updates
 
+5/6/2019 - I updated the Event engine so it should now work on Linux.  I still need to test.  My changes to the device page for filesystem seem to have broken the Windows agent's display.  Another thing to add to the to-do list.  Also I still need to switch the Windows agent to use subprocess.  Hopefully I will get this done this week.  
+
 5/5/2019 - Linux agent is now working for all monitors except disk activity.  
 
 5/4/2019 - I added network monitoring to the Linux agent.  Total bytes sent and received per second.  It's more or less an average of 60 seconds but it is what it is.  Linux agent is almost complete.  I still have pagefile and disk activity to add.  Pagefile will be easy but I'm not sure I will be able to do disk activity though.  After this I have to update the event engine and the Windows agent.  When all of this is done, I'll do some cleanup and publish the 0.03b.
