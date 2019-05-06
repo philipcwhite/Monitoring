@@ -13,7 +13,7 @@ class EventSettings:
     mailactive = 0
     mailadmin = "monitoring@monitoring"
     mailserver = "localhost"
-    running = 1
+    running = True
 
 class EventConfig:
     def load_config():
@@ -22,17 +22,17 @@ class EventConfig:
             f = open(EventSettings.application_path + EventSettings.config_file, "r")
             fl = f.readlines()
             for i in fl:
-                if 'mon_server:' in i: EventSettings.server = i[11:].replace("\n","")
-                if 'mon_port:' in i :EventSettings.port = int(i[9:].replace("\n",""))
-                if 'dbhost:' in i: EventSettings.dbhost = i[7:].replace("\n","")
-                if 'dbuser:' in i: EventSettings.dbuser = i[7:].replace("\n","")
-                if 'dbpassword:' in i: EventSettings.dbpassword = i[11:].replace("\n","")
-                if 'database:' in i: EventSettings.database = i[9:].replace("\n","")
-                if 'mailactive:' in i: EventSettings.mailactive = int(i[11:].replace("\n",""))
-                if 'mailserver:' in i: EventSettings.mailserver = i[11:].replace("\n","")
-                if 'mailadmin:' in i: EventSettings.mailadmin = i[10:].replace("\n","")
-                if 'availability_check:' in i: EventSettings.availability_check = int(i[19:].replace("\n",""))
-                if 'availability_severity:' in i: EventSettings.availability_severity = i[22:].replace("\n","")
+                if 'mon_server:' in i: EventSettings.server = i[11:].replace("\n","").replace(' ','')
+                if 'mon_port:' in i :EventSettings.port = int(i[9:].replace("\n","").replace(' ',''))
+                if 'dbhost:' in i: EventSettings.dbhost = i[7:].replace("\n","").replace(' ','')
+                if 'dbuser:' in i: EventSettings.dbuser = i[7:].replace("\n","").replace(' ','')
+                if 'dbpassword:' in i: EventSettings.dbpassword = i[11:].replace("\n","").replace(' ','')
+                if 'database:' in i: EventSettings.database = i[9:].replace("\n","").replace(' ','')
+                if 'mailactive:' in i: EventSettings.mailactive = int(i[11:].replace("\n","").replace(' ',''))
+                if 'mailserver:' in i: EventSettings.mailserver = i[11:].replace("\n","").replace(' ','')
+                if 'mailadmin:' in i: EventSettings.mailadmin = i[10:].replace("\n","").replace(' ','')
+                if 'availability_check:' in i: EventSettings.availability_check = int(i[19:].replace("\n","").replace(' ',''))
+                if 'availability_severity:' in i: EventSettings.availability_severity = i[22:].replace("\n","").replace(' ','')
         except: pass
 
 class EventData:
@@ -119,7 +119,7 @@ class EventData:
                         connection.commit()
         finally: connection.close()
 
-class EventAvailable():
+class EventAvailable:
     def check_available():
         try:
             check_time = str(time.time() - EventSettings.availability_check).split('.')[0]
@@ -138,7 +138,7 @@ class EventAvailable():
             EventData.agent_avail_select_event_open(check_time)
         except: pass
 
-class ServerEvent():
+class ServerEvent:
     def process_events():
         try:
             id = EventData.agent_select_id()
@@ -171,14 +171,22 @@ class ServerEvent():
                     s = smtplib.SMTP(EventSettings.mailserver)
                     s.send_message(msg)
                     s.quit()
-
-                #print(str(time.time()).split('.')[0] + ":" + notify_email + ":" + notify_name + ":" + name + ":" + monitor + ":" + message + ":" + severity + ":" +status + ":" + str(date) + "\n")
                 f = open(EventSettings.application_path + "output.txt","a")
                 f.write(str(time.time()).split('.')[0] + ":" + notify_email + ":" + notify_name + ":" + name + ":" + monitor + ":" + message + ":" + severity + ":" +status + ":" + str(date) + "\n")
                 f.close()
         except: pass
 
+class EventLoop:
+    def run_process():
+        while EventSettings.running == True:
+            a = datetime.datetime.now().second
+            if a == 0:
+                EventAvailable.check_available()
+                EventAvailable.check_open()
+                ServerEvent.process_events()
+            time.sleep(1)
+
+# Uncomment for use with Linux systems.  Run the command below to execute.
+# sudo python3.7 event.py
 #EventConfig.load_config()
-#EventAvailable.check_available()
-#EventAvailable.check_open()
-#ServerEvent.process_events()
+#EventLoop.run_process()

@@ -1,8 +1,10 @@
 import asyncio, os, ssl, time, pymysql.cursors
 
 class CollectSettings:
-    application_path = './'
-    config_file = "settings.cfg"
+    # For Windows specify full path
+    application_path = 'C://Program Files//monitoring//collect//'
+    # For Linux use ./
+    #application_path = './'
     server = "0.0.0.0"
     port = 8888
     secure = 0
@@ -16,7 +18,7 @@ class CollectLoad:
     def load_config():
         try:
             CollectSettings.running = 1 
-            f = open(CollectSettings.application_path + 'collect/' + CollectSettings.config_file, "r")
+            f = open(CollectSettings.application_path + 'settings.cfg', "r")
             fl = f.readlines()
             for i in fl:
                 if 'mon_server:' in i: CollectSettings.server = i[12:].replace("\n","")
@@ -175,4 +177,4 @@ class CollectServer():
 
 # Uncomment for use with Linux systems.  Run the command below to execute.
 # sudo python3.7 collect.py
-#CollectServer.server_start()
+# CollectServer.server_start()

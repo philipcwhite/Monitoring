@@ -25,18 +25,11 @@ class EventService(win32serviceutil.ServiceFramework):
     def SvcStop(self):
         self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
         win32event.SetEvent(self.hWaitStop)
-        event.CollectServer.send_close()
+        event.EventSettings.running = False
 
     def SvcDoRun(self):
         event.EventConfig.load_config()
-        rc = None
-        while rc != win32event.WAIT_OBJECT_0:
-            a = datetime.datetime.now().second
-            if a == 0:
-                event.EventAvailable.check_available()
-                event.EventAvailable.check_open()
-                event.ServerEvent.process_events()
-            rc = win32event.WaitForSingleObject(self.hWaitStop, 1000)
+        event.EventLoop.run_process()
                 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
@@ -45,5 +38,3 @@ if __name__ == '__main__':
         servicemanager.StartServiceCtrlDispatcher()
     else:
         win32serviceutil.HandleCommandLine(EventService)
-
-
