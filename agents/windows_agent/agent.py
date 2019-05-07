@@ -3,7 +3,7 @@
 # You may use, distribute and modify this code under the terms of the Apache 2 license. You should have received a 
 # copy of the Apache 2 license with this file. If not, please visit:  https://github.com/philipcwhite/monitoring
 
-import datetime, os, platform, re, socket, sqlite3, ssl, time
+import datetime, os, platform, re, socket, sqlite3, ssl, subprocess, time
 
 class AgentSettings:
     log = None
@@ -160,29 +160,23 @@ class AgentSQL():
 
 class AgentWindows():
     def conf_memory_total():
-        process = os.popen('wmic path Win32_ComputerSystem get TotalPhysicalMemory /value')
-        result = process.read()
-        process.close()
+        result = subprocess.run('wmic path Win32_ComputerSystem get TotalPhysicalMemory /value', shell=True, capture_output=True, text=True).stdout
         result = re.search(r'(?m)(?<=\bTotalPhysicalMemory=).*$', result).group()
         result = round(int(result)  / 1048576, 0)
         AgentSQL.insert_data('conf.memory.total', str(result))
 
     def perf_filesystem():
-        process = os.popen('''wmic path Win32_PerfFormattedData_PerfDisk_LogicalDisk WHERE "Name LIKE '%:'" get Name,PercentFreeSpace,PercentIdleTime /format:csv''')
-        result = process.read()
-        process.close()
+        result = subprocess.run('''wmic path Win32_PerfFormattedData_PerfDisk_LogicalDisk WHERE "Name LIKE '%:'" get Name,PercentFreeSpace,PercentIdleTime /format:csv''', shell=True, capture_output=True, text=True).stdout
         result_list = result.split('\n')
         for i in result_list:
             if not 'PercentFreeSpace' in i and ',' in i:
                 ld_list = i.split(',')
                 ld_name = ld_list[1].replace(':','').lower()
-                AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.used', str(100 - float(ld_list[2])))
+                AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.free', str(ld_list[2]))
                 AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.active', str(100 - float(ld_list[3])))
 
     def perf_memory():
-        process = os.popen('wmic path Win32_OperatingSystem get FreePhysicalMemory,TotalVisibleMemorySize /value')
-        result = process.read()
-        process.close()    
+        result = subprocess.run('wmic path Win32_OperatingSystem get FreePhysicalMemory,TotalVisibleMemorySize /value', shell=True, capture_output=True, text=True).stdout 
         FreeMem = int(re.search(r'(?m)(?<=\bFreePhysicalMemory=).*$', result).group())
         TotalMem = int(re.search(r'(?m)(?<=\bTotalVisibleMemorySize=).*$', result).group())
         PercentMem = ((TotalMem-FreeMem)/TotalMem)*100
@@ -192,9 +186,7 @@ class AgentWindows():
     def perf_network():
         nw_br = 0
         nw_bs = 0
-        process = os.popen('wmic path Win32_PerfFormattedData_Tcpip_NetworkInterface get BytesReceivedPersec,BytesSentPersec /format:csv')
-        result = process.read()
-        process.close()
+        result = subprocess.run('wmic path Win32_PerfFormattedData_Tcpip_NetworkInterface get BytesReceivedPersec,BytesSentPersec /format:csv', shell=True, capture_output=True, text=True).stdout
         result_list = result.split('\n')
         for i in result_list:
             if not 'BytesReceivedPersec' in i and ',' in i:
@@ -205,32 +197,24 @@ class AgentWindows():
         AgentSQL.insert_data('perf.network.bytes.sent', str(nw_bs))
 
     def perf_pagefile():
-        process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_PagingFile where name="_Total" get PercentUsage /value')
-        result = process.read()
-        process.close()
+        result = subprocess.run('wmic path Win32_PerfFormattedData_PerfOS_PagingFile where name="_Total" get PercentUsage /value', shell=True, capture_output=True, text=True).stdout
         result = str(re.search(r'(?m)(?<=\bPercentUsage=).*$', result).group())
         AgentSQL.insert_data('perf.pagefile.percent.used', result)
     
     def perf_processor():
-        process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_Processor where name="_Total" get PercentProcessorTime /value')
-        result = process.read()
-        process.close()
+        result = subprocess.run('wmic path Win32_PerfFormattedData_PerfOS_Processor where name="_Total" get PercentProcessorTime /value', shell=True, capture_output=True, text=True).stdout
         result = str(re.search(r'(?m)(?<=\bPercentProcessorTime=).*$', result).group())
         AgentSQL.insert_data('perf.processor.percent.used', result)
     
     def perf_uptime():
-        process = os.popen('wmic path Win32_PerfFormattedData_PerfOS_System get SystemUptime /value')
-        result = process.read()
-        process.close()
+        result = subprocess.run('wmic path Win32_PerfFormattedData_PerfOS_System get SystemUptime /value', shell=True, capture_output=True, text=True).stdout
         result = str(re.search(r'(?m)(?<=\bSystemUpTime=).*$', result).group())
         AgentSQL.insert_data('perf.system.uptime.seconds', result)
     
     def perf_services():
         if AgentSettings.services:
             for service in AgentSettings.services:
-                process = os.popen('wmic path Win32_Service where name="' + service + '" get State /value')
-                result = process.read()
-                process.close()
+                result = subprocess.run('wmic path Win32_Service where name="' + service + '" get State /value', shell=True, capture_output=True, text=True).stdout
                 result = str(re.search(r'(?m)(?<=\bState=).*$', result).group())
                 sname = 'perf.service.' + service.replace(' ','').lower() + '.state'
                 if result == 'Running': result = 1
@@ -262,8 +246,11 @@ class AgentProcess():
             AgentSQL.insert_data('conf.os.architecture', platform.architecture()[0])
             AgentSQL.insert_data('conf.os.build', platform.win32_ver()[1])
             AgentSQL.insert_data('conf.ipaddress', socket.gethostbyname(socket.gethostname()))
-            AgentSQL.insert_data('conf.domain', socket.getfqdn().split('.', 1)[1])
             AgentSQL.insert_data('conf.processors', str(os.cpu_count()))
+            domain_name = socket.getfqdn()
+            if '.' in domain_name: domain_name = domain_name.split('.', 1)[1]
+            else: domain_name = 'Stand Alone'
+            AgentSQL.insert_data('conf.domain', domain_name)
         except: pass
         try:
             AgentWindows.conf_memory_total()
