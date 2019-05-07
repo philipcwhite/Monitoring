@@ -228,19 +228,23 @@ class WebDevice:
         for i in fs_list:
             try:
                 fs_query_used = WebData.web_code_device_filesystem(name, 'perf.filesystem.' + i + '.percent.used')
-                #fs_query_active = WebData.web_code_device_filesystem(name,'perf.filesystem.' + i + '.percent.active')
+                fs_query_active = WebData.web_code_device_filesystem(name,'perf.filesystem.' + i + '.percent.active')
                 fs_used = str(round(float(fs_query_used['value']),0))
-                #fs_active = str(round(float(fs_query_active['value']),0))
+                fs_active = str(round(float(fs_query_active['value']),0))
                 fs_name = ""
                 if agentsystem['platform'] == 'Windows':
                     fs_name = "Windows " + i + " drive"
+                    html_fs += """<table style="width:100%"><tr><td style="width:33%">""" + fs_name + """ </td>
+                        <td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.used">Space Used: """ + fs_used + """</a></td>
+                        <td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.active">Filesystem Activity: """ + fs_active + """</a></td>
+                        <td style="width:33%"></td>
+                        </tr></table>"""
                 elif agentsystem['platform'] == 'Linux':
                     fs_name = "Linux Filesystem: " + i             
-                html_fs += """<table style="width:100%"><tr><td style="width:33%">""" + fs_name + """ </td>
+                    html_fs += """<table style="width:100%"><tr><td style="width:33%">""" + fs_name + """ </td>
                         <td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.used">Space Used: """ + fs_used + """</a></td>
                         <td style="width:33%"></td>
                         </tr></table>"""
-                #<td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.active">Filesystem Activity: """ + fs_active + """</a></td>
             except: pass
         html_fs += """</div></div></td></tr>""" 
         html = """<tr><td style="padding-right:4px;text-align:center">
