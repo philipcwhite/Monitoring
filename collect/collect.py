@@ -5,14 +5,14 @@ class CollectSettings:
     application_path = 'C://Program Files//monitoring//collect//'
     # For Linux use ./
     #application_path = './'
-    server = "0.0.0.0"
+    server = '0.0.0.0'
     port = 8888
     secure = 0
     running = 1
-    dbhost = "localhost"
-    dbuser = "monitoring"
-    dbpassword = "password"
-    database = "monitoring"
+    dbhost = 'localhost'
+    dbuser = 'monitoring'
+    dbpassword = 'monitoring'
+    database = 'monitoring'
 
 class CollectLoad:
     def load_config():
