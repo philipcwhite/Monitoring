@@ -33,10 +33,9 @@ class MonWebsite(win32serviceutil.ServiceFramework):
         con.close()
 
     def SvcDoRun(self):
-        try:
-            web_site.start_server()
-        except:
-            pass
+        web_server.app_vars.app_path = 'C:\\PROGRA~1\\monitoring\\server\\'
+        web_server.app_vars.cert_path = 'C:\\PROGRA~1\\monitoring\\server\\certificates\\'
+        web_site.start_server()
                 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
