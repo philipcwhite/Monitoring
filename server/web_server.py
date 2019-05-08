@@ -11,7 +11,7 @@ import urllib.parse
 
 class app_vars:
     # Server paths
-    app_path = 'C:\\Progra~1\\monitoring\\server\\'
+    app_path = './'
     app_login = '/login'
 
     # Server configuration
@@ -24,7 +24,7 @@ class app_vars:
     ssl_enabled = False
     cert_key = 'localhost.pem'
     cert_name = 'localhost.crt'
-    cert_path = 'C:\\Progra~1\\monitoring\\certificates\\'
+    cert_path = './certificates/'
 
     # Service shutdown settings
     stop_ip = '127.0.0.1'
