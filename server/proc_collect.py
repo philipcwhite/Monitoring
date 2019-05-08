@@ -1,10 +1,7 @@
 import asyncio, configparser, os, ssl, time, pymysql.cursors
 
 class CollectSettings:
-    # For Windows specify full path
-    app_path = 'C://Program Files//monitoring//server//'
-    # For Linux use ./
-    #application_path = './'
+    app_path = './'
     server = "0.0.0.0"
     port = 8888
     secure = False
