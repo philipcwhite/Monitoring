@@ -28,6 +28,8 @@ Graph View
 
 ## Updates
 
+5/8/2019 - I am working on rearranging some code to better share resources like certificates and configuration files.  I added a new directory called server where I am moving the website, event engine, and collector.  I've also switched from text files to ini files for configuration.  The three server components will now share the same ini file.  I rewrote the three Windows services as well.  I will make similar startup scripts for systemd on linux.  I also updated the agents to use ini files.  I have not tested all of the code as of yet.   
+
 5/7/2019 - It looks like we have a fully working app on elementary OS.  I still have a few things to test, lots of bugs to squash, and a ton of docs to update but things are looking good.  I just tested the event engine today and it's working fine.  I also updated the Windows agent to use subprocess.  
 
 5/6/2019 - I updated the Event engine so it should now work on Linux.  I still need to test.  My changes to the device page for filesystem seem to have broken the Windows agent's display.  Another thing to add to the to-do list.  Also I still need to switch the Windows agent to use subprocess.  Hopefully I will get this done this week.  
