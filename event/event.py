@@ -10,8 +10,8 @@ class EventSettings:
     config_file = "settings.cfg"
     database = "monitoring"
     dbhost = "localhost"
-    dbpassword = "test"
-    dbuser = "test"
+    dbpassword = "monitoring"
+    dbuser = "monitoring"
     mailactive = 0
     mailadmin = "monitoring@monitoring"
     mailserver = "localhost"
