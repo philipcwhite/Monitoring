@@ -27,8 +27,8 @@ CREATE TABLE IF NOT EXISTS `agentdata` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
--- Dumping structure for table monitoring.agentevent
-CREATE TABLE IF NOT EXISTS `agentevent` (
+-- Dumping structure for table monitoring.agentevents
+CREATE TABLE IF NOT EXISTS `agentevents` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `timestamp` int(10) unsigned NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL DEFAULT '0',
   `password` varchar(100) NOT NULL DEFAULT '0',
-  `admin` tinyint(1) NOT NULL DEFAULT 0,
+  `role` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
