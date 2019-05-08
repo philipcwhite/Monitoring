@@ -238,7 +238,7 @@ class AgentProcess():
             thresholds = list(dict(parser.items('thresholds')).values())
             AgentSettings.server = config['server']
             AgentSettings.port = int(config['port'])
-            AgentSettings.secure = config['secure']
+            AgentSettings.secure = eval(config['secure'])
             AgentSettings.log = config['log']
             AgentSettings.processes = processes
             for i in thresholds: 
@@ -252,14 +252,12 @@ class AgentProcess():
             if domain_name == AgentSettings.name: domain_name = 'Stand Alone'
             build_name = subprocess.run('cat /etc/os-release|grep -oP "(?<=^NAME=).*"', shell=True, capture_output=True, text=True).stdout.replace('"','').replace('\n','')
             build_version = subprocess.run('cat /etc/os-release|grep -oP "(?<=^VERSION_ID=).*"', shell=True, capture_output=True, text=True).stdout.replace('"','').replace('\n','')
-
             AgentSQL.insert_data('conf.os.name', platform.system())
             AgentSQL.insert_data('conf.os.architecture', platform.architecture()[0])
             AgentSQL.insert_data('conf.os.build', build_name + ' ' + build_version)
             AgentSQL.insert_data('conf.ipaddress', socket.gethostbyname(socket.gethostname()))
             AgentSQL.insert_data('conf.domain', domain_name)
             AgentSQL.insert_data('conf.processors', str(os.cpu_count()))
-
         except: pass
         try:
             AgentLinux.perf_filesystem()
