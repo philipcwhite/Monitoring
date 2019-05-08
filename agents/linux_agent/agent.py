@@ -3,15 +3,15 @@
 # You may use, distribute and modify this code under the terms of the Apache 2 license. You should have received a 
 # copy of the Apache 2 license with this file. If not, please visit:  https://github.com/philipcwhite/monitoring
 
-import datetime, os, platform, socket, sqlite3, ssl, subprocess, time
+import configparser, datetime, os, platform, socket, sqlite3, ssl, subprocess, time
 
 class AgentSettings:
-    log = None
+    log = False
     name = None
     path = './'
     port = 8888
     running = True
-    secure = 0
+    secure = False
     server = '127.0.0.1'
     processes = []
     time = None
@@ -224,25 +224,26 @@ class AgentLinux():
         output = subprocess.run('cat /proc/uptime', shell=True, capture_output=True, text=True).stdout.split()[0]
         uptime = int(round(float(output),0))
         AgentSQL.insert_data('perf.system.uptime.seconds', str(uptime))
-    
-
+   
 class AgentProcess():
     def initialize_agent():
-        AgentSettings.name = socket.gethostname().lower()
-        AgentSQL.create_tables()
-        AgentSQL.delete_thresholds()
         try:
-            f = open(AgentSettings.path + 'settings.cfg', 'r')
-            fl = f.read().split('\n')
-            for i in fl:
-                if i.startswith('server:'): AgentSettings.server = i[7:].replace(' ','')
-                if i.startswith('port:'): AgentSettings.port = int(i[5:].replace(' ',''))
-                if i.startswith('secure:'): AgentSettings.secure = int(i[7:].replace(' ',''))
-                if i.startswith('log:'): AgentSettings.log = i[4:].replace(' ','')
-                if i.startswith('processes:'): AgentSettings.processes = i[10:].replace(' ','').split(',')
-                if i.startswith('thresh:'):
-                    thresh = i[7:].replace(' ','').split(',')
-                    AgentSQL.insert_thresholds(thresh[0], thresh[1], thresh[2], thresh[3], thresh[4])
+            AgentSettings.name = socket.gethostname().lower()
+            AgentSQL.create_tables()
+            AgentSQL.delete_thresholds()
+            parser = configparser.ConfigParser()
+            parser.read(AgentSettings.path + 'settings.ini')
+            config = dict(parser.items('configuration'))
+            processes = list(dict(parser.items('processes')).values())
+            thresholds = list(dict(parser.items('thresholds')).values())
+            AgentSettings.server = config['server']
+            AgentSettings.port = int(config['port'])
+            AgentSettings.secure = config['secure']
+            AgentSettings.log = config['log']
+            AgentSettings.processes = processes
+            for i in thresholds: 
+                thresh = i.split(',')
+                AgentSQL.insert_thresholds(thresh[0], thresh[1], thresh[2], thresh[3], thresh[4])
         except: pass
 
     def data_process():
