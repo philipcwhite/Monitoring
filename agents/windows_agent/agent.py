@@ -3,15 +3,15 @@
 # You may use, distribute and modify this code under the terms of the Apache 2 license. You should have received a 
 # copy of the Apache 2 license with this file. If not, please visit:  https://github.com/philipcwhite/monitoring
 
-import datetime, os, platform, re, socket, sqlite3, ssl, subprocess, time
+import configparser, datetime, os, platform, re, socket, sqlite3, ssl, subprocess, time
 
 class AgentSettings:
-    log = None
+    log = False
     name = None
     path = 'C:\\Progra~1\\monitoring\\agent\\'
     port = 8888
     running = True
-    secure = 0
+    secure = False
     server = '127.0.0.1'
     services = []
     time = None
@@ -172,7 +172,7 @@ class AgentWindows():
             if not 'PercentFreeSpace' in i and ',' in i:
                 ld_list = i.split(',')
                 ld_name = ld_list[1].replace(':','').lower()
-                AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.free', str(ld_list[2]))
+                AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.used', str(100 - float(ld_list[2])))
                 AgentSQL.insert_data('perf.filesystem.' + ld_name + '.percent.active', str(100 - float(ld_list[3])))
 
     def perf_memory():
@@ -223,21 +223,23 @@ class AgentWindows():
 
 class AgentProcess():
     def initialize_agent():
-        AgentSettings.name = socket.gethostname().lower()
-        AgentSQL.create_tables()
-        AgentSQL.delete_thresholds()
         try:
-            f = open(AgentSettings.path + 'settings.cfg', 'r')
-            fl = f.read().split('\n')
-            for i in fl:
-                if i.startswith('server:'): AgentSettings.server = i[7:].replace(' ','')
-                if i.startswith('port:'): AgentSettings.port = int(i[5:].replace(' ',''))
-                if i.startswith('secure:'): AgentSettings.secure = int(i[7:].replace(' ',''))
-                if i.startswith('log:'): AgentSettings.log = i[4:].replace(' ','')
-                if i.startswith('services:'): AgentSettings.services = i[9:].replace(' ','').split(',')
-                if i.startswith('thresh:'):
-                    thresh = i[7:].replace(' ','').split(',')
-                    AgentSQL.insert_thresholds(thresh[0], thresh[1], thresh[2], thresh[3], thresh[4])
+            AgentSettings.name = socket.gethostname().lower()
+            AgentSQL.create_tables()
+            AgentSQL.delete_thresholds()
+            parser = configparser.ConfigParser()
+            parser.read(AgentSettings.path + 'settings.ini')
+            config = dict(parser.items('configuration'))
+            services = list(dict(parser.items('services')).values())
+            thresholds = list(dict(parser.items('thresholds')).values())
+            AgentSettings.server = config['server']
+            AgentSettings.port = int(config['port'])
+            AgentSettings.secure = config['secure']
+            AgentSettings.log = config['log']
+            AgentSettings.services = services
+            for i in thresholds: 
+                thresh = i.split(',')
+                AgentSQL.insert_thresholds(thresh[0], thresh[1], thresh[2], thresh[3], thresh[4])
         except: pass
 
     def data_process():
@@ -317,7 +319,7 @@ class AgentProcess():
     def send_data(message):
         sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
         try:
-            if AgentSettings.secure == 1:
+            if AgentSettings.secure == True:
                 context = ssl.create_default_context()
                 context.options |= ssl.PROTOCOL_TLSv1_2
                 context.check_hostname = False
