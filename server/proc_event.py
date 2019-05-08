@@ -2,7 +2,7 @@ import datetime, configparser, os, smtplib, time, pymysql.cursors
 from email.message import EmailMessage
 
 class EventSettings:
-    application_path = 'C:\\Progra~1\\monitoring\\server\\'
+    application_path = './'
     availability_check = 300
     availability_severity = 1
     database = 'monitoring'
