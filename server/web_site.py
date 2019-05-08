@@ -199,7 +199,7 @@ def load_config():
         server = dict(parser.items('server'))
         app_vars.server_port = int(server['port_web'])
         app_vars.session_expire = int(server['session_expire'])
-        app_vars.ssl_enabled = server['secure']
+        app_vars.ssl_enabled = eval(server['secure'])
         app_vars.cert_key = certificates['key']
         app_vars.cert_name = certificates['name']
         WebData.host = database['host']
