@@ -234,7 +234,7 @@ class AgentProcess():
             thresholds = list(dict(parser.items('thresholds')).values())
             AgentSettings.server = config['server']
             AgentSettings.port = int(config['port'])
-            AgentSettings.secure = config['secure']
+            AgentSettings.secure = eval(config['secure'])
             AgentSettings.log = config['log']
             AgentSettings.services = services
             for i in thresholds: 
