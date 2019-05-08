@@ -28,6 +28,8 @@ Graph View
 
 ## Updates
 
+5/7/2019 - It looks like we have a fully working app on elementary OS.  I still have a few things to test, lots of bugs to squash, and a ton of docs to update but things are looking good.  I just tested the event engine today and it's working fine.  I also updated the Windows agent to use subprocess.  
+
 5/6/2019 - I updated the Event engine so it should now work on Linux.  I still need to test.  My changes to the device page for filesystem seem to have broken the Windows agent's display.  Another thing to add to the to-do list.  Also I still need to switch the Windows agent to use subprocess.  Hopefully I will get this done this week.  
 
 5/5/2019 - Linux agent is now working for all monitors except disk activity.  
