@@ -273,8 +273,8 @@ class WebDevice:
             <div style="padding-left: 10px">
             <table style="width:100%"><tr>
             <td style="width:33%">Network Total Traffic</td>
-            <td style="width:33%"><a href="/devices/""" + name + """/graph/perf.network.bytes.sent">Bytes Sent: """ + str(net_bs) + """</a></td>
-            <td style="width:33%"><a href="/devices/""" + name + """/graph/perf.network.bytes.received">Bytes Received: """ + str(net_br) + """</a></td>
+            <td style="width:33%"><a href="/devices/""" + name + """/perf.network.bytes.sent">Bytes Sent: """ + str(net_bs) + """</a></td>
+            <td style="width:33%"><a href="/devices/""" + name + """/perf.network.bytes.received">Bytes Received: """ + str(net_br) + """</a></td>
             </tr></table></div></div></td></tr>"""
         html += html_fs
         return html
@@ -288,7 +288,6 @@ class WebDevice:
         device_data = WebData.web_code_device_graph(name, monitor)
         data_list = []
         max_value = 0
-        mid_value = 0
         graph_time = datetime.datetime.now() - datetime.timedelta(minutes=60)
         for i in range(61):
             agent_data = WebDeviceGraph(time=graph_time.strftime('%H:%M'),dvalue=0)
@@ -895,5 +894,4 @@ class WebViews:
         User sessions are also controlled via cookies.  The cookie duration is the same as the session.<br />
         session_expire: 7200
         <br /><br /><b><a href='#top'>top</a></b></br />"""
-
         return html
