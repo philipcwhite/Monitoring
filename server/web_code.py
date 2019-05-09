@@ -227,11 +227,11 @@ class WebDevice:
         for i in fs_list:
             try:
                 fs_query_used = WebData.web_code_device_filesystem(name, 'perf.filesystem.' + i + '.percent.used')
-                fs_query_active = WebData.web_code_device_filesystem(name,'perf.filesystem.' + i + '.percent.active')
                 fs_used = str(round(float(fs_query_used['value']),0))
-                fs_active = str(round(float(fs_query_active['value']),0))
                 fs_name = ""
                 if agentsystem['platform'] == 'Windows':
+                    fs_query_active = WebData.web_code_device_filesystem(name,'perf.filesystem.' + i + '.percent.active')
+                    fs_active = str(round(float(fs_query_active['value']),0))
                     fs_name = "Windows " + i + " drive"
                     html_fs += """<table style="width:100%"><tr><td style="width:33%">""" + fs_name + """ </td>
                         <td style="width:33%"><a href="/devices/""" + name + """/perf.filesystem.""" + i + """.percent.used">Space Used: """ + fs_used + """</a></td>
