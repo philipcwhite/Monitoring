@@ -2,19 +2,17 @@
 Monitoring Server and Agents written in Python
 
 ## About
-The goal of this project is to make a tool that provides good functionality and is relatively easy to deploy and use.  I come from a Windows background so the initial focus of the tool is for Windows based monitoring.  Also, I know how bleak the options are for Windows based monitoring tools so it fills a nice void.  That being said, I do plan to add Linux support as well.
-
-This repository contains the code for the monitoring web server, collect and event engines, and a Windows agent.  It is a early beta at this point however most of the functionality is working.  
+The goal of this project is to make a monitoring tool that provides good functionality and is relatively easy to deploy and use.  It has evolved from a Windows based VB.Net project to a its current itteration written in Python to support mulitiple platforms.  This repository contains the code for the monitoring web server, collect and event engines, and agents.  It is a early beta at this point however most of the functionality is working.  
 
 ### The Monitoring Server
-The monitoring server is composed of three services: the website, the collect engine, and the event engine.  These services all connect to a MySQL (MariaDB) backend.  The website coded in pure Python and runs on a custom server as a Windows service.  It's main purpose is for viewing the event data although it provides user, notification policy, and event administration.  The collect engine mainly acts as a gateway to translate TCP/SSL data from agents into SQL records.  It does some event management as well when it is processing incoming events.  The event engine takes care of agent down events and processes notifications.  Notifications are by default logged and can be sent to a SMTP server.  
+The monitoring server is composed of three services: the website, the collect engine, and the event engine.  These services all connect to a MySQL (MariaDB) backend.  The website coded in pure Python and runs on a custom server.  It's main purpose is for viewing the event data although it provides user, notification policy, and event administration.  The collect engine mainly acts as a gateway to translate TCP/SSL data from agents into SQL records.  It does some event management as well when it is processing incoming events.  The event engine takes care of agent down events and processes notifications.  Notifications are by default logged and can be sent to a SMTP server.  
 
 ### The Windows Agent
 The Windows agent collects data via WMIC and processes events locally.  It stores its data in a SQLite database which allows the agent to maintain state even after reboots and system crashes.  Data is transferred via TCP (or TCP/SSL) to the Collect Engine on the Monitoring Server.  All data transmissions require a response from the Collect Server to assure data has been transferred.  If the Agent does not receive a response it will keep trying to send the data until it succeeds.  Data is transferred via TCP over port 8888 (non-SSL by default).  Agent configuration and thresholds are maintained locally on the agent.  The agent receives no configuration or commands from above.  This is designed by default to allow agents to function in a secured environment.
 
-### Linux
-I am currently rewriting the server to work on most modern Linux varients.  As of now, the server and collector are working.  The Event engine needs to be rewritten with an internal counter.  I have also written a Linux agent which is 90% complete.  It works but is still lacking a few statistics.  As many linux distrobutions are slightly different, I will probably find a lot of bugs when I ramp up testing.  As of now I've run most of my queries on both Elementary OS (Ubuntu) and Centos. 
-
+### The Linux Agent
+The Linux agent works very similarly to the Windows version.  Instead of WMIC, it uses basic system calls like free, top, df, etc.  I have done basic testing for this agent on both elementary OS (Ubuntu) and Centos.  There are a couple of differences in the actual monitors but overall it provides about the same level of funtionality.
+ 
 ## Screenshots
 
 ![WebSite](https://raw.githubusercontent.com/philipcwhite/Monitoring/master/images/home.png)
@@ -27,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+
+5/9/2019 - I've been busy updating all of the boring stuff today like user guides.  I still have a long way to go.  Hopefully next week I'll be able to prepare a new beta release for both Windows and Linux.  0.03b is coming!  :) 
 
 5/8/2019 - I finished the directory re-org today.  The Windows specific paths for services are now loaded via the service scripts.  I also tested SSL and it is working.  The next beta should be out soon with Linux support for at least elementary OS (Ubuntu).  
 
