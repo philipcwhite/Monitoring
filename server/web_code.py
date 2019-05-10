@@ -815,11 +815,11 @@ class WebViews:
         The monitoring agent's configuration (settings.ini) is broken down into three sections: configuration, services (Windows) or processes (Linux), and thresholds.
         <br /><br /> 
         The main [configuration] section includes five variables.  Ex.<br /><br />
-        log = False<br /><br />
+        log = False<br />
         secure = True<br />
         port = 8888<br />
         secure = False<br />
-        server = 56.76.47.194<br />
+        server = 56.76.47.194<br /><br />
         The server variable is the ip address of the collection server that you are sending data to.  Port is the port that the collection server is listening on.  Secure is to set SSL (TLS 1.2) to True or False (default).  This is used when sending data from the agent to the collector.  The collector must be set the same as the agent.  Passphrase is an additional security level.  The collector uses this to verify that the message can be accepted.  This setting must be the same on the collector and agent.  And log is currently not enabled.
         <br /><br /> 
         The [services] section is for Windows services.  Services can be added like the example below.  The utilize the short service name.<br /><br />
