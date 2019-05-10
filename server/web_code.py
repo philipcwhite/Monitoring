@@ -814,12 +814,13 @@ class WebViews:
         <h3 id='agent_settings'>Settings</h3>
         The monitoring agent's configuration (settings.ini) is broken down into three sections: configuration, services (Windows) or processes (Linux), and thresholds.
         <br /><br /> 
-        The main [configuration] section includes four variables.  Ex.<br /><br />
-        server = 56.76.47.194<br />
+        The main [configuration] section includes five variables.  Ex.<br /><br />
+        log = False<br /><br />
+        secure = True<br />
         port = 8888<br />
         secure = False<br />
-        log = False<br /><br /> 
-        The server variable is the ip address of the collection server that you are sending data to.  Port is the port that the collection server is listening on.  Secure is to set SSL (TLS 1.2) to True or False (default).  This is used when sending data from the agent to the collector.  The collector must be set the same as the agent.  And log is currently not enabled.
+        server = 56.76.47.194<br />
+        The server variable is the ip address of the collection server that you are sending data to.  Port is the port that the collection server is listening on.  Secure is to set SSL (TLS 1.2) to True or False (default).  This is used when sending data from the agent to the collector.  The collector must be set the same as the agent.  Passphrase is an additional security level.  The collector uses this to verify that the message can be accepted.  This setting must be the same on the collector and agent.  And log is currently not enabled.
         <br /><br /> 
         The [services] section is for Windows services.  Services can be added like the example below.  The utilize the short service name.<br /><br />
         s00 = Spooler<br />
@@ -848,12 +849,13 @@ class WebViews:
         user = monitoring<br />
         password = monitoring<br /><br />
         The [server] section includes basic port information and settings to enable secure (SSL/TLS 1.2) connections.  For secure connections, secure has to be set to True and the port should be changed to 443.  This will set the security for both the web server and the collect engine.<br /><br />
+        log = False<br /><br />
         ipaddress = 127.0.0.1<br />
+        passphrase = secure_monitoring<br />
         port_collect = 8888<br />
         port_web = 443<br />
-        session_expire = 3600<br />
         secure = True<br />
-        log = False<br /><br />
+        session_expire = 3600<br />
         The [mail] section is used by the event engine to handle sending emails.<br /><br />
         active = 0<br />
         admin = philip.c.white@monitoring<br />
