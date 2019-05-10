@@ -2,7 +2,7 @@ import datetime, configparser, os, smtplib, time, pymysql.cursors
 from email.message import EmailMessage
 
 class EventSettings:
-    application_path = './'
+    app_path = './'
     availability_check = 300
     availability_severity = 1
     database = 'monitoring'
@@ -170,7 +170,7 @@ class ServerEvent:
                     s = smtplib.SMTP(EventSettings.mailserver)
                     s.send_message(msg)
                     s.quit()
-                f = open(EventSettings.application_path + "output.txt","a")
+                f = open(EventSettings.app_path + "output.txt","a")
                 f.write(str(time.time()).split('.')[0] + ":" + notify_email + ":" + notify_name + ":" + name + ":" + monitor + ":" + message + ":" + severity + ":" +status + ":" + str(date) + "\n")
                 f.close()
         except: pass
