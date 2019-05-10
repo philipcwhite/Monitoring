@@ -14,8 +14,8 @@ import datetime
 import proc_event
 
 class EventService(win32serviceutil.ServiceFramework):
-    _svc_name_ = "EventService"
-    _svc_display_name_ = "Event Service"
+    _svc_name_ = 'EventService'
+    _svc_display_name_ = 'Event Service'
 
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
@@ -28,8 +28,7 @@ class EventService(win32serviceutil.ServiceFramework):
         proc_event.EventSettings.running = False
 
     def SvcDoRun(self):
-        proc_event.EventConfig.app_path = 'C:\\PROGRA~1\\monitoring\\server\\'
-        proc_event.EventConfig.load_config()
+        proc_event.EventSettings.app_path = 'C:\\PROGRA~1\\monitoring\\server\\'
         proc_event.start_server()
                 
 if __name__ == '__main__':
