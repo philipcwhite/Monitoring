@@ -360,5 +360,5 @@ class AgentProcess():
                 AgentSQL.delete_data_events()
             time.sleep(1)
 
-#AgentProcess.initialize_agent()
-#AgentProcess.run_process()
+AgentProcess.initialize_agent()
+AgentProcess.run_process()
