@@ -778,7 +778,6 @@ class WebViews:
         &nbsp;-<a href='#website_events'>Events</a><br />
         &nbsp;-<a href='#website_reports'>Reports</a><br />
         &nbsp;-<a href='#website_settings'>Settings</a><br />
-        &nbsp;-<a href='#website_server'>Web Server</a><br />
         <br />
         <h2 id='intro'>Introduction</h2>
         The monitoring application consist of five major components (Agent, Collector, Event Engine, Web Server, and Website).  These components 
