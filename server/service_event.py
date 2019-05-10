@@ -28,6 +28,7 @@ class EventService(win32serviceutil.ServiceFramework):
         proc_event.EventSettings.running = False
 
     def SvcDoRun(self):
+        proc_event.EventConfig.app_path = 'C:\\PROGRA~1\\monitoring\\server\\'
         proc_event.EventConfig.load_config()
         proc_event.start_server()
                 
