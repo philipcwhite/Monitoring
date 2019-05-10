@@ -849,13 +849,13 @@ class WebViews:
         user = monitoring<br />
         password = monitoring<br /><br />
         The [server] section includes basic port information and settings to enable secure (SSL/TLS 1.2) connections.  For secure connections, secure has to be set to True and the port should be changed to 443.  This will set the security for both the web server and the collect engine.<br /><br />
-        log = False<br /><br />
+        log = False<br />
         ipaddress = 127.0.0.1<br />
         passphrase = secure_monitoring<br />
         port_collect = 8888<br />
         port_web = 443<br />
         secure = True<br />
-        session_expire = 3600<br />
+        session_expire = 3600<br /><br />
         The [mail] section is used by the event engine to handle sending emails.<br /><br />
         active = 0<br />
         admin = philip.c.white@monitoring<br />
