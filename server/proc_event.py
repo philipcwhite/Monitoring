@@ -82,7 +82,7 @@ class EventData:
         connection = EventData.mon_con()
         try:
             with connection.cursor() as cursor:
-                sql = "SELECT name FROM agentsystem WHERE timestamp<" + timestamp
+                sql = "SELECT name FROM agentsystem WHERE timestamp < " + timestamp
                 cursor.execute(sql)
                 result = cursor.fetchall()
                 return result
@@ -123,12 +123,11 @@ class EventAvailable:
         try:
             check_time = str(time.time() - EventSettings.availability_check).split('.')[0]
             cur_time = str(time.time()).split('.')[0]
-            hosts = EventData.agent_avail_select(check_time)
+            hosts = EventData.agent_avail_select(str(check_time))
             for i in hosts:
-                name = i["name"]
-                message = "Agent not responding for " + str(int(round(EventSettings.availability_check / 60,0)))  + " minutes"
+                name = i['name']
+                message = 'Agent not responding for ' + str(int(round(EventSettings.availability_check / 60,0)))  + ' minutes'
                 EventData.agent_avail_event_open(cur_time, name, message, str(EventSettings.availability_severity))
-                #print(message)
         except: pass
 
     def check_open():
