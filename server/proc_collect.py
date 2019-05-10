@@ -10,8 +10,9 @@ class CollectSettings:
     dbuser = 'monitoring'
     dbpassword = 'monitoring'
     database = 'monitoring'
-    cert_name = ''
-    cert_key = ''
+    cert_name = 'localhost.crt'
+    cert_key = 'localhost.pem'
+    passphrase = 'secure_monitoring'
 
 class CollectLoad:
     def load_config():
@@ -24,6 +25,7 @@ class CollectLoad:
             server = dict(parser.items('server'))
             CollectSettings.port = int(server['port_collect'])
             CollectSettings.secure = server['secure']
+            CollectSettings.passphrase = server['passphrase']
             CollectSettings.cert_key = certificates['key']
             CollectSettings.cert_name = certificates['name']
             CollectSettings.dbhost = database['host']
@@ -99,52 +101,45 @@ class CollectData:
         architecture = '' 
         processors = 0 
         memory = 0
-        for i in message.splitlines():
-            if 'conf.ipaddress' in i:
+        header = message.splitlines()[0]
+        if CollectSettings.passphrase in header:
+            for i in message.splitlines():
                 line = i.split(';')
-                timestamp = line[0]
-                name = line[1]
-                ipaddress = line[3]
-            if 'conf.os.name' in i:
-                line = i.split(';')
-                platform = line[3]
-            if 'conf.os.build' in i:
-                line = i.split(';')
-                buildnumber = line[3]
-            if 'conf.os.architecture' in i:
-                line = i.split(';')
-                architecture = line[3]
-            if 'conf.domain' in i:
-                line = i.split(';')
-                domain = line[3]
-            if 'conf.processors' in i:
-                line = i.split(';')
-                processors = line[3]
-            if 'conf.memory.total' in i:
-                line = i.split(';')
-                memory = line[3]
-        CollectData.agent_system(timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory)
-        for i in message.splitlines():
-            if ';perf' in i and i.count(";") == 3:
-                line = i.split(';')
-                timestamp = line[0]
-                name = line[1]
-                monitor = line[2]
-                value = float(line[3])
-                CollectData.agent_data(timestamp, name, monitor, value)
-        for i in message.splitlines():
-            if ';event;' in i:
-                line = i.split(';')
-                timestamp = line[0]
-                name = line[1]
-                monitor = line[3]
-                message = line[4]
-                status = line[5]
-                severity = line[6]
-                if int(status) == 1:
-                    CollectData.agent_events_open(timestamp, name, monitor, message, status, severity)
-                elif int(status) == 0:
-                    CollectData.agent_events_close(name, monitor, severity)
+                if 'conf.ipaddress' in i:                
+                    timestamp = line[0]
+                    name = line[1]
+                    ipaddress = line[3]
+                if 'conf.os.name' in i:
+                    platform = line[3]
+                if 'conf.os.build' in i:
+                    buildnumber = line[3]
+                if 'conf.os.architecture' in i:
+                    architecture = line[3]
+                if 'conf.domain' in i:
+                    domain = line[3]
+                if 'conf.processors' in i:
+                    processors = line[3]
+                if 'conf.memory.total' in i:
+                    memory = line[3]
+                if ';perf' in i and i.count(";") == 3:
+                    timestamp = line[0]
+                    name = line[1]
+                    monitor = line[2]
+                    value = float(line[3])
+                    CollectData.agent_data(timestamp, name, monitor, value)
+                if ';event;' in i:
+                    timestamp = line[0]
+                    name = line[1]
+                    monitor = line[3]
+                    message = line[4]
+                    status = line[5]
+                    severity = line[6]
+                    if int(status) == 1:
+                        CollectData.agent_events_open(timestamp, name, monitor, message, status, severity)
+                    elif int(status) == 0:
+                        CollectData.agent_events_close(name, monitor, severity)
+            CollectData.agent_system(timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory)
+            print(timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory)
 
 class EchoServerClientProtocol(asyncio.Protocol):
     def connection_made(self, transport):
