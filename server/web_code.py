@@ -437,6 +437,7 @@ class WebSettings:
     
     def about():
         html = """
+        Monitoring 0.03b<br />
         Copyright (C) 2018-2019 Phil White - All Rights Reserved <br />
         You may use, distribute and modify this application under the terms of the Apache 2 license. You should have received a 
         copy of the Apache 2 license with this application. If not, please visit: 
@@ -769,10 +770,8 @@ class WebViews:
         <b><a href='#intro'>Introduction</a></b><br />
         <b><a href='#agent'>Agent</a></b><br />
         &nbsp;-<a href='#agent_settings'>Settings</a><br />
-        <b><a href='#collector'>Collector</a></b><br />
-        &nbsp;-<a href='#collect_settings'>Settings</a><br />
-        <b><a href='#event'>Event Engine</a></b><br />
-        &nbsp;-<a href='#event_settings'>Settings</a><br />
+        <b><a href='#server'>Server</a></b><br />
+        &nbsp;-<a href='#server_settings'>Settings</a><br />
         <b><a href='#website'>Website</a></b><br />
         &nbsp;-<a href='#website_main'>Main</a><br />
         &nbsp;-<a href='#website_devices'>Devices</a><br />
@@ -782,67 +781,88 @@ class WebViews:
         &nbsp;-<a href='#website_server'>Web Server</a><br />
         <br />
         <h2 id='intro'>Introduction</h2>
-        The monitoring application consist of four major components (Agent, Collector, Event Engine, and Website).  These components 
+        The monitoring application consist of five major components (Agent, Collector, Event Engine, Web Server, and Website).  These components 
         work together to perform basic monitoring. This guide is to help you better understand how the components function.
-        <br /><br /><b><a href='#top'>top</a></b></br />
+        <br /><br />
         <h2 id='agent'>Agent</h2>
-        The Agent is one of the most complex components.  It collects data and creates events based on configuration settings and it 
-        syncs the data to the collector.  Every Minute the agent polls for new performance data.  It then logs this data in a SQLite 
-        database.  It reviews the rules provided by the configuration settings, and then it connects to the collector to send data. 
-        If the data is delivered successfully, the collector will send a response and the agent will mark data as sent.  If the agent 
-        can't communicate, it will continue to log the data locally.  
-        <br />
+        The monitoring agent collects performance statistics using various standard python and system calls. For Windows it calls wmic and for Linux it uses free, top, uptime, df, etc. 
+        <br /><br />
+        The short system name (non-domain) is used as the primary key for the agent and every piece of data sent to the collector is tagged with it.  The following additional system configurations are collected by the agent.
+        <br /><br />
+        conf.domain<br />
+        conf.ipaddress<br />
+        conf.memory.total<br />
+        conf.os.architecture<br />
+        conf.os.build<br />
+        conf.os.name<br />
+        conf.processors<br />
+        <br /><br />
+        The agent also collect a variety of performance data.  Some is OS specific and some can be configured on the agent.<br /><br />
+        perf.memory.percent.used<br />
+        perf.filesystem.c.percent.used<br />
+        perf.network.bytes.received<br />
+        perf.network.bytes.sent<br />
+        perf.pagefile.percent.used<br />
+        perf.process.processname.state<br />
+        perf.processor.percent.used<br />
+        perf.service.spooler.state<br />
+        perf.system.uptime.seconds<br />
+        <br /><br /> 
+        The agent records statistics locally to a SQLite database at one minute intervals on the minute.  It then sends the data via TCP (optionally SSL) to a collection server (collector).  If the collector successfully receives the data it responds back and the agent records the data as sent.  All data transmissions are initialized from the agent to the collector.
+        <br /><br /> 
+        The agent also generates events based on defined thresholds.  The thresholds are defined in settings.ini and stored in SQLite for processing.  Agent events are sent on the minute with performance data.  The agent will open, close, escalate, or deescalate events based on priority changes.  It will also maintain state and not resend on the same alert if that alert has not changed. 
+        <br /><br />
         <h3 id='agent_settings'>Settings</h3>
-        The agent settings file (monitoring\agent\settings.cfg) is the most complex settings file.  <br />
-        <h4>Server Communications</h4>
-        In settings.cfg the following three line control server communications.  These line work in conjunction with the collector 
-        and must be configured correctly on both in order to work. <br />
-        server: 10.211.55.17 - This is where the agent sends data (ie the collector's IP). <br />  
-        port: 8888 - This is the connection port that the agent and collector share.<br />
-        secure: 0 - Setting this to 1 Enables SSL/TLS 1.2.  This setting must be identical on the collector.<br />
-        <h4>Monitoring Services</h4>
-        The services variable designates what services to be monitored.  To monitor services list whatever services you would like 
-        monitored in a comma seperated list. Ex.<br />
-        services: Spooler,LanmanServer<br />
-        <h4>Event Management</h4>
-        Agents control what events get sent forward and the configuration is defined here.  The agent ships with a predefined 
-        list to help you out.  In settings.cfg you will see several lines that look like this: <br />
-        thresh: perf.filesystem.c.percent.free,4,15,<,900.<br /><br />
-        What this means is monitor,severity,threshold,operator,duration.  The monitor is predefined and only set monitors can be used.  
-        The severity can be 1 - Critcal, 2 - Major, 3 - Warning, 4 - Informational.  The threshold depends on the monitor although many 
-        are percentages 0-100.  The operator defines if you want to trigger for greater than or less than the threshold.  For services 
-        only equals is allowed.  And lastly is the duration (in seconds) to check for when creating an event.  
-        <br /><br /><b><a href='#top'>top</a></b></br />  
-        <h2 id='collector'>Collector</h2>
-        The collector works hand in had with the agent and it's configuration reflects this.  Like all of the other components, 
-        the collector also runs as a Windows service and can be controlled via services.msc or net start/stop.
-        <br />
-        <h3 id='collect_settings'>Settings</h3>
-        The collector has serveral settings.  THese mainly configure the socket and create the connection to the database.  <br />
-        database:monitoring - This is the database that the application is connecting to.<br />
-        dbhost:localhost -  This is the host of the database.<br />
-        dbpassword:test - This is the password of the DBO.<br />
-        dbuser:test - This is the username of the DBO.<br />
-        mon_port:8888 -This is the port that the agents connect to.<br />
-        secure:0 - This is the security level that the collector and the agent communicate on (1=SSL, 0=non-SSL)<br />
-        mon_server:10.211.55.17 - This is the host IP of the collector.
-        <br /><br /><b><a href='#top'>top</a></b></br />
-        <h2 id='event'>Event Engine</h2>
-        The Event engine does a little less than what it's name implies.  It does however still do some event processing.  It's main 
-        job is to process notifications, and create and delete availability events.  So if a agent stops responding, it will create 
-        an event based on the time that the agent has stopped communicating.  
-        <h3 id='event_settings'>Settings</h3>
-        Like the other modules, all configurations are maintained in the settings.cfg file.<br /><br />
-        availability_check:300 - This is the duration in seconds that the server will wait before opening an agent down event<br />
-        availability_severity:1 - This is the severity that the server will assign to an agent down event (1 - Critcal, 2 - Major, 3 - Warning, 4 - Informational).<br />
-        database:monitoring - This is the database that the application is connecting to.<br />
-        dbhost:localhost -  This is the host of the database.<br />
-        dbpassword:test - This is the password of the DBO.<br />
-        dbuser:test - This is the username of the DBO.<br />
-        mailactive:0 - If mail is being sent then this needs to be set to 1.<br />
-        mailadmin:admin@monitoring - This is the address that the mail will come from.<br />
-        mailserver:localhost - This is the mail relay server's address
-        <br /><br /><b><a href='#top'>top</a></b></br />
+        The monitoring agent's configuration (settings.ini) is broken down into three sections: configuration, services (Windows) or processes (Linux), and thresholds.
+        <br /><br /> 
+        The main [configuration] section includes four variables.  Ex.<br /><br />
+        server = 56.76.47.194<br />
+        port = 8888<br />
+        secure = False<br />
+        log = False<br /><br /> 
+        The server variable is the ip address of the collection server that you are sending data to.  Port is the port that the collection server is listening on.  Secure is to set SSL (TLS 1.2) to True or False (default).  This is used when sending data from the agent to the collector.  The collector must be set the same as the agent.  And log is currently not enabled.
+        <br /><br /> 
+        The [services] section is for Windows services.  Services can be added like the example below.  The utilize the short service name.<br /><br />
+        s00 = Spooler<br />
+        s01 = LanmanServer<br />
+        <br /><br /> 
+        The [processes] section is for Linux processes and works similar to the Windows server section.  Processes can be added like the example below.  The utilize the short service name.<br /><br />
+        p00 = systemd<br />
+        p01 =<br /><br /> 
+        The thresholds section is a bit more in-depth.  Each threshold defined by TXX has five parts (Ex. perf.filesystem.c.percent.free,4,15,<,900).  This represents monitor, severity, threshold, operator, and duration.  The monitor is predefined and only set monitors can be used.  The severity can be 1 - Critical, 2 - Major, 3 - Warning, 4 - Informational.  The threshold depends on the monitor although many are percentages 0-100.  The operator defines if you want to trigger for greater than or less than the threshold.  For services and processes only equals is allowed.  And lastly is the duration (in seconds) to check for when creating an event. 
+        <br /><br /> 
+        Although the agent is fixed as to its default monitors, it would be very easy to add additional monitors.  As long as the threshold rules are respected, the agent can be modified to collect send data and events on any obtainable performance statistic.
+        <br /><br />
+        <b><a href='#top'>top</a></b></br />
+        
+        <h2 id='server'>Server</h2>
+        There are three major server components: the web server, collect engine, and event engine.  The web server is a simple micro-framework for asynchronously handling python web code.  The collect engine listens for agent traffic and processes it into the database.  And the event engine handles simple agent events and maintenance tasks.  While these three components run separately, they all use the same configuration file (settings.ini) and certificates.
+        <br /><br />
+        <h3 id='server_settings'>Settings</h3>
+        Like the agent, all setting for the server components are handled using a settings.ini file.  Here is a breakdown of the sections and their variables.<br /><br />
+        The [certificates] section maintains the name of the certificate and the key file.  These are required for making SSL/TLS 1.2 connections for web and agent communication.<br /><br />
+        key = localhost.pem<br />
+        name = localhost.crt<br /><br />
+        The [database] section includes all of the database connection information.<br /><br />
+        host = localhost<br />
+        name = monitoring<br />
+        user = monitoring<br />
+        password = monitoring<br /><br />
+        The [server] section includes basic port information and settings to enable secure (SSL/TLS 1.2) connections.  For secure connections, secure has to be set to True and the port should be changed to 443.  This will set the security for both the web server and the collect engine.<br /><br />
+        ipaddress = 127.0.0.1<br />
+        port_collect = 8888<br />
+        port_web = 443<br />
+        session_expire = 3600<br />
+        secure = True<br />
+        log = False<br /><br />
+        The [mail] section is used by the event engine to handle sending emails.<br /><br />
+        active = 0<br />
+        admin = philip.c.white@monitoring<br />
+        server = localhost<br /><br />
+        The [events] section is for configuring availability checks for agents.  If an agent has not reported in a specified number of seconds, then the event engine will create an event and set its severity based on these settings.<br /><br />
+        availability_check = 300<br />
+        availability_severity = 1<br />
+        <br /><b><a href='#top'>top</a></b></br />
         <h2 id='website'>Website</h2>
         The website is the most user interactive component of the monitoring application and consists of several sections.  This guide will 
         briefly cover each section.<br />
@@ -872,26 +892,5 @@ class WebViews:
         <br />
         To send out all critical events on all systems, you can create a rule with your email address, '%_%' for hostname and monitor, 
         select status open, severity Critical, and set enabled to True.<br />
-        <h3 id='website_server'>Web Server</h3>
-        The website utilizes <a href='https://github.com/philipcwhite/webserver'>wserver</a> for handling requests.  In the Windows 
-        environment the website runs as a Windows service called 'Monitoring Website'.  It can be started or stopped using services.msc 
-        or by running net commands: net start (or stop) monitoringweb.  The website can be configured through the settings.cfg file included 
-        in the application website directory (\monitoring\website\).<br />
-        <h4>SSL</h4>
-        Secure Sockets Layer (SSL) can be controlled through four settings.  <br />
-        ssl_enabled: True/False - Determines if the server should use SSL.  SSL is run as TLS 1.2.<br />
-        server_port: 80 - If enabling SSL, change this to 443 or any port not in use<br />
-        cert_key: localhost.pem - Here you can specify the certificate key.  By default it uses the provided localhost key stored in \monitoring\certificates\ <br />
-        cert_name: localhost.crt - Here you can specify the certificate.  By default it uses the provided localhost certificate stored in \monitoring\certificates\ <br />
-        <h4>Database</h4>
-        The next four settings are for configuring the MariaDB(MySQL)<br />
-        db_host: localhost<br /> 
-        db_name: monitoring<br />
-        db_user: test<br />
-        db_password test<br />
-        <h4>Session</h4>
-        The last setting controls the application session timeout in seconds.  This determines how long a user's session is live. 
-        User sessions are also controlled via cookies.  The cookie duration is the same as the session.<br />
-        session_expire: 7200
-        <br /><br /><b><a href='#top'>top</a></b></br />"""
+        <br /><b><a href='#top'>top</a></b></br />"""
         return html
