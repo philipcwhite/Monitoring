@@ -26,7 +26,7 @@ class CollectService(win32serviceutil.ServiceFramework):
         win32event.SetEvent(self.hWaitStop)
         proc_collect.CollectSettings.running = 0
         con = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        con.connect((proc_collect.CollectSettings.server, proc_collect.CollectSettings.port))
+        con.connect(('127.0.0.1', proc_collect.CollectSettings.port))
         byte=str('Close').encode()
         con.send(byte)
         con.close()
