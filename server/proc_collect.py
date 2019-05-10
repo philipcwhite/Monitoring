@@ -139,7 +139,6 @@ class CollectData:
                     elif int(status) == 0:
                         CollectData.agent_events_close(name, monitor, severity)
             CollectData.agent_system(timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory)
-            print(timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory)
 
 class EchoServerClientProtocol(asyncio.Protocol):
     def connection_made(self, transport):
