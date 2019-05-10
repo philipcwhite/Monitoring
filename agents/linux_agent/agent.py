@@ -8,6 +8,7 @@ import configparser, datetime, os, platform, socket, sqlite3, ssl, subprocess, t
 class AgentSettings:
     log = False
     name = None
+    passphrase = 'secure_monitoring'
     path = './'
     port = 8888
     running = True
@@ -237,9 +238,10 @@ class AgentProcess():
             processes = list(dict(parser.items('processes')).values())
             thresholds = list(dict(parser.items('thresholds')).values())
             AgentSettings.server = config['server']
+            AgentSettings.passphrase = config['passphrase']
             AgentSettings.port = int(config['port'])
             AgentSettings.secure = eval(config['secure'])
-            AgentSettings.log = config['log']
+            AgentSettings.log = eval(config['log'])
             AgentSettings.processes = processes
             for i in thresholds: 
                 thresh = i.split(',')
@@ -349,13 +351,14 @@ class AgentProcess():
             a = datetime.datetime.now().second
             if a == 0:
                 AgentSettings.time = str(time.time()).split('.')[0]
-                send_message = AgentProcess.data_process()
+                header = 'passphrase;' + AgentSettings.passphrase + '\n'
+                data_message = AgentProcess.data_process()
                 event_message = AgentProcess.event_process()
                 #print(send_message, event_message)
-                message = send_message + event_message
+                message = header+ data_message + event_message
                 AgentProcess.send_data(message)
                 AgentSQL.delete_data_events()
             time.sleep(1)
 
-AgentProcess.initialize_agent()
-AgentProcess.run_process()
+#AgentProcess.initialize_agent()
+#AgentProcess.run_process()
