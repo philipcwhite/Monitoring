@@ -26,6 +26,8 @@ Graph View
 
 ## Updates
 
+5/10/2019 -  The agent and collector now use a shared security key.  I also fixed an issue with the event engine not loading its configuration for Windows.  I still have a few more things to work on, on the Linux side (systemd startup).
+
 5/9/2019 - I've been busy updating all of the boring stuff today like user guides.  I still have a long way to go.  Hopefully next week I'll be able to prepare a new beta release for both Windows and Linux.  0.03b is coming!  :) 
 
 5/8/2019 - I finished the directory re-org today.  The Windows specific paths for services are now loaded via the service scripts.  I also tested SSL and it is working.  The next beta should be out soon with Linux support for at least elementary OS (Ubuntu).  
