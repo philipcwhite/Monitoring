@@ -32,6 +32,7 @@ class CollectService(win32serviceutil.ServiceFramework):
         con.close()
 
     def SvcDoRun(self):
+        proc_collect.CollectSettings.cert_path = 'C:\\PROGRA~1\\monitoring\\server\\certificates\\'
         proc_collect.CollectSettings.app_path = 'C:\\PROGRA~1\\monitoring\\server\\'
         proc_collect.start_server()
                 
