@@ -194,7 +194,7 @@ class WebDevice:
         <td><b>IP Address:</b> """ + agentsystem['ipaddress'] + """</td>
         <td><b>Domain:</b> """ + agentsystem['domain'].lower() + """</td>
         <td><b>Platform:</b> """ + agentsystem['platform'] + " (" + agentsystem['architecture'] + """)</td>
-        <td><b>Build:</b> """ + str(agentsystem['buildnumber']) + """</td>
+        <td><b>Build:</b> """ + str(agentsystem['build']) + """</td>
         <td><b>Processors:</b> """ + str(agentsystem['processors']) + """</td>
         <td><b>Memory:</b> """ + str(agentsystem['memory'])[:-3] + """ MB</td>
         </tr></table>"""
@@ -534,7 +534,7 @@ class WebReports:
         output = 'Last Reported,Name,IP Address,Platform,Build Number,Architecture,Domain,Processors,Memory' + cr
         for i in devices:
             last_reported = str(datetime.datetime.fromtimestamp(int(i['timestamp'])))
-            output += last_reported + ',' + i['name'] + ',' + i['ipaddress'] + ',' + i['platform'] + ',' + str(i['buildnumber']) + ',' + i['architecture']
+            output += last_reported + ',' + i['name'] + ',' + i['ipaddress'] + ',' + i['platform'] + ',' + str(i['build']) + ',' + i['architecture']
             output +=  ',' + i['domain'] + ',' + str(i['processors']) + ',' + str(i['memory']) + cr
         return output
 

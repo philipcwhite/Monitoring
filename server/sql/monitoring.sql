@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `agentsystem` (
   `name` varchar(100) NOT NULL,
   `ipaddress` varchar(100) DEFAULT NULL,
   `platform` varchar(250) DEFAULT NULL,
-  `buildnumber` varchar(50) DEFAULT NULL,
+  `build` varchar(50) DEFAULT NULL,
   `architecture` varchar(25) DEFAULT NULL,
   `domain` varchar(100) DEFAULT NULL,
   `processors` int(10) unsigned DEFAULT NULL,

@@ -1,4 +1,4 @@
-import asyncio, configparser, os, ssl, time, pymysql.cursors
+import asyncio, configparser, json, os, ssl, time, pymysql.cursors
 
 class CollectSettings:
     app_path = './'
@@ -44,7 +44,7 @@ class CollectData:
                                      cursorclass = pymysql.cursors.DictCursor)
         return connection
 
-    def agent_system(timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory):
+    def agent_system(timestamp, name, domain, ipaddress, platform, build, architecture, processors, memory):
         connection = CollectData.mon_con()
         try:
             with connection.cursor() as cursor:
@@ -55,12 +55,12 @@ class CollectData:
                 if not result is None:
                     qname = result['name']
                 if name == qname:
-                    sql = "UPDATE agentsystem SET timestamp=%s, domain=%s, ipaddress=%s, platform=%s, buildnumber=%s, architecture=%s, processors=%s, memory=%s WHERE name=%s"
-                    cursor.execute(sql, (timestamp, domain, ipaddress, platform, buildnumber, architecture, processors, memory, name))
+                    sql = "UPDATE agentsystem SET timestamp=%s, domain=%s, ipaddress=%s, platform=%s, build=%s, architecture=%s, processors=%s, memory=%s WHERE name=%s"
+                    cursor.execute(sql, (timestamp, domain, ipaddress, platform, build, architecture, processors, memory, name))
                     connection.commit()
                 else:
-                    sql = "INSERT INTO agentsystem (timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                    cursor.execute(sql, (timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory))
+                    sql = "INSERT INTO agentsystem (timestamp, name, domain, ipaddress, platform, build, architecture, processors, memory) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+                    cursor.execute(sql, (timestamp, name, domain, ipaddress, platform, build, architecture, processors, memory))
                     connection.commit()
         finally: connection.close()
 
@@ -92,53 +92,35 @@ class CollectData:
         finally: connection.close()
 
     def parse_data(message):
-        timestamp = 0
-        name = '' 
-        domain = '' 
-        ipaddress = '' 
-        platform = '' 
-        buildnumber = '' 
-        architecture = '' 
-        processors = 0 
-        memory = 0
-        header = message.splitlines()[0]
-        if CollectSettings.passphrase in header:
-            for i in message.splitlines():
-                line = i.split(';')
-                if 'conf.ipaddress' in i:                
-                    timestamp = line[0]
-                    name = line[1]
-                    ipaddress = line[3]
-                if 'conf.os.name' in i:
-                    platform = line[3]
-                if 'conf.os.build' in i:
-                    buildnumber = line[3]
-                if 'conf.os.architecture' in i:
-                    architecture = line[3]
-                if 'conf.domain' in i:
-                    domain = line[3]
-                if 'conf.processors' in i:
-                    processors = line[3]
-                if 'conf.memory.total' in i:
-                    memory = line[3]
-                if ';perf' in i and i.count(";") == 3:
-                    timestamp = line[0]
-                    name = line[1]
-                    monitor = line[2]
-                    value = float(line[3])
-                    CollectData.agent_data(timestamp, name, monitor, value)
-                if ';event;' in i:
-                    timestamp = line[0]
-                    name = line[1]
-                    monitor = line[3]
-                    message = line[4]
-                    status = line[5]
-                    severity = line[6]
+        try:
+            message = json.loads(message)
+            #print(message)
+            passphrase = message["passphrase"]
+            if CollectSettings.passphrase == passphrase:
+                timestamp = message["time"]
+                name = message["name"]
+                domain = message["domain"]
+                ipaddress = message["ip"]
+                platform = message["platform"]
+                build = message["build"] 
+                architecture = message["arch"] 
+                processors = message["procs"]
+                memory = message["memory"] 
+                CollectData.agent_system(timestamp, name, domain, ipaddress, platform, build, architecture, processors, memory)
+                for i in message["data"]:
+                    CollectData.agent_data(i["time"], name, i["monitor"], i["value"])
+                for i in message["events"]:
+                    timestamp = i["time"]
+                    name = name
+                    monitor = i["monitor"]
+                    message = i["message"]
+                    status = i["status"]
+                    severity = i["severity"]
                     if int(status) == 1:
                         CollectData.agent_events_open(timestamp, name, monitor, message, status, severity)
                     elif int(status) == 0:
                         CollectData.agent_events_close(name, monitor, severity)
-            CollectData.agent_system(timestamp, name, domain, ipaddress, platform, buildnumber, architecture, processors, memory)
+        except:pass
 
 class EchoServerClientProtocol(asyncio.Protocol):
     def connection_made(self, transport):

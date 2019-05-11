@@ -3,7 +3,7 @@
 # You may use, distribute and modify this code under the terms of the Apache 2 license. You should have received a 
 # copy of the Apache 2 license with this file. If not, please visit:  https://github.com/philipcwhite/monitoring
 
-import configparser, datetime, os, platform, re, socket, sqlite3, ssl, subprocess, time
+import configparser, datetime, json, os, platform, re, socket, sqlite3, ssl, subprocess, time
 
 class AgentSettings:
     log = False
@@ -26,11 +26,13 @@ class AgentSQL():
     def create_tables():
         sql_create_agent_data = "CREATE TABLE IF NOT EXISTS AgentData (time integer,name text,monitor text,value integer,sent integer);"
         sql_create_agent_events = "CREATE TABLE IF NOT EXISTS AgentEvents (time integer,name text,monitor text,message text,status integer,severity integer, sent integer);"
+        sql_create_agent_system = "CREATE TABLE IF NOT EXISTS AgentSystem (time integer, name text, ipaddress text, platform text, build text, architecture text, domain text, processors integer, memory integer);"
         sql_create_agent_thresholds = "CREATE TABLE IF NOT EXISTS AgentThresholds (monitor text,severity integer,threshold integer, compare text,duration integer);"
         con = AgentSQL.sql_con()
         c = con.cursor()
         c.execute(sql_create_agent_data)
         c.execute(sql_create_agent_events)
+        c.execute(sql_create_agent_system)
         c.execute(sql_create_agent_thresholds)
         con.commit()
         con.close()
@@ -76,6 +78,19 @@ class AgentSQL():
         con.commit()
         con.close()
 
+    def insert_system(ipaddress, os, build, architecture, domain, processors, memory):
+        sql_update = "UPDATE AgentSystem SET time=" + str(AgentSettings.time) + ", name='" + AgentSettings.name + "', ipaddress='" + ipaddress + "', platform='" + os + "', architecture='" + architecture + "'"
+        sql_update += ", domain='" + domain + "', processors=" + str(processors) +", memory=" + str(memory) + " WHERE name='" + AgentSettings.name + "'" 
+        sql_insert = "INSERT INTO AgentSystem(time, name, ipaddress, platform, build, architecture, domain, processors, memory) "
+        sql_insert += "SELECT " + str(AgentSettings.time) + ",'" + AgentSettings.name + "','" + ipaddress + "','" + os + "','" + build + "','" + architecture +  "','" + domain + "'," + str(processors) + "," + str(memory) 
+        sql_insert += " WHERE NOT EXISTS(SELECT 1 FROM AgentSystem WHERE name='" + AgentSettings.name + "')"
+        con = AgentSQL.sql_con()
+        c = con.cursor()
+        c.execute(sql_update)
+        c.execute(sql_insert)
+        con.commit()
+        con.close()
+
     def insert_thresholds(monitor, severity, threshold, compare, duration):
         sql_query = "INSERT INTO AgentThresholds(monitor, severity, threshold, compare, duration) "
         sql_query += "VALUES('" + monitor + "'," + severity + "," + threshold + ",'" + compare +  "'," + duration + ")"
@@ -92,11 +107,9 @@ class AgentSQL():
         c = con.cursor()
         c.execute(sql_query)
         rows = c.fetchall()
-        for time, name, monitor, value in rows:
-            output += str(time) + ';' + name + ';' + monitor + ';' + str(value) + '\n'
         con.commit()
         con.close()
-        return output
+        return rows
     
     def select_data_events(time, monitor):
         sql_query = "SELECT value FROM AgentData WHERE monitor='" + monitor + "' AND time > " + str(time) 
@@ -118,18 +131,26 @@ class AgentSQL():
         con.close()
         return monitor
 
-    def select_open_events():
+    def select_events():
         output = ''
         sql_query = "SELECT time, name, monitor, message, status, severity FROM AgentEvents WHERE sent=0" 
         con = AgentSQL.sql_con()
         c = con.cursor()
         c.execute(sql_query)
         rows = c.fetchall()
-        for time, name, monitor, message, status, severity in rows:
-            output = output + str(time) + ';' + name + ';event;' + monitor + ';' + message + ';' + str(status) + ';' + str(severity) + '\n'
         con.commit()
         con.close()
-        return output
+        return rows
+
+    def select_system():
+        sql_query = "SELECT time, name, ipaddress, platform, build, architecture, domain, processors, memory FROM AgentSystem"
+        con = AgentSQL.sql_con()
+        c = con.cursor()
+        c.execute(sql_query)
+        rows = c.fetchone()
+        con.commit()
+        con.close()
+        return rows  
 
     def select_thresholds():
         sql_query = "SELECT monitor, severity, threshold, compare, duration FROM AgentThresholds"
@@ -160,11 +181,19 @@ class AgentSQL():
         con.close()
 
 class AgentWindows():
-    def conf_memory_total():
-        result = subprocess.run('wmic path Win32_ComputerSystem get TotalPhysicalMemory /value', shell=True, capture_output=True, text=True).stdout
-        result = re.search(r'(?m)(?<=\bTotalPhysicalMemory=).*$', result).group()
-        result = round(int(result)  / 1048576, 0)
-        AgentSQL.insert_data('conf.memory.total', str(result))
+    def conf_system():
+        memory = subprocess.run('wmic path Win32_ComputerSystem get TotalPhysicalMemory /value', shell=True, capture_output=True, text=True).stdout
+        memory = re.search(r'(?m)(?<=\bTotalPhysicalMemory=).*$', memory).group()
+        memory = round(int(memory)  / 1048576, 0)
+        osplatform = platform.system()
+        architecture = platform.architecture()[0]
+        build = platform.win32_ver()[1]
+        ipaddress= socket.gethostbyname(socket.gethostname())
+        processors = str(os.cpu_count())
+        domain = socket.getfqdn()
+        if '.' in domain: domain = domain.split('.', 1)[1]
+        else: domain = 'Stand Alone'
+        AgentSQL.insert_system(ipaddress, osplatform, build, architecture, domain, processors, memory)
 
     def perf_filesystem():
         result = subprocess.run('''wmic path Win32_PerfFormattedData_PerfDisk_LogicalDisk WHERE "Name LIKE '%:'" get Name,PercentFreeSpace,PercentIdleTime /format:csv''', shell=True, capture_output=True, text=True).stdout
@@ -246,18 +275,7 @@ class AgentProcess():
 
     def data_process():
         try:
-            AgentSQL.insert_data('conf.os.name', platform.system())
-            AgentSQL.insert_data('conf.os.architecture', platform.architecture()[0])
-            AgentSQL.insert_data('conf.os.build', platform.win32_ver()[1])
-            AgentSQL.insert_data('conf.ipaddress', socket.gethostbyname(socket.gethostname()))
-            AgentSQL.insert_data('conf.processors', str(os.cpu_count()))
-            domain_name = socket.getfqdn()
-            if '.' in domain_name: domain_name = domain_name.split('.', 1)[1]
-            else: domain_name = 'Stand Alone'
-            AgentSQL.insert_data('conf.domain', domain_name)
-        except: pass
-        try:
-            AgentWindows.conf_memory_total()
+            AgentWindows.conf_system()
             AgentWindows.perf_filesystem()
             AgentWindows.perf_memory()
             AgentWindows.perf_network()
@@ -266,8 +284,6 @@ class AgentProcess():
             AgentWindows.perf_uptime()
             AgentWindows.perf_services()
         except: pass
-        output = AgentSQL.select_data()
-        return output
         
     def event_create(monitor, severity, threshold, compare, duration, status):
         message = monitor.replace('perf.', '').replace('.', ' ').capitalize()
@@ -314,9 +330,30 @@ class AgentProcess():
                 AgentProcess.event_create(monitor, severity, threshold, compare, duration, 1)
             else:
                 AgentProcess.event_create(monitor, severity, threshold, compare, duration, 0)
-        output = AgentSQL.select_open_events()
-        if output is None: output = ''
-        return output
+
+    def create_packet():
+        system = AgentSQL.select_system()
+        events = AgentSQL.select_events()
+        data = AgentSQL.select_data()
+        agent_data = []
+        agent_events = []
+        for i in events: agent_events.append({"time":i[0],"monitor":i[2],"message":i[3],"status":i[4],"severity":i[5]})
+        for i in data: agent_data.append({"time":i[0],"monitor":i[2],"value":i[3]})
+        packet = {"time": system[0],
+                  "name": system[1],
+                  "ip": system[2],
+                  "platform": system[3],
+                  "build": system[4],
+                  "arch": system[5],
+                  "domain": system[6],
+                  "procs": system[7],
+                  "memory": system[8],
+                  "passphrase": AgentSettings.passphrase,
+                  "data": agent_data,
+                  "events": agent_events}
+        packet = json.dumps(packet)
+        #print(packet)
+        return packet
         
     def send_data(message):
         sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -347,10 +384,9 @@ class AgentProcess():
             a = datetime.datetime.now().second
             if a == 0:
                 AgentSettings.time = str(time.time()).split('.')[0]
-                header = 'passphrase;' + AgentSettings.passphrase + '\n'
-                data_message = AgentProcess.data_process()
-                event_message = AgentProcess.event_process()
-                message = header + data_message + event_message
-                AgentProcess.send_data(message)
+                AgentProcess.data_process()
+                AgentProcess.event_process()
+                AgentProcess.create_packet()
+                AgentProcess.send_data(AgentProcess.create_packet())
                 AgentSQL.delete_data_events()
             time.sleep(1)

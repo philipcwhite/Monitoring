@@ -57,7 +57,7 @@ class WebData:
         con = WebData.web_con()
         try:
             with con.cursor() as cursor:
-                sql = r"SELECT id, timestamp, name, ipaddress, platform, buildnumber, architecture, domain, processors, memory FROM agentsystem WHERE name='" + name +"' LIMIT 1"
+                sql = r"SELECT id, timestamp, name, ipaddress, platform, build, architecture, domain, processors, memory FROM agentsystem WHERE name='" + name +"' LIMIT 1"
                 cursor.execute(sql)
                 result = cursor.fetchone()
                 return result
@@ -117,7 +117,7 @@ class WebData:
         con = WebData.web_con()
         try:
             with con.cursor() as cursor:
-                sql = r"SELECT id, timestamp, name, ipaddress, platform, buildnumber, architecture, domain, processors, memory FROM agentsystem ORDER BY name"
+                sql = r"SELECT id, timestamp, name, ipaddress, platform, build, architecture, domain, processors, memory FROM agentsystem ORDER BY name"
                 cursor.execute(sql)
                 result = cursor.fetchall()
                 return result
@@ -127,7 +127,7 @@ class WebData:
         con = WebData.web_con()
         try:
             with con.cursor() as cursor:
-                sql = r"SELECT id, timestamp, name, ipaddress, platform, buildnumber, architecture, domain, processors, memory FROM agentsystem ORDER BY name LIMIT " + str(page_start) + "," + str(page_end)
+                sql = r"SELECT id, timestamp, name, ipaddress, platform, build, architecture, domain, processors, memory FROM agentsystem ORDER BY name LIMIT " + str(page_start) + "," + str(page_end)
                 cursor.execute(sql)
                 result = cursor.fetchall()
                 return result
