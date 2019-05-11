@@ -26,6 +26,8 @@ Graph View
 
 ## Updates
 
+5/11/2019 - I finally got my conversion from CSV to JSON working with SSL.  Now the agents send data as JSON packets instead of CSV.  I think I still need to put some flow control in to prevent huge packets but things are working for the most part.  Packet sizes should now be significantly smaller.  The upside (or downside) of using JSON is that the packets have to be correct.  CSV would work even if the datastream was partially interupted, inserting part of the data (with data loss) instead of no data.  I think if I build in some flow restrictions this should be able to be mitigated.  Also the smaller packet size should help as well.
+
 5/11/2019 - I had a setback today.  I tried updating the agent to use JSON and SSL no longer works.  Still investigating but I may have to roll back some updates.  
 
 5/10/2019 -  The agent and collector now use a shared security key.  I also fixed an issue with the event engine not loading its configuration for Windows.  I still have a few more things to work on, on the Linux side (systemd startup).
