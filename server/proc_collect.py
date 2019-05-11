@@ -108,7 +108,7 @@ class CollectData:
                 memory = message["memory"] 
                 CollectData.agent_system(timestamp, name, domain, ipaddress, platform, build, architecture, int(processors), float(memory))
                 for i in message["data"]:
-                    CollectData.agent_data(i["time"], name, i["monitor"], i["value"])
+                    CollectData.agent_data(i[list(i)[0]], name, list(i)[1], i[list(i)[1]])
                 for i in message["events"]:
                     timestamp = i["time"]
                     name = name
