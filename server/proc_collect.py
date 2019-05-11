@@ -12,6 +12,7 @@ class CollectSettings:
     database = 'monitoring'
     cert_name = 'localhost.crt'
     cert_key = 'localhost.pem'
+    cert_path = './certificates/'
     passphrase = 'secure_monitoring'
 
 class CollectLoad:
@@ -24,7 +25,7 @@ class CollectLoad:
             database = dict(parser.items('database'))
             server = dict(parser.items('server'))
             CollectSettings.port = int(server['port_collect'])
-            CollectSettings.secure = server['secure']
+            CollectSettings.secure = eval(server['secure'])
             CollectSettings.passphrase = server['passphrase']
             CollectSettings.cert_key = certificates['key']
             CollectSettings.cert_name = certificates['name']
@@ -94,7 +95,6 @@ class CollectData:
     def parse_data(message):
         try:
             message = json.loads(message)
-            #print(message)
             passphrase = message["passphrase"]
             if CollectSettings.passphrase == passphrase:
                 timestamp = message["time"]
@@ -106,7 +106,7 @@ class CollectData:
                 architecture = message["arch"] 
                 processors = message["procs"]
                 memory = message["memory"] 
-                CollectData.agent_system(timestamp, name, domain, ipaddress, platform, build, architecture, processors, memory)
+                CollectData.agent_system(timestamp, name, domain, ipaddress, platform, build, architecture, int(processors), float(memory))
                 for i in message["data"]:
                     CollectData.agent_data(i["time"], name, i["monitor"], i["value"])
                 for i in message["events"]:
@@ -120,7 +120,7 @@ class CollectData:
                         CollectData.agent_events_open(timestamp, name, monitor, message, status, severity)
                     elif int(status) == 0:
                         CollectData.agent_events_close(name, monitor, severity)
-        except:pass
+        except: pass
 
 class EchoServerClientProtocol(asyncio.Protocol):
     def connection_made(self, transport):
@@ -141,7 +141,7 @@ class CollectServer():
         if CollectSettings.secure == True:
             ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
             ssl_context.options |= ssl.PROTOCOL_TLSv1_2
-            ssl_context.load_cert_chain(certfile = CollectSettings.app_path + 'certificates\\' + CollectSettings.cert_name, keyfile = CollectSettings.app_path + 'certificates\\' + CollectSettings.cert_key)
+            ssl_context.load_cert_chain(certfile = CollectSettings.cert_path + CollectSettings.cert_name, keyfile = CollectSettings.cert_path + CollectSettings.cert_key)
             server = await loop.create_server(lambda: EchoServerClientProtocol(), CollectSettings.server, CollectSettings.port, ssl=ssl_context)
         else: server = await loop.create_server(lambda: EchoServerClientProtocol(), CollectSettings.server, CollectSettings.port)
         async with server: await server.serve_forever()
