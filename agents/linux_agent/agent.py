@@ -348,7 +348,7 @@ class AgentProcess():
         agent_data = []
         agent_events = []
         for i in events: agent_events.append({"time":i[0],"monitor":i[2],"message":i[3],"status":i[4],"severity":i[5]})
-        for i in data: agent_data.append({"time":i[0],"monitor":i[2],"value":i[3]})
+        for i in data: agent_data.append({"time":i[0],i[2]:i[3]})
         packet = {"time": system[0],
                   "name": system[1],
                   "ip": system[2],
