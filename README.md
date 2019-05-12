@@ -1,4 +1,4 @@
-# Monitoring ver. 0.02b
+# Monitoring ver. 0.03b
 Monitoring Server and Agents written in Python
 
 ## About
@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+
+5/11/2019 - 0.03b is out today.  This is the first release supporting both Windows and Linux.  
 
 5/11/2019 - I finally got my conversion from CSV to JSON working with SSL.  Now the agents send data as JSON packets instead of CSV.  I think I still need to put some flow control in to prevent huge packets but things are working for the most part.  Packet sizes should now be significantly smaller.  The upside (or downside) of using JSON is that the packets have to be correct.  CSV would work even if the datastream was partially interupted, inserting part of the data (with data loss) instead of no data.  I think if I build in some flow restrictions this should be able to be mitigated.  Also the smaller packet size should help as well.
 
