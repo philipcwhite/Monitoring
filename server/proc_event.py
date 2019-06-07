@@ -5,6 +5,9 @@ class EventSettings:
     app_path = './'
     availability_check = 300
     availability_severity = 1
+    agent_retention = 2592000
+    data_retention = 2592000
+    event_retention = 2592000
     database = 'monitoring'
     dbhost = 'localhost'
     dbpassword = 'monitoring'
@@ -23,10 +26,14 @@ class EventConfig:
             database = dict(parser.items('database'))
             events = dict(parser.items('events'))
             mail = dict(parser.items('mail'))
+            retention = dict(parser.items('retention'))
             EventSettings.dbhost = database['host']
             EventSettings.database = database['name']
             EventSettings.dbuser = database['user']
             EventSettings.dbpassword = database['password']
+            EventSettings.agent_retention = int(retention['agent'])
+            EventSettings.data_retention = int(retention['data'])
+            EventSettings.event_retention = int(retention['event'])
             EventSettings.mailactive = int(mail['active'])
             EventSettings.mailserver = mail['server']
             EventSettings.mailadmin = mail['admin']
@@ -117,6 +124,33 @@ class EventData:
                         connection.commit()
         finally: connection.close()
 
+    def remove_agents():
+        connection = EventData.mon_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = 'DELETE FROM agentsystem WHERE timestamp < ' + str(time.time() - EventSettings.agent_retention) 
+                cursor.execute(sql)
+                connection.commit()
+        finally: connection.close()
+
+    def remove_events():
+        connection = EventData.mon_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = 'DELETE FROM agentevents WHERE timestamp < ' + str(time.time() - EventSettings.event_retention) 
+                cursor.execute(sql)
+                connection.commit()
+        finally: connection.close()
+
+    def remove_data():
+        connection = EventData.mon_con()
+        try:
+            with connection.cursor() as cursor:
+                sql = 'DELETE FROM agentdata WHERE timestamp < ' + str(time.time() - EventSettings.data_retention) 
+                cursor.execute(sql)
+                connection.commit()
+        finally: connection.close()
+
 class EventAvailable:
     def check_available():
         try:
@@ -181,4 +215,7 @@ def start_server():
             EventAvailable.check_available()
             EventAvailable.check_open()
             ServerEvent.process_events()
+            EventData.remove_agents()
+            EventData.remove_data()
+            EventData.remove_events()
         time.sleep(1)
