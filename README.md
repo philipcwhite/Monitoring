@@ -26,6 +26,8 @@ Graph View
 
 ## Updates
 
+6/7/2019 - I added in configurable data retention options in settings.ini on the server.  This will now by default remove events, data, and agents older than 30 days.  
+
 5/20/2019 - I think I fixed part of the issue with packets not fully sending.  I will probably add some additional flow control to the SQL query for preventing all queued data from being sent at once.
 
 5/11/2019 - 0.03b is out today.  This is the first release supporting both Windows and Linux.  
