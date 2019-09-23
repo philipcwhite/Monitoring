@@ -26,6 +26,8 @@ Graph View
 
 ## Updates
 
+9/23/2019 - I added in a systemd service file so the Linux agent can be run on startup using systemctl.  I will add scripts for the server as time permits.  
+
 6/7/2019 - I added in configurable data retention options in settings.ini on the server.  This will now by default remove events, data, and agents older than 30 days.  
 
 5/20/2019 - I think I fixed part of the issue with packets not fully sending.  I will probably add some additional flow control to the SQL query for preventing all queued data from being sent at once.
