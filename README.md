@@ -26,6 +26,8 @@ Graph View
 
 ## Updates
 
+10/9/2019 - I added a shell script to automate installing the Linux agent.  I still need to build the systemd files and install script for the Linux server.  
+
 9/23/2019 - I added in a systemd service file so the Linux agent can be run on startup using systemctl.  I will add scripts for the server as time permits.  
 
 6/7/2019 - I added in configurable data retention options in settings.ini on the server.  This will now by default remove events, data, and agents older than 30 days.  
