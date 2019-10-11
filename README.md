@@ -26,6 +26,8 @@ Graph View
 
 ## Updates
 
+10/11-2019 - I'll hopefully have a public demo site up and running in the next few weeks.  I did some preliminary testing in Azure today and everything seems to be working as intended.  I'm going to finish with the systemd install scripts before I move any farther forward.  I did notice a couple of bugs when I deployed to Azure that I'll try to sort out too.  The systemd scripts probably need a little cleanup too.  If you're wondering I'm testing on Ubuntu in Azure.  It's so weird when you code in Python using Visual Studio Code on a Elementary Linux VM running on a macbook via Parallels, then deploy to Ubuntu on Azure.  That's a lot of Microsoft in Linux land.
+
 10/9/2019 - I added a shell script to automate installing the Linux agent.  I still need to build the systemd files and install script for the Linux server.  
 
 9/23/2019 - I added in a systemd service file so the Linux agent can be run on startup using systemctl.  I will add scripts for the server as time permits.  
