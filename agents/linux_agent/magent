@@ -1,33 +1,38 @@
 #!/bin/sh
 
-# Script for configuring the monitoring agent to use systemd
-# Default install directory is /opt/monitoring
-# Default service account is monitoring
+# Set variables
+user='monitoring'
+directory='/opt/monitoring'
 
 # Add service account
-useradd -r -s /bin/false monitoring
-# Delete service account
-#userdel monitoring
+useradd -r -s /bin/false $user
 
-mkdir -p /opt/monitoring/agent
-cp agent.py /opt/monitoring/agent/agent.py
-cp  settings.ini /opt/monitoring/agent/setting.ini
-chown -R monitoring /opt/monitoring
-chmod -R 755 /opt/monitoring/agent
+# Create program directory
+mkdir -p $directory/agent
+cp agent.py $directory/agent/agent.py
+cp  settings.ini $directory/agent/setting.ini
+chown -R monitoring $directory
+chmod -R 755 $directory/agent
 
-echo "[Unit]" > /lib/systemd/system/magent.service
-echo "Description=Linux Monitoring Agent Service" >> /lib/systemd/system/magent.service
-echo "After=multi-user.target" >> /lib/systemd/system/magent.service
-echo "\n" >> /lib/systemd/system/magent.service
-echo "[Service]" >> /lib/systemd/system/magent.service
-echo "Type=simple" >> /lib/systemd/system/magent.service
-echo "ExecStart=/usr/bin/python3.7 /opt/monitoring/agent/agent.py" >> /lib/systemd/system/magent.service
-echo "User=monitoring" >> /lib/systemd/system/magent.service
-echo "\n" >> /lib/systemd/system/magent.service
-echo "[Install]" >> /lib/systemd/system/magent.service
-echo "WantedBy=multi-user.target" >> /lib/systemd/system/magent.service
+# Write systemd service file
+cat > /lib/systemd/system/magent.service <<EOF
+[Unit]
+Description=Linux Monitoring Agent Service
+After=multi-user.target
 
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3.7 /opt/monitoring/agent/agent.py
+User=monitoring
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Set Permissions
 chmod 644 /lib/systemd/system/magent.service
+
+# Enable service
 systemctl daemon-reload
 systemctl enable magent.service
 systemctl start magent.service
