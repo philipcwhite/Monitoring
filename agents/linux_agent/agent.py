@@ -9,7 +9,7 @@ class AgentSettings:
     log = False
     name = None
     passphrase = 'secure_monitoring'
-    path = './'
+    path = '/opt/monitoring/agent/'
     port = 8888
     running = True
     secure = False
