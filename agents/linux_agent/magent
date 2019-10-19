@@ -6,11 +6,13 @@ directory='/opt/monitoring'
 
 # Add service account
 useradd -r -s /bin/false $user
+# Delete service account
+#userdel monitoring
 
 # Create program directory
 mkdir -p $directory/agent
 cp agent.py $directory/agent/agent.py
-cp  settings.ini $directory/agent/setting.ini
+cp  settings.ini $directory/agent/settings.ini
 chown -R monitoring $directory
 chmod -R 755 $directory/agent
 
@@ -22,8 +24,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3.7 /opt/monitoring/agent/agent.py
-User=monitoring
+ExecStart=/usr/bin/python3.7 $directory/agent/agent.py
 
 [Install]
 WantedBy=multi-user.target
