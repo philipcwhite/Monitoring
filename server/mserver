@@ -1,0 +1,99 @@
+#!/bin/sh
+
+#This is a work in progress.  It should install the server components and register them correctly.  
+
+# Set variables
+user='monitoring'
+directory='/opt/monitoring'
+
+
+# Add service account
+useradd -r -s /bin/false $user
+# Delete service account
+#userdel monitoring
+
+# Create program directory
+mkdir -p $directory/server
+mkdir -p $directory/server/certificates
+mkdir -p $directory/server/static
+cp start_collect.py $directory/server/start_collect.py
+cp start_event.py $directory/server/start_event.py
+cp start_web.py $directory/server/start_web.py
+cp proc_collect.py $directory/server/proc_collect.py
+cp proc_event.py $directory/server/proc_event.py
+cp web_code.py $directory/server/web_code.py
+cp web_data.py $directory/server/web_data.py
+cp web_server.py $directory/server/web_server.py
+cp web_site.py $directory/server/web_site.py
+cp settings.ini $directory/server/settings.ini
+cp certificates/localhost.crt $directory/server/certificates/localhost.crt
+cp certificates/localhost.pem $directory/server/certificates/localhost.pem
+cp static/favicon.ico $directory/server/static/favicon.ico
+cp static/mon_app.css $directory/server/static/mon_app.css
+
+chown -R monitoring $directory
+chmod -R 755 $directory/server
+
+sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/web_server.py
+sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/proc_collect.py
+sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/proc_event.py
+sed -i "s,cert_path = './certificates/',cert_path = '/opt/monitoring/server/certificates/',g" $directory/server/proc_collect.py
+
+# Write systemd service files
+
+cat > /lib/systemd/system/mcserver.service <<EOF
+[Unit]
+Description=Linux Monitoring Collect Server Service
+After=multi-user.target  
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3.7 /opt/monitoring/server/start_collect.py
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > /lib/systemd/system/meserver.service <<EOF
+[Unit]
+Description=Linux Monitoring Event Server Service
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3.7 /opt/monitoring/server/start_event.py
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > /lib/systemd/system/mwserver.service <<EOF
+[Unit]
+Description=Linux Monitoring Web Server Service
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3.7 /opt/monitoring/server/start_web.py
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+
+# Set Permissions
+chmod 644 /lib/systemd/system/mcserver.service
+chmod 644 /lib/systemd/system/meserver.service
+chmod 644 /lib/systemd/system/mwserver.service
+
+# Enable service
+
+systemctl daemon-reload
+
+systemctl enable mcserver.service
+systemctl enable meserver.service
+systemctl enable mwserver.service
+
+systemctl start mcserver.service
+systemctl start meserver.service
+systemctl start mwserver.service
