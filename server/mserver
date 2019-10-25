@@ -31,6 +31,11 @@ cp certificates/localhost.pem $directory/server/certificates/localhost.pem
 cp static/favicon.ico $directory/server/static/favicon.ico
 cp static/mon_app.css $directory/server/static/mon_app.css
 
+
+# Install pymysql
+python3.7 -m pip install --target=$directory/server/ pymysql
+
+
 chown -R monitoring $directory
 chmod -R 755 $directory/server
 
@@ -38,6 +43,8 @@ sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/ser
 sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/proc_collect.py
 sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/proc_event.py
 sed -i "s,cert_path = './certificates/',cert_path = '/opt/monitoring/server/certificates/',g" $directory/server/proc_collect.py
+sed -i "s,cert_path = './certificates/',cert_path = '/opt/monitoring/server/certificates/',g" $directory/server/web_server.py
+
 
 # Write systemd service files
 
