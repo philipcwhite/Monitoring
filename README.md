@@ -26,6 +26,8 @@ Graph View
 
 ## Updates
 
+10/25/2019 - I updated the linux server installer to install pymysql and rewrite the static path for the certificates.  Unfortunately the demo site will be on hold for now due to Azure only allowing me to keep it live for 120 hours.  I have a Visual Studio subscription so my account is limited.  I may have to script somthing to run it for periods of less than 24 hours per day or consider other hosting.  
+
 10/18/2019 - I uploaded a new shell script to install the server components.  It still needs some work but it at least takes care of copying the files, creating the services, and enabling them.  I'm still working through a few systemd issues but I believe it's coming together.  Probably a few more days on this and then back to bug hunting.  Hopefully I get to a new release by the end of the year.  
 
 10/11-2019 - I'll hopefully have a public demo site up and running in the next few weeks.  I did some preliminary testing in Azure today and everything seems to be working as intended.  I'm going to finish with the systemd install scripts before I move any farther forward.  I did notice a couple of bugs when I deployed to Azure that I'll try to sort out too.  The systemd scripts probably need a little cleanup too.  If you're wondering I'm testing on Ubuntu in Azure.  It's so weird when you code in Python using Visual Studio Code on a Elementary Linux VM running on a macbook via Parallels, then deploy to Ubuntu on Azure.  That's a lot of Microsoft in Linux land.
