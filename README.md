@@ -26,6 +26,8 @@ Graph View
 
 ## Updates
 
+1/23/2019 - Sorry for the lack of updates.  I took a new job and moved across the country.  I noticed I need to make some updates for Python 3.8 and probably put in a setting to allow the version to be a variable in the installs.  I should have updates soon.  Thanks
+
 10/25/2019 - I updated the linux server installer to install pymysql and rewrite the static path for the certificates.  Unfortunately the demo site will be on hold for now due to Azure only allowing me to keep it live for 120 hours.  I have a Visual Studio subscription so my account is limited.  I may have to script somthing to run it for periods of less than 24 hours per day or consider other hosting.  
 
 10/18/2019 - I uploaded a new shell script to install the server components.  It still needs some work but it at least takes care of copying the files, creating the services, and enabling them.  I'm still working through a few systemd issues but I believe it's coming together.  Probably a few more days on this and then back to bug hunting.  Hopefully I get to a new release by the end of the year.  
