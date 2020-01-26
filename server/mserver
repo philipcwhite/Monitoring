@@ -5,7 +5,7 @@
 # Set variables
 user='monitoring'
 directory='/opt/monitoring'
-
+pythonver='python3.8'
 
 # Add service account
 useradd -r -s /bin/false $user
@@ -33,7 +33,7 @@ cp static/mon_app.css $directory/server/static/mon_app.css
 
 
 # Install pymysql
-python3.7 -m pip install --target=$directory/server/ pymysql
+$pythonver -m pip install --target=$directory/server/ pymysql
 
 
 chown -R monitoring $directory
@@ -55,7 +55,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3.7 /opt/monitoring/server/start_collect.py
+ExecStart=/usr/bin/$pythonver /opt/monitoring/server/start_collect.py
 
 [Install]
 WantedBy=multi-user.target
@@ -68,7 +68,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3.7 /opt/monitoring/server/start_event.py
+ExecStart=/usr/bin/$pythonver /opt/monitoring/server/start_event.py
 
 [Install]
 WantedBy=multi-user.target
@@ -81,7 +81,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3.7 /opt/monitoring/server/start_web.py
+ExecStart=/usr/bin/$pythonver /opt/monitoring/server/start_web.py
 
 [Install]
 WantedBy=multi-user.target
