@@ -189,12 +189,12 @@ class web_handle(asyncio.Protocol):
         parsed_url = self.path.split('?')
         path_string = parsed_url[0]
         path_func = path_string.split('/')[1]
-        if path_func is '':path_func='index'
+        if path_func == '':path_func='index'
         for i in dir(self.controller):
             if not '__' in i:
                 if i == path_func:
                     for x in path_string.split('/'):
-                        if not x is '': args.append(x)
+                        if not x == '': args.append(x)
                     if args: del args[0]
                     if '?' in self.path:
                         parsed_args = parsed_url[1].split('&')
