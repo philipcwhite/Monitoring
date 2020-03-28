@@ -3,6 +3,7 @@
 # Set variables
 user='monitoring'
 directory='/opt/monitoring'
+pythonver='python3.8'
 
 # Add service account
 useradd -r -s /bin/false $user
@@ -24,7 +25,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3.7 $directory/agent/agent.py
+ExecStart=/usr/bin/$pythonver $directory/agent/agent.py
 
 [Install]
 WantedBy=multi-user.target
