@@ -122,7 +122,7 @@ class CollectData:
                         CollectData.agent_events_close(name, monitor, severity)
         except: pass
 
-class EchoServerClientProtocol(asyncio.Protocol):
+class EchoServerProtocol(asyncio.Protocol):
     def connection_made(self, transport):
         self.transport = transport
 
@@ -142,8 +142,8 @@ class CollectServer():
             ssl_context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
             ssl_context.options |= ssl.PROTOCOL_TLSv1_2
             ssl_context.load_cert_chain(certfile = CollectSettings.cert_path + CollectSettings.cert_name, keyfile = CollectSettings.cert_path + CollectSettings.cert_key)
-            server = await loop.create_server(lambda: EchoServerClientProtocol(), CollectSettings.server, CollectSettings.port, ssl=ssl_context)
-        else: server = await loop.create_server(lambda: EchoServerClientProtocol(), CollectSettings.server, CollectSettings.port)
+            server = await loop.create_server(lambda: EchoServerProtocol(), CollectSettings.server, CollectSettings.port, ssl=ssl_context)
+        else: server = await loop.create_server(lambda: EchoServerProtocol(), CollectSettings.server, CollectSettings.port)
         async with server: await server.serve_forever()
 
 def start_server():
