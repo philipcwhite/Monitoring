@@ -42,138 +42,103 @@ class EventConfig:
         except: pass
 
 class EventData:
-    def mon_con():
-        connection = pymysql.connect(host = EventSettings.dbhost,
-                                     user = EventSettings.dbuser,
-                                     password = EventSettings.dbpassword,
-                                     db = EventSettings.database,
-                                     charset = 'utf8mb4',
-                                     cursorclass = pymysql.cursors.DictCursor)
-        return connection
+    def __init__(self):
+        self.con = pymysql.connect(host = EventSettings.dbhost, user = EventSettings.dbuser, password = EventSettings.dbpassword,
+                                   db = EventSettings.database, charset = 'utf8mb4', cursorclass = pymysql.cursors.DictCursor)
+        self.cursor = self.con.cursor()
+    
+    def __del__(self):
+        self.con.close()
 
-    def agent_select_id():
-        connection = EventData.mon_con()
-        try:
-            with connection.cursor() as cursor:
-                sql = 'SELECT id from agentevents ORDER BY id DESC LIMIT 1' 
-                cursor.execute(sql)
-                result = cursor.fetchone()
-                result = str(result['id'])
-                return result
-        finally: connection.close()
+    def agent_select_id(self):
+        sql = 'SELECT id from agentevents ORDER BY id DESC LIMIT 1' 
+        self.cursor.execute(sql)
+        result = self.cursor.fetchone()
+        result = str(result['id'])
+        return result
+        
+    def agent_events_processed(self, id):
+        sql = 'UPDATE agentevents SET processed=1 WHERE id<=' + str(id)
+        self.cursor.execute(sql)
+        self.con.commit()
 
-    def agent_events_processed(id):
-        connection = EventData.mon_con()
-        try:
-            with connection.cursor() as cursor:
-                sql = 'UPDATE agentevents SET processed=1 WHERE id<=' + str(id)
-                cursor.execute(sql)
-                connection.commit()
-        finally: connection.close()
-
-    def agent_filter_select(id):
-        connection = EventData.mon_con()
-        try:
-            with connection.cursor() as cursor:
-                sql = '''select t1.notify_email, t1.notify_name, t2.id, t2.timestamp, t2.name, t2.monitor, t2.message, t2.severity, t2.status FROM notifyrule as t1 
-                      INNER JOIN agentevents as t2 on 
-                      t2.name LIKE t1.agent_name AND t2.monitor LIKE t1.agent_monitor 
-                      AND t2.status LIKE t1.agent_status AND t2.severity LIKE t1.agent_severity AND t2.processed=0 AND T2.id<=''' + str(id) + ' AND t1.notify_enabled=1'
-                cursor.execute(sql)
-                result = cursor.fetchall()
-                agent_events_processed(id)
-                return result
-        finally: connection.close()
-
-    def agent_avail_select(timestamp):
-        connection = EventData.mon_con()
-        try:
-            with connection.cursor() as cursor:
-                sql = 'SELECT name FROM agentsystem WHERE timestamp < ' + timestamp
-                cursor.execute(sql)
-                result = cursor.fetchall()
-                return result
-        finally: connection.close()
-
-    def agent_avail_event_open(timestamp, name, message, severity):
-        connection = EventData.mon_con()
-        try:
-            with connection.cursor() as cursor:
-                sql = r"""INSERT INTO agentevents 
+    def agent_filter_select(self, id):
+        sql = '''select t1.notify_email, t1.notify_name, t2.id, t2.timestamp, t2.name, t2.monitor, t2.message, t2.severity, t2.status FROM notifyrule as t1 
+                 INNER JOIN agentevents as t2 on 
+                 t2.name LIKE t1.agent_name AND t2.monitor LIKE t1.agent_monitor 
+                 AND t2.status LIKE t1.agent_status AND t2.severity LIKE t1.agent_severity AND t2.processed=0 AND T2.id<=''' + str(id) + ' AND t1.notify_enabled=1'
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+        agent_events_processed(id)
+        return result
+        
+    def agent_avail_select(self, timestamp):
+        sql = 'SELECT name FROM agentsystem WHERE timestamp < ' + timestamp
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+        return result
+        
+    def agent_avail_event_open(self, timestamp, name, message, severity):
+        sql = r"""INSERT INTO agentevents 
                 (timestamp, name, monitor, message, status, severity, processed) 
                 SELECT """ + str(timestamp) + """, '""" + name + """', 'perf.system.availability.seconds', '""" + message + """', 1, """ + str(severity) + """, 0 FROM DUAL
                 WHERE NOT EXISTS (SELECT name FROM agentevents WHERE name='""" + name + """' AND monitor='perf.system.availability.seconds' AND status=1)"""
-                cursor.execute(sql)
-                connection.commit()
-        finally: connection.close()        
-
-    def agent_avail_select_event_open(timestamp):
-        connection = EventData.mon_con()
-        try:
-            with connection.cursor() as cursor:
-                sql = r"""SELECT DISTINCT t1.name FROM agentevents as t1 
-                INNER JOIN agentdata as t2 on t1.name = t2.name
-                WHERE t1.monitor='perf.system.availability.seconds' AND t1.status=1 AND t2.timestamp >=""" + str(timestamp)
-                cursor.execute(sql)
-                result = cursor.fetchall()
-                if not result is None:
-                    for i in result:
-                        name = i['name']
-                        sql = r'UPDATE agentevents SET status=0 WHERE name="' + name + '"'
-                        cursor.execute(sql)
-                        connection.commit()
-        finally: connection.close()
-
-    def remove_agents():
-        connection = EventData.mon_con()
-        try:
-            with connection.cursor() as cursor:
-                sql = 'DELETE FROM agentsystem WHERE timestamp < ' + str(time.time() - EventSettings.agent_retention) 
-                cursor.execute(sql)
-                connection.commit()
-        finally: connection.close()
-
-    def remove_events():
-        connection = EventData.mon_con()
-        try:
-            with connection.cursor() as cursor:
-                sql = 'DELETE FROM agentevents WHERE timestamp < ' + str(time.time() - EventSettings.event_retention) 
-                cursor.execute(sql)
-                connection.commit()
-        finally: connection.close()
-
-    def remove_data():
-        connection = EventData.mon_con()
-        try:
-            with connection.cursor() as cursor:
-                sql = 'DELETE FROM agentdata WHERE timestamp < ' + str(time.time() - EventSettings.data_retention) 
-                cursor.execute(sql)
-                connection.commit()
-        finally: connection.close()
+        self.cursor.execute(sql)
+        self.con.commit()
+           
+    def agent_avail_select_event_open(self, timestamp):
+        sql = r"""SELECT DISTINCT t1.name FROM agentevents as t1 
+              INNER JOIN agentdata as t2 on t1.name = t2.name
+              WHERE t1.monitor='perf.system.availability.seconds' AND t1.status=1 AND t2.timestamp >=""" + str(timestamp)
+        self.cursor.execute(sql)
+        result = self.cursor.fetchall()
+        if not result is None:
+            for i in result:
+                name = i['name']
+                sql = r'UPDATE agentevents SET status=0 WHERE name="' + name + '"'
+                self.cursor.execute(sql)
+                self.con.commit()
+        
+    def remove_agents(self):
+        sql = 'DELETE FROM agentsystem WHERE timestamp < ' + str(time.time() - EventSettings.agent_retention) 
+        self.cursor.execute(sql)
+        self.con.commit()
+        
+    def remove_events(self):
+        sql = 'DELETE FROM agentevents WHERE timestamp < ' + str(time.time() - EventSettings.event_retention) 
+        self.cursor.execute(sql)
+        self.con.commit()
+        
+    def remove_data(self):
+        sql = 'DELETE FROM agentdata WHERE timestamp < ' + str(time.time() - EventSettings.data_retention) 
+        self.cursor.execute(sql)
+        self.con.commit()
+        
+ED = EventData()
 
 class EventAvailable:
     def check_available():
         try:
             check_time = str(time.time() - EventSettings.availability_check).split('.')[0]
             cur_time = str(time.time()).split('.')[0]
-            hosts = EventData.agent_avail_select(str(check_time))
+            hosts = ED.agent_avail_select(str(check_time))
             for i in hosts:
                 name = i['name']
                 message = 'Agent not responding for ' + str(int(round(EventSettings.availability_check / 60,0)))  + ' minutes'
-                EventData.agent_avail_event_open(cur_time, name, message, str(EventSettings.availability_severity))
+                ED.agent_avail_event_open(cur_time, name, message, str(EventSettings.availability_severity))
         except: pass
 
     def check_open():
         try:
             check_time = str(time.time() - EventSettings.availability_check).split('.')[0]
-            EventData.agent_avail_select_event_open(check_time)
+            ED.agent_avail_select_event_open(check_time)
         except: pass
 
 class ServerEvent:
     def process_events():
         try:
-            id = EventData.agent_select_id()
-            output = EventData.agent_filter_select(id)
+            id = ED.agent_select_id()
+            output = ED.agent_filter_select(id)
             for i in output:
                 notify_email = i['notify_email']
                 notify_name = i['notify_name']
@@ -215,7 +180,7 @@ def start_server():
             EventAvailable.check_available()
             EventAvailable.check_open()
             ServerEvent.process_events()
-            EventData.remove_agents()
-            EventData.remove_data()
-            EventData.remove_events()
+            ED.remove_agents()
+            ED.remove_data()
+            ED.remove_events()
         time.sleep(1)
