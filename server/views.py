@@ -15,7 +15,7 @@ class controller(object):
         else: self.redirect('/login')
 
     def login(self):
-        html = WebViews.load_login()
+        html = render('login.html')
         return html
 
     def logoff(self):
@@ -24,7 +24,7 @@ class controller(object):
 
     def index(self, page=1):
         user = self.get_auth()
-        html = WebViews.load_base(user, WebViews.load_bc_home(), WebViews.load_refresh('/index_content/' + str(page)))
+        html = render('base.html', user = user, breadcrumbs = WebViews.load_bc_home(), body = WebViews.load_refresh('/index_content/' + str(page)))
         return html
     
     def index_content(self, page=1):
