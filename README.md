@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+7/15/2020 - I'm currently doing a huge overhaul of the code.  The current source code works for the most part, but will not install with the installer. If you want a working release please download one of the release packages.  Trying to package some of my modules and clean up code.  I also started work on a template engine so I plan on removing a lot of the HTML from code.  So far I've been able to remove about 200 lines of code, mostly on the database side.  
+
 7/13/2020 - Updated the Linux agent.  Removed over 50 lines of code.  Changed how SQL queries flow.  AgentSQL class now takes care of opening and closing connections (__init__/__del__).  I'll try to migrate these to the Windows agent next and then update the server which will be a bit different going to MySQL.    
 
 5/12/2020 - Still continuing to update code.  Made minor changes today.  
