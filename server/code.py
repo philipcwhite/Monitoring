@@ -333,7 +333,6 @@ class WebDevice:
         html = WebViews.load_basic_page("System Performance", WebDevice.device_graph(name, monitor))
         return html
 
-class WebDevices:
     def device_index():
         agentsystem = WD.web_code_device_all()
         uptime_check = 600
@@ -648,14 +647,4 @@ class WebViews:
         <tr><td></td><td style="text-align:right"><input type="submit" class="action-button" value="Submit" /></td></tr>
         </table>
         </form>"""
-        return html
-
-    def load_confirm_delete(id):
-        html = """
-        <table>
-        <tr><td>Are you sure you want to delete this user? &nbsp;
-        <input type="button" onclick="window.location.href='/user_delete_confirm/""" + str(id) + """'" class="action-button" value="Yes" /> 
-        <input type="button" onclick="window.location.href='/users/'" class="action-button" value="No" />
-        </td></tr>
-        </table>"""
         return html
