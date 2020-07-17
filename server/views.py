@@ -2,7 +2,7 @@ import configparser
 from web.server import app, app_vars
 from web.templates import render
 from data import Data
-from code import WebAuth, WebIndex, WebDevice, WebDevices, WebEvents, WebNotify, WebReports, WebSettings, WebSearch, WebUsers, WebViews
+from code import WebAuth, WebIndex, WebDevice, WebDevices, WebEvents, WebNotify, WebReports, WebSearch, WebUsers, WebViews
 
 class controller(object):
     WD = Data('localhost','monitoring','monitoring','monitoring')
@@ -69,7 +69,7 @@ class controller(object):
     
     def reports(self):
         user = self.get_auth()
-        html = render('base.html', user = user, breadcrumbs = WebViews.load_bc_reports(), body = WebViews.load_basic_page('Reports', WebViews.load_reports()))
+        html = render('base.html', user = user, breadcrumbs = WebViews.load_bc_reports(), body = render('reports.html'))
         return html
     
     def report(self, filename):
@@ -84,12 +84,12 @@ class controller(object):
 
     def settings(self):
         user = self.get_auth()
-        html = render('base.html', user = user, breadcrumbs = WebViews.load_bc_settings(),  body = WebViews.load_basic_page('Settings', WebSettings.settings()))
+        html = render('base.html', user = user, breadcrumbs = WebViews.load_bc_settings(), body = render('settings.html'))
         return html
 
     def about(self):
         user = self.get_auth()
-        html = render('base.html', user = user, breadcrumbs = WebViews.load_bc_settings(), body = WebViews.load_basic_page('About', WebSettings.about()))
+        html = render('base.html', user = user, breadcrumbs = WebViews.load_bc_settings(), body = render('about.html'))
         return html
 
     def notify(self):
