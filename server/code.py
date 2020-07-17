@@ -4,8 +4,6 @@ from data import Data
 WD = Data('localhost','monitoring','monitoring','monitoring')
 
 class WebAuth:
-    WD = Data('localhost','monitoring','monitoring','monitoring')
-
     def verify_auth(username, password):
         encrypt_password = hashlib.sha224(password.encode()).hexdigest()
         authuser = WD.web_auth(username, encrypt_password)
@@ -163,27 +161,23 @@ class WebIndex:
                 else: html += """<td style="width:10px"><a href="/""" + str(i) + """">""" + str(i) + """</a></td>"""
         return html
 
-    def index_page(index_block_1, index_block_2, index_block_3, index_block_4, index_block_pager):
+    def index_content(page):
         html = """<table style="width:100%;">
         <tr><td style="padding-right:4px">
-        <div class="card-div"><div class="card-header">Host Availability</div>""" + index_block_1 + """</div></td>
+        <div class="card-div"><div class="card-header">Host Availability</div>""" + WebIndex.index_block_1() + """</div></td>
         <td style="padding-left:4px;padding-right:4px">
-        <div class="card-div"><div class="card-header">Open Events</div>""" + index_block_2 + """</div></td>
+        <div class="card-div"><div class="card-header">Open Events</div>""" + WebIndex.index_block_2() + """</div></td>
         <td style="padding-left:4px">
-        <div class="card-div"><div class="card-header">Monitoring Server</div>""" + index_block_3 + """</div></td></tr>
+        <div class="card-div"><div class="card-header">Monitoring Server</div>""" + WebIndex.index_block_3() + """</div></td></tr>
         <tr><td colspan="3" style="padding-top:8px">
         <div class="card-div"><div class="card-header">Host Summary</div>
-        <table style="width:100%;table-layout:fixed;">""" + index_block_4 + """</table> 
+        <table style="width:100%;table-layout:fixed;">""" + WebIndex.index_block_4(page)+ """</table> 
         <table style="width:100%;table-layout:fixed;"><tr><td></td>
-        """ + index_block_pager + """
+        """ + WebIndex.index_block_pager(page) + """
         <td style="width:10px"></td></tr>
         </table></div></td></tr></table>"""
         return html
-
-    def index_content(page):
-        html=""
-        html += WebIndex.index_page(WebIndex.index_block_1(), WebIndex.index_block_2(), WebIndex.index_block_3(), WebIndex.index_block_4(page), WebIndex.index_block_pager(page))
-        return html
+   
 
 class WebDeviceGraph:
     def __init__(self, time, dvalue):
@@ -423,31 +417,6 @@ class WebEvents:
     def events_content(status):
         html = WebViews.load_events_content(WebEvents.event_summary(status), WebEvents.event_list(status))
         return html
-
-class WebSettings:
-    def settings():
-        html = """
-        <b>Site Settings</b><br />
-        <a href="/notify">Notification Rules</a><br />
-        <br />
-        <b>User and Role Management</b><br />
-        <a href="/users">Manage Users</a><br />
-        <br />
-        <b>Documentation</b><br />
-        <a href='/help'>User Guide</a><br />
-        <a href="/about">About</a><br />
-        <br /> """
-        return html
-    
-    def about():
-        html = """
-        Monitoring 0.03b<br />
-        Copyright (C) 2018-2019 Phil White - All Rights Reserved <br />
-        You may use, distribute and modify this application under the terms of the Apache 2 license. You should have received a 
-        copy of the Apache 2 license with this application. If not, please visit: 
-        <a href='https://github.com/philipcwhite/monitoring'>https://github.com/philipcwhite/monitoring</a>"""
-        return html
-
 
 class WebSearch:
     def search_devices(device):
@@ -689,21 +658,4 @@ class WebViews:
         <input type="button" onclick="window.location.href='/users/'" class="action-button" value="No" />
         </td></tr>
         </table>"""
-        return html
-
-    def load_reports():
-        html = """
-        <table style='width:100%'>
-        <tr><td><b>Device Report:</b> An overview of all device configuration data.</td>
-        <td style='text-align:right'>
-        <input type="button" onclick="window.location.href='/report/devices.html'" class="action-button" value="html" />&nbsp;
-        <input type="button" onclick="window.location.href='/report/devices.csv'" class="action-button" value="csv" />
-        </td></tr>
-        <tr><td><b>Event Report:</b> An export of all open events.</td>
-        <td style='text-align:right'>
-        <input type="button" onclick="window.location.href='/report/events.html'" class="action-button" value="html" />&nbsp;
-        <input type="button" onclick="window.location.href='/report/events.csv'" class="action-button" value="csv" />
-        </td></tr>
-        </table>
-        """
         return html
