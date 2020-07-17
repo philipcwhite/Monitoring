@@ -148,7 +148,7 @@ class Data:
     def web_code_create_user(self, username, encrypt_pass, role):
         sql = r"INSERT INTO users (username, password, role) SELECT '" + username + "', '" + encrypt_pass + "', " + str(role)  + " FROM DUAL WHERE NOT EXISTS (SELECT * from users WHERE username='" + username + "') LIMIT 1"
         self.cursor.execute(sql)
-        con.commit()
+        self.con.commit()
         
     def web_code_edit_user_role(self, id, role):
         sql = r"UPDATE users set role=" + str(role) + " where id=" + str(id)
