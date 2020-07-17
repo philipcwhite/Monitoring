@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+7/17/2020 - I'm continuing to clean up code.  Currently a few things are broken due to this.  I've managed to remove several hundred lines of code and have transistioned even more to templates.  I changed the order of how the app starts up to using a preload file (start.py).  This allows the variables to be populated prior to the database being instantiated. It's not perfect but it's getting better. I'll probably enhance the template engine at some point so even more HTML can be moved out of the backend code.
+
 7/15/2020 - I'm currently doing a huge overhaul of the code.  The current source code works for the most part, but will not install with the installer. If you want a working release please download one of the release packages.  Trying to package some of my modules and clean up code.  I also started work on a template engine so I plan on removing a lot of the HTML from code.  So far I've been able to remove about 200 lines of code, mostly on the database side.  
 
 7/13/2020 - Updated the Linux agent.  Removed over 50 lines of code.  Changed how SQL queries flow.  AgentSQL class now takes care of opening and closing connections (__init__/__del__).  I'll try to migrate these to the Windows agent next and then update the server which will be a bit different going to MySQL.    
