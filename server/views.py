@@ -2,7 +2,7 @@ import configparser
 from web.server import app, app_vars
 from web.templates import render
 from data import Data
-from code import WebAuth, WebIndex, WebDevice, WebDevices, WebEvents, WebNotify, WebReports, WebSearch, WebUsers, WebViews
+from code import WebAuth, WebIndex, WebDevice, WebEvents, WebNotify, WebReports, WebSearch, WebUsers, WebViews
 
 class controller(object):
     WD = Data('localhost','monitoring','monitoring','monitoring')
@@ -50,7 +50,7 @@ class controller(object):
     def devices(self, name=None, monitor=None):
         user = self.get_auth()
         if name is None and monitor is None:
-            html = render('base.html', user = user, breadcrumbs = WebViews.load_bc_devices(), body = WebViews.load_basic_page('Devices', WebDevices.device_index()))
+            html = render('base.html', user = user, breadcrumbs = WebViews.load_bc_devices(), body = WebViews.load_basic_page('Devices', WebDevice.device_index()))
         elif not name is None and monitor is None:
             html = render('base.html', user = user, breadcrumbs = WebViews.load_bc_device(name), body = WebViews.load_refresh('/device_content/' + name))
         elif not name is None and not monitor is None:
@@ -160,8 +160,7 @@ class controller(object):
 
     def user_delete(self, id):
         user = self.get_auth()
-        #Add confirmation Page
-        html = render('base.html', user = user, breadcrumbs = WebViews.load_bc_settings(), body = WebViews.load_basic_page('Users', WebViews.load_confirm_delete(id)))
+        html = render('base.html', user = user, breadcrumbs = WebViews.load_bc_settings(), body = render('user_delete.html', id = str(id)))
         return html
 
     def user_delete_confirm(self, id):
