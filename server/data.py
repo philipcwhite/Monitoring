@@ -1,17 +1,22 @@
 import pymysql.cursors
 
-class Data:
-    def __init__(self, host, instance, user, password):
-        self.con = pymysql.connect(host = host, user = user, password = password, 
-                                   db = instance, charset = 'utf8mb4', cursorclass = pymysql.cursors.DictCursor)
-        self.cursor = self.con.cursor()
+# Database settings
+host = 'localhost'
+instance = 'monitoring'
+user = 'monitoring'
+password = 'monitoring'
 
+class Data:
     '''def __init__(self):
         print(settings.db_user, 3)
-        self.con = pymysql.connect(host = 'localhost', user = 'monitoring', password = 'monitoring', 
-                                   db = 'monitoring', charset = 'utf8mb4', cursorclass = pymysql.cursors.DictCursor)
+        self.con = pymysql.connect(host = 'localhost', user = 'monitoring', password = 'monitoring', db = 'monitoring', charset = 'utf8mb4', cursorclass = pymysql.cursors.DictCursor)
         self.cursor = self.con.cursor()'''
-    
+
+    def __init__(self):
+        from web.server import app_vars
+        self.con = pymysql.connect(host = host, user = user, password = password, db = instance, charset = 'utf8mb4', cursorclass = pymysql.cursors.DictCursor)
+        self.cursor = self.con.cursor()
+
     def __del__(self):
         self.con.close()
 
