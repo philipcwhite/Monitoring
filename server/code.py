@@ -24,13 +24,14 @@ class WebAuth:
             encrypt_password = hashlib.sha224(pass1.encode()).hexdigest()
             return encrypt_password
 
-class WebDeviceGraph:
+class WebCodeGraph:
     def __init__(self, time, dvalue):
         self.time=time
         self.dvalue=dvalue
 
-class WebDevice:
+class WebCode:
     def device_content_system(name):
+        WD = Data()
         agentsystem = WD.web_code_device_system(name)
         html = """<table style="width:100%"><tr>
         <td><b>Name:</b> """ + agentsystem['name'] + """</td>
@@ -44,6 +45,7 @@ class WebDevice:
         return html
 
     def device_content_data(name):  
+        WD = Data()
         agentsystem = WD.web_code_device_system(name)
         agent_query = WD.web_code_device_data_latest(name)
         cpu_perc = 0
@@ -128,19 +130,20 @@ class WebDevice:
         <div class="card-div" style="height:45px">
         <div class="card-header">System Information</div>
         <div style="padding-left: 10px">
-        """ + WebDevice.device_content_system(name) + """
+        """ + WebCode.device_content_system(name) + """
         </div></div></td></tr>
-        """ + WebDevice.device_content_data(name) + """
+        """ + WebCode.device_content_data(name) + """
         </table>"""
         return html
 
     def device_graph(name, monitor):
+        WD = Data()
         device_data = WD.web_code_device_graph(name, monitor)
         data_list = []
         max_value = 0
         graph_time = datetime.datetime.now() - datetime.timedelta(minutes=60)
         for i in range(61):
-            agent_data = WebDeviceGraph(time=graph_time.strftime('%H:%M'),dvalue=0)
+            agent_data = WebCodeGraph(time=graph_time.strftime('%H:%M'),dvalue=0)
             data_list.append(agent_data)
             graph_time = graph_time + datetime.timedelta(minutes=1)
         for i in device_data:
@@ -182,6 +185,7 @@ class WebDevice:
         return html
 
     def device_index():
+        WD = Data()
         agentsystem = WD.web_code_device_all()
         uptime_check = 600
         currenttime = time.time()
@@ -193,8 +197,8 @@ class WebDevice:
             html = html + """<tr><td style="padding-left:10px">""" + icon + "</td><td><a href='/devices/" + str(i['name']) + "'>" + str(i['name']) + "</td><td>" + str(i['domain']) + "</td><td>" + str(i['ipaddress']) + "</td><td>" + str(i['platform']) + "</td></tr>"
         return html
 
-class WebViews:
     def search_devices(device):
+        WD = Data()
         results = WD.web_code_device_system_search(device)
         html = "Host names containing: " + str(device) + "<br />"
         for i in results:
@@ -404,6 +408,7 @@ class WebViews:
 
     def user_initialize():
         #Check if admin user exists. If not create it
+        WD = Data()
         username = 'admin'
         password = 'password'
         role = 1
@@ -411,6 +416,7 @@ class WebViews:
         WD.web_code_create_user(username, encrypt_password, role)
 
     def user_list():
+        WD = Data()
         users = WD.web_code_select_users()
         html = "<table style='width:100%'>"
         for i in users:
@@ -422,13 +428,12 @@ class WebViews:
         return html
 
     def user_add(username, password, role):
+        WD = Data()
         encrypt_password = hashlib.sha224(password.encode()).hexdigest()
         WD.web_code_create_user(username, encrypt_password, role)
 
-    def user_delete(id):
-        WD.web_code_delete_user(id)
-
     def report_devices(ext):
+        WD = Data()
         cr = ''
         if ext == 'html': cr = '<br />'
         elif ext == 'csv': cr = '\r\n'
@@ -441,6 +446,7 @@ class WebViews:
         return output
 
     def report_events(ext):
+        WD = Data()
         cr = ''
         if ext == 'html': cr = '<br />'
         elif ext == 'csv': cr = '\r\n'
@@ -450,12 +456,6 @@ class WebViews:
             last_reported = str(datetime.datetime.fromtimestamp(int(i['timestamp'])))
             output += last_reported + ',' + i['name'] + ',' + i['monitor'] + ',' + i['message'] + ',' + str(i['severity']) + cr
         return output
-
-    def load_refresh(url):
-        html = """<div id="refresh"></div>
-        <script>function refresh() {$.ajax({url: '""" + url + """', success: function(data) {$('#refresh').html(data);}});setTimeout(refresh, 60000);}    
-        $(function(){refresh();});</script>"""
-        return html
 
     def breadcrumbs(name, *args):
         html = ''
@@ -481,29 +481,6 @@ class WebViews:
             html = """<svg class="bread-font" viewBox="0 0 512 512"><path fill="currentColor" d="M444.788 291.1l42.616 24.599c4.867 2.809 7.126 8.618 5.459 13.985-11.07 35.642-29.97 67.842-54.689 94.586a12.016 12.016 0 0 1-14.832 2.254l-42.584-24.595a191.577 191.577 0 0 1-60.759 35.13v49.182a12.01 12.01 0 0 1-9.377 11.718c-34.956 7.85-72.499 8.256-109.219.007-5.49-1.233-9.403-6.096-9.403-11.723v-49.184a191.555 191.555 0 0 1-60.759-35.13l-42.584 24.595a12.016 12.016 0 0 1-14.832-2.254c-24.718-26.744-43.619-58.944-54.689-94.586-1.667-5.366.592-11.175 5.459-13.985L67.212 291.1a193.48 193.48 0 0 1 0-70.199l-42.616-24.599c-4.867-2.809-7.126-8.618-5.459-13.985 11.07-35.642 29.97-67.842 54.689-94.586a12.016 12.016 0 0 1 14.832-2.254l42.584 24.595a191.577 191.577 0 0 1 60.759-35.13V25.759a12.01 12.01 0 0 1 9.377-11.718c34.956-7.85 72.499-8.256 109.219-.007 5.49 1.233 9.403 6.096 9.403 11.723v49.184a191.555 191.555 0 0 1 60.759 35.13l42.584-24.595a12.016 12.016 0 0 1 14.832 2.254c24.718 26.744 43.619 58.944 54.689 94.586 1.667 5.366-.592 11.175-5.459 13.985L444.788 220.9a193.485 193.485 0 0 1 0 70.2zM336 256c0-44.112-35.888-80-80-80s-80 35.888-80 80 35.888 80 80 80 80-35.888 80-80z"></path></svg>
             &nbsp;&nbsp;Settings&nbsp;""" 
         return html
-
-    def load_change_password():
-        html = """
-        <form action="" method="POST">
-        <table>
-        <tr><td style="width:150px">Old Password</td><td style="width:150px"><input type="password" class="text-input" name="pass1" /></td></tr>
-        <tr><td>New Password</td><td><input type="password" class="text-input" name="pass2" /></td></tr>
-        <tr><td></td><td style="text-align:right"><input type="submit" class="action-button" value="Submit" /></td></tr>
-        </table>
-        </form>"""
-        return html
-
-    def load_user_add():
-        html = """
-        <form action="" method="POST">
-        <table>
-        <tr><td style="width:150px">Username</td><td style="width:150px"><input type="text" class="text-input" name="username" /></td></tr>
-        <tr><td>New Password</td><td><input type="password" class="text-input" name="password" /></td></tr>
-        <tr><td>Role</td><td><input type='radio' name='role' value='0' /> User <input type='radio' name='role' value='1' /> Admin</td></tr>
-        <tr><td></td><td style="text-align:right"><input type="submit" class="action-button" value="Submit" /></td></tr>
-        </table>
-        </form>"""
-        return html
     
     def load_user_edit_role(role):
         html = """
@@ -520,6 +497,7 @@ class WebViews:
         return html
 
     def notify_rules():
+        WD = Data()
         notifyrules = WD.web_code_select_notifyrules()
         html = "<table style='width:100%'>"
         for i in notifyrules:
@@ -529,6 +507,7 @@ class WebViews:
         return html
 
     def notify_add():
+        WD = Data()
         html = """<form action='' method='POST'><table><tr><td>Rule Name</td><td><input type='text' name='notify_name' /></td></tr>
                <tr><td>Email Address</td><td><input type='text' name='notify_email' /></td></tr>"""
         dd_html = "<tr><td>Hostname</td><td><select name='agent_name'><option value='%_%'>All</option>"
@@ -545,6 +524,7 @@ class WebViews:
         return html
     
     def notify_edit(id):
+        WD = Data()
         rule = WD.web_code_select_notifyrule(id)
         html = """<form action='' method='POST'><table><tr><td>Rule Name</td><td><input type='text' name='notify_name' value='""" + str(rule['notify_name']) + """' /></td></tr>
                <tr><td>Email Address</td><td><input type='text' name='notify_email'  value='""" + str(rule['notify_email']) + """' /></td></tr>"""
