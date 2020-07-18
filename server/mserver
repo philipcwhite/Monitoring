@@ -3,47 +3,23 @@
 #This is a work in progress.  It should install the server components and register them correctly.  
 
 # Set variables
-user='monitoring'
 directory='/opt/monitoring'
-pythonver='python3.8'
-
-# Add service account
-useradd -r -s /bin/false $user
-# Delete service account
-#userdel monitoring
 
 # Create program directory
-mkdir -p $directory/server
-mkdir -p $directory/server/certificates
-mkdir -p $directory/server/static
-cp start_collect.py $directory/server/start_collect.py
-cp start_event.py $directory/server/start_event.py
-cp start_web.py $directory/server/start_web.py
-cp proc_collect.py $directory/server/proc_collect.py
-cp proc_event.py $directory/server/proc_event.py
-cp web_code.py $directory/server/web_code.py
-cp web_data.py $directory/server/web_data.py
-cp web_server.py $directory/server/web_server.py
-cp web_site.py $directory/server/web_site.py
-cp settings.ini $directory/server/settings.ini
-cp certificates/localhost.crt $directory/server/certificates/localhost.crt
-cp certificates/localhost.pem $directory/server/certificates/localhost.pem
-cp static/favicon.ico $directory/server/static/favicon.ico
-cp static/mon_app.css $directory/server/static/mon_app.css
-
+mkdir -p $directory
+cp -R server $directory
 
 # Install pymysql
-$pythonver -m pip install --target=$directory/server/ pymysql
-
+python3.8 -m pip install --target=$directory/server/ pymysql
 
 chown -R monitoring $directory
 chmod -R 755 $directory/server
 
-sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/web_server.py
-sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/proc_collect.py
-sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/proc_event.py
-sed -i "s,cert_path = './certificates/',cert_path = '/opt/monitoring/server/certificates/',g" $directory/server/proc_collect.py
-sed -i "s,cert_path = './certificates/',cert_path = '/opt/monitoring/server/certificates/',g" $directory/server/web_server.py
+sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/web/server.py
+sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/collect.py
+sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/event.py
+sed -i "s,cert_path = './certificates/',cert_path = '/opt/monitoring/server/certificates/',g" $directory/server/collect.py
+sed -i "s,cert_path = './certificates/',cert_path = '/opt/monitoring/server/certificates/',g" $directory/server/web/server.py
 
 
 # Write systemd service files
@@ -55,7 +31,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/$pythonver /opt/monitoring/server/start_collect.py
+ExecStart=/usr/bin/python3.8 /opt/monitoring/server/collect.py
 
 [Install]
 WantedBy=multi-user.target
@@ -68,7 +44,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/$pythonver /opt/monitoring/server/start_event.py
+ExecStart=/usr/bin/python3.8 /opt/monitoring/server/event.py
 
 [Install]
 WantedBy=multi-user.target
@@ -80,11 +56,14 @@ Description=Linux Monitoring Web Server Service
 After=multi-user.target
 
 [Service]
+WorkingDirectory=/opt/monitoring/server/
 Type=simple
-ExecStart=/usr/bin/$pythonver /opt/monitoring/server/start_web.py
+ExecStart=/usr/bin/python3.8 /opt/monitoring/server/start.py
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
+
 EOF
 
 
