@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+7/31/2020 - I templated the index page and added rounded corners to the rectangle status block.  
+
 7/17/2020 - Updated the Linux install script.  Some changes break running the server on Windows.  When I finish updating the code, I'll fix these changes for Windows.    
 
 7/17/2020 - I'm continuing to clean up code.  Currently a few things are broken due to this.  I've managed to remove several hundred lines of code and have transistioned even more to templates.  I changed the order of how the app starts up to using a preload file (start.py).  This allows the variables to be populated prior to the database being instantiated. It's not perfect but it's getting better. I'll probably enhance the template engine at some point so even more HTML can be moved out of the backend code.
