@@ -26,7 +26,8 @@ class controller(object):
 
     def index_content(self, page=1):
         user = self.get_auth()
-        return WebCode.index(page)
+        head1, block1, head2, block2, head3, block3, head4, block4, pager = WebCode.index(page)
+        return render('index.html', head1 = head1, block1 = block1, head2 = head2, block2 = block2, head3 = head3, block3 = block3, head4 = head4, block4 = block4, pager = pager)
 
     def events(self, status=1):
         user = self.get_auth()

@@ -192,8 +192,8 @@ class WebCode:
         html = ""
         icon = ""
         for i in agentsystem:
-            if (i['timestamp'] + uptime_check) >= currenttime: icon = """<svg width="10" height="10"><rect width="10" height="10" style="fill:#93C54B" /></svg>"""
-            else: icon =  """<svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg>"""
+            if (i['timestamp'] + uptime_check) >= currenttime: icon = """<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#93C54B" /></svg>"""
+            else: icon =  """<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#d9534f" /></svg>"""
             html = html + """<tr><td style="padding-left:10px">""" + icon + "</td><td><a href='/devices/" + str(i['name']) + "'>" + str(i['name']) + "</td><td>" + str(i['domain']) + "</td><td>" + str(i['ipaddress']) + "</td><td>" + str(i['platform']) + "</td></tr>"
         return html
 
@@ -207,8 +207,9 @@ class WebCode:
 
     def index(page):
         WD = Data()
+        block4 = ''
+        pager = ''
         # Block 1
-        html = """<table style="width:100%;"><tr><td style="padding-right:4px"><div class="card-div"><div class="card-header">Host Availability</div>"""
         ok = 0
         down = 0
         total = ok + down
@@ -224,14 +225,13 @@ class WebCode:
         ok_perc = (ok / total) * 100
         down_perc = (down / total) * 100
         total_perc = str(ok_perc) + ' ' + str(down_perc)
-        html += """<table style="width:100%;height:105px"><tr><td style="width:50%;text-align:center;">
-        <svg width="95" height="95" viewBox="0 0 42 42" class="donut">
-        <circle class="donut-ring" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#d9534f" stroke-width="5"></circle>
-        <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#93C54B" stroke-width="5" stroke-dasharray='""" + total_perc +"""' stroke-dashoffset="25"></circle></svg></td>
-        <td style="width:50%;vertical-align:top;padding-top:34px"><svg width="10" height="10"><rect width="10" height="10" style="fill:#93C54B" /></svg> """ + str(ok) + """ Hosts Up<br />
-        <svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg> """ + str(down) + """ Hosts Down</td></tr></table>
-        </div></td><td style="padding-left:4px;padding-right:4px">
-        <div class="card-div"><div class="card-header">Open Events</div>"""
+        block1 = '<table style="width:100%;height:105px"><tr><td style="width:50%;text-align:center;">'
+        block1 += '<svg width="95" height="95" viewBox="0 0 42 42" class="donut">'
+        block1 += '<circle class="donut-ring" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#d9534f" stroke-width="5"></circle>'
+        block1 += '<circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#93C54B" stroke-width="5" stroke-dasharray="' + total_perc +'" stroke-dashoffset="25"></circle></svg></td>'
+        block1 += '<td style="width:50%;vertical-align:top;text-align:left;padding-top:34px">'
+        block1 += '<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#93C54B" /></svg> ' + str(ok) + ' Hosts Up<br />'
+        block1 += '<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#d9534f" /></svg> ' + str(down) + ' Hosts Down</td></tr></table>'
         # Block 2
         info = 0
         warn = 0
@@ -255,19 +255,19 @@ class WebCode:
         warn_points = str(warn_perc) + ' ' + str(100 - warn_perc)
         majr_points = str(majr_perc) + ' ' + str(100 - majr_perc)
         crit_points = str(crit_perc) + ' ' + str(100 - crit_perc)
-        html += """<table style="width:100%;height:105px"><tr><td style="width:50%;text-align:center">
-        <svg width="95" height="95" viewBox="0 0 42 42" class="donut">
-        <circle class="donut-ring" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#93C54B" stroke-width="5"></circle>
-        <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#29ABE0" stroke-width="5" stroke-dasharray='""" + info_points +"""' stroke-dashoffset="25"></circle>
-        <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#ffc107" stroke-width="5" stroke-dasharray='""" + warn_points +"""' stroke-dashoffset='""" + str(100 - info_perc + 25) + """'></circle>
-        <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#F47C3C" stroke-width="5" stroke-dasharray='""" + majr_points +"""' stroke-dashoffset='""" + str(100 - info_perc - warn_perc + 25) + """'></circle>
-        <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#d9534f" stroke-width="5" stroke-dasharray='""" + crit_points +"""' stroke-dashoffset='""" + str(100 - info_perc - warn_perc - majr_perc + 25) + """'></circle>
-        </svg></td><td style="width:50%;vertical-align:top;padding-top:16px">
-        <svg width="10" height="10"><rect width="10" height="10" style="fill:#29ABE0" /></svg> """ + str(info) + """ Information<br />
-        <svg width="10" height="10"><rect width="10" height="10" style="fill:#ffc107" /></svg> """ + str(warn) + """ Warning<br />
-        <svg width="10" height="10"><rect width="10" height="10" style="fill:#F47C3C" /></svg> """ + str(majr) + """ Major<br />
-        <svg width="10" height="10"><rect width="10" height="10" style="fill:#d9534f" /></svg> """ + str(crit) + """ Critical
-        </td></tr></table></div></td>"""
+        block2 = '<table style="width:100%;height:105px"><tr><td style="width:50%;text-align:center">'
+        block2 += '<svg width="95" height="95" viewBox="0 0 42 42" class="donut">'
+        block2 += '<circle class="donut-ring" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#93C54B" stroke-width="5"></circle>'
+        block2 += '<circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#29ABE0" stroke-width="5" stroke-dasharray="' + info_points + '" stroke-dashoffset="25"></circle>'
+        block2 += '<circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#ffc107" stroke-width="5" stroke-dasharray="' + warn_points + '" stroke-dashoffset="' + str(100 - info_perc + 25) + '"></circle>'
+        block2 += '<circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#F47C3C" stroke-width="5" stroke-dasharray="' + majr_points + '" stroke-dashoffset="' + str(100 - info_perc - warn_perc + 25) + '"></circle>'
+        block2 += '<circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#d9534f" stroke-width="5" stroke-dasharray="' + crit_points + '" stroke-dashoffset="' + str(100 - info_perc - warn_perc - majr_perc + 25) + '"></circle>'
+        block2 += '</svg></td><td style="width:50%;vertical-align:top;text-align:left;padding-top:16px">'
+        block2 += '<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#29ABE0" /></svg> ' + str(info) + ' Information<br />'
+        block2 += '<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#ffc107" /></svg> ' + str(warn) + ' Warning<br />'
+        block2 += '<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#F47C3C" /></svg> ' + str(majr) + ' Major<br />'
+        block2 += '<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#d9534f" /></svg> ' + str(crit) + ' Critical'
+        block2 += '</td></tr></table>'
         # Block 3
         name = socket.gethostname().lower()
         uptime_check = 300
@@ -291,40 +291,35 @@ class WebCode:
                 if i['monitor'] == 'perf.processor.percent.used' : cpu_perc = float(i['value'])
                 if i['monitor'] == 'perf.memory.percent.used' : mem_perc = float(i['value'])
         except: pass
-        html += """<td style="padding-left:4px"><div class="card-div"><div class="card-header">Monitoring Server</div>
-        <table style="width:100%;height:105px"><tr><td style="width:50%;padding-left:25px;vertical-align:top;padding-top:10px">
-        Name: """ + name + """<br />
-        Processors: """ + str(agent_processors) + """<br />
-        Memory: """ + str(agent_memory)[:-3] + """ MB <br />
-        Platform: """ + agent_platform + """ (""" + agent_architecture + """) <br />
-        </td><td style="width:50%;padding-left:10px;vertical-align:top;padding-top:10px">"""
+        block3 = '<table style="width:100%;height:105px;padding-top:6px;padding-left:10px"><tr><td style="width:50%;vertical-align:top;text-align:left">'
+        block3 += 'Name: ' + name + '<br />'
+        block3 += 'Processors: ' + str(agent_processors) + '<br />'
+        block3 += 'Memory: ' + str(agent_memory)[:-3] + ' MB <br />'
+        block3 += 'Platform: ' + agent_platform + ' (' + agent_architecture + ') <br />'
+        block3 += '</td><td style="width:50%;vertical-align:top;text-align:left">'
         if (agent_timestamp + uptime_check) >= currenttime:
-            cpu_color = "93C54B"
-            mem_color = "93C54B"
-            if cpu_perc >= 90 : cpu_color = "D9534F"
-            html += """<svg width="10" height="10"><rect width="10" height="10" style="fill:#""" + cpu_color + """" /></svg> """ + str(cpu_perc)[:-2] + """% CPU<br />"""
-            if mem_perc >= 90: mem_color = "D9534F"
-            html += """<svg width="10" height="10"><rect width="10" height="10" style="fill:#""" + mem_color + """" /></svg> """ + str(mem_perc)[:-2] + """% Memory<br />"""
-        else: html += "Agent Not Reporting"
-        html += """</td></tr></table></div></td></tr>
-        <tr><td colspan="3" style="padding-top:8px">
-        <div class="card-div"><div class="card-header">Host Summary</div>
-        <table style="width:100%;table-layout:fixed;">"""
+            cpu_color = '93C54B'
+            mem_color = '93C54B'
+            if cpu_perc >= 90 : cpu_color = 'D9534F'
+            block3 += '<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#' + cpu_color + '" /></svg> ' + str(cpu_perc)[:-2] + '% CPU<br />'
+            if mem_perc >= 90: mem_color = 'D9534F'
+            block3 += '<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#' + mem_color + '" /></svg> ' + str(mem_perc)[:-2] + '% Memory<br />'
+        else: block3 += 'Agent Not Reporting'
+        block3 += '</td></tr></table>'
         # Block 4
         page_start = (int(page) * 100) - 100
         page_end = page_start + 100
         agentsystem = WD.web_code_index_devices(page_start, page_end)
         uptime_check = 300
         currenttime = time.time()
-        icon = ""
+        icon = ''
         for i in agentsystem:
             dt = datetime.datetime.fromtimestamp(int(i['timestamp']))
-            date = """<span style="padding-right:10px">Last Reported: """ + str(dt) + "</span>"
-            color = "93C54B"
+            date = '<span style="padding-right:10px">Last Reported: ' + str(dt) + '</span>'
+            color = '93C54B'
             if (int(i['timestamp']) + uptime_check) < currenttime : color = "D9534F"
-            icon = """<svg width="10" height="10"><rect width="10" height="10" style="fill:#""" + color + """" /></svg>"""
-            html += "<tr><td style='padding-left:20px'>" + icon + " &nbsp;<a href='devices/" + str(i['name']) + "'>" + str(i['name']) + r"</a></td><td>IP Address: " + str(i['ipaddress']) + r"</td><td>Domain: " + str(i['domain']).lower() + r"</td><td>Platform: " + str(i['platform']) + r" (" + str(i['architecture']) + r")</td><td>" + date + r"</td></tr>"
-        html += """</table><table style="width:100%;table-layout:fixed;"><tr><td></td>"""
+            icon = '<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#' + color + '" /></svg>'
+            block4 = '<tr><td style="padding-left:20px">' + icon + ' &nbsp;<a href="devices/' + str(i['name']) + '">' + str(i['name']) + '</a></td><td>IP Address: ' + str(i['ipaddress']) + '</td><td>Domain: ' + str(i['domain']).lower() + '</td><td>Platform: ' + str(i['platform']) + ' (' + str(i['architecture']) + ')</td><td>' + date + '</td></tr>'
         # Pager
         page_start = (int(page) * 100) - 100
         page_end = page_start + 100
@@ -332,14 +327,13 @@ class WebCode:
         page_count = int(math.ceil(int(agent_count['total']) / 100))
         uptime_check = 300
         currenttime = time.time()
-        icon = ""
+        icon = ''
         if page_count > 1:
             for i in range(1,page_count + 1):
-                if i == page: html += """<td style="width:10px">""" + str(i) + "</td>"
-                elif i == 1: html += """<td style="width:10px"><a href="/">""" + str(i) + """</a></td>"""
-                else: html += """<td style="width:10px"><a href="/""" + str(i) + """">""" + str(i) + """</a></td>"""
-        html += """<td style="width:10px"></td></tr></table></div></td></tr></table>"""
-        return html
+                if i == page: pager += '<td style="width:10px">' + str(i) + '</td>'
+                elif i == 1: pager += '<td style="width:10px"><a href="/">' + str(i) + '</a></td>'
+                else: pager += '<td style="width:10px"><a href="/' + str(i) + '">' + str(i) + '</a></td>'
+        return 'Host Availability', block1, 'Open Events', block2, 'Monitoring Server', block3, 'Host Summary', block4, pager
 
     def events(status):
         WD = Data()
@@ -369,11 +363,11 @@ class WebCode:
         html = """<table style="width:100%;"><tr><td><div class="card-div">
         <div class="card-header">Event Summary</div><table style="width:100%;text-align:center"><tr>
         <td style="text-align:left; padding-left:10px">""" + status_text + """</td>
-        <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#CCCCCC" /></svg>&nbsp; """ + str(total) + """&nbsp;  Total</td>
-        <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#29ABE0" /></svg>&nbsp;  """ + str(info) + """&nbsp;  Information</td>
-        <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#FFC107" /></svg>&nbsp;  """ + str(warn) + """&nbsp;  Warning</td>
-        <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#F47C3C" /></svg>&nbsp;  """ + str(majr) + """&nbsp;  Major</td>
-        <td><svg width="10" height="10"><rect width="10" height="10" style="fill:#D9534F" /></svg>&nbsp;  """ + str(crit) + """&nbsp;  Critical</td>
+        <td><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#CCCCCC" /></svg>&nbsp; """ + str(total) + """&nbsp;  Total</td>
+        <td><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#29ABE0" /></svg>&nbsp;  """ + str(info) + """&nbsp;  Information</td>
+        <td><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#FFC107" /></svg>&nbsp;  """ + str(warn) + """&nbsp;  Warning</td>
+        <td><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#F47C3C" /></svg>&nbsp;  """ + str(majr) + """&nbsp;  Major</td>
+        <td><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#D9534F" /></svg>&nbsp;  """ + str(crit) + """&nbsp;  Critical</td>
         <td style="text-align:right;padding-right:12px"><input type="button" onclick="window.location.href='/events/?status=""" + str(change_status) + """'" class="action-button" value='""" + change_status_text + """' /></td>
         </tr></table>
         </div></td></tr><tr><td style="text-align: left;padding-top:8px">
@@ -400,7 +394,7 @@ class WebCode:
                 color = "#D9534F"
                 sev_text = "Critical"
             html = html + """<tr><td style="text-align:left;padding-left:10px">""" + date + """</td>
-            <td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" style="fill:""" + color + """" /></svg> """ + sev_text + """</td><td><a href="/device/""" + i['name'] + """">""" + i['name'] + """</a></td><td>""" + i['message'] + """</td>
+            <td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:""" + color + """" /></svg> """ + sev_text + """</td><td><a href="/device/""" + i['name'] + """">""" + i['name'] + """</a></td><td>""" + i['message'] + """</td>
             <td style="text-align:right;padding-right:12px"><input type="button" onclick="window.location.href='/event_change/""" + str(i['id']) + """/""" + str(change_status) + """'" class="action-button" value='""" + change_status_text +"""'  /></td>
             </tr>"""
         html += "</table></div></td></tr></table>"
