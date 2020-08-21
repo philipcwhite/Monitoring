@@ -5,7 +5,7 @@ Install Notes (0.03b)
 ./monitoring/agent
 ./monitoring/server
 
-2.  Install Python 3.7.3 for AMD64.  This can be obtained from http://python.org.  You must be running 3.7 or newer.
+2.  Install Python 3.8+ for AMD64.  This can be obtained from http://python.org.  You must be running 3.8 or newer.
 
 3.  You need to install one module.  Open an administrator cmd prompt and enter:
 sudo python3.7 -m pip install pymysql
