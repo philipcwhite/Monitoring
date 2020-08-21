@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+8/21/2020 - Lots of code updates today.  I'm mostly doing code cleanup.  I removed about 40 lines of code and changed some of my string concatenations.  If all goes well, release 0.4b should be ready in the next month.  I have a few more bug fixes, and then I have to test/fix for Windows.  
+
 7/31/2020 - I templated the index page and added rounded corners to the rectangle status block.  
 
 7/17/2020 - Updated the Linux install script.  Some changes break running the server on Windows.  When I finish updating the code, I'll fix these changes for Windows.    
