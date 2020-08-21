@@ -16,7 +16,7 @@ class app_vars:
     app_templates = './templates/'
 
     # Server configuration
-    server_name = 'wServer 0.01b'
+    server_name = 'wServer 0.02b'
     server_ip = '0.0.0.0'
     server_port = 9999
     session_expire = 3600
@@ -74,18 +74,18 @@ class web_handle(asyncio.Protocol):
         if self.get_cookie is None:
             self.session_id = session_id
             if not self.set_cookie is None:
-                self.set_cookie += 'Set-Cookie: session_id=' + self.session_id + '; max-age=' + str(app_vars.session_expire) + '; path=/ \r\n'
+                self.set_cookie += f'Set-Cookie: session_id={self.session_id}; max-age={str(app_vars.session_expire)}; path=/ \r\n'
             else:
-                self.set_cookie = 'Set-Cookie: session_id=' + self.session_id + '; max-age=' + str(app_vars.session_expire) + '; path=/ \r\n'
+                self.set_cookie = f'Set-Cookie: session_id={self.session_id}; max-age={str(app_vars.session_expire)}; path=/ \r\n'
         else:
             if not 'session_id' in self.get_cookie:
                 if not self.set_cookie is None:
-                    self.set_cookie += 'Set-Cookie: session_id=' + self.session_id + '; max-age=' + str(app_vars.session_expire) + '; path=/ \r\n'   
+                    self.set_cookie += f'Set-Cookie: session_id={self.session_id}; max-age={str(app_vars.session_expire)}; path=/ \r\n'   
         # Set other cookies
         if not key is None:
             if value is None: value = ''
             if expires is None: expires = ''
-            self.set_cookie += 'Set-Cookie: ' + str(key) + '=' + str(value) + '; max-age=' + str(expires) + '; path=/ \r\n'
+            self.set_cookie += f'Set-Cookie: {str(key)}={str(value)}; max-age={str(expires)}; path=/ \r\n'
 
     def login(self, user):
         if not user is None:
@@ -98,7 +98,7 @@ class web_handle(asyncio.Protocol):
             if o.session_user == user:
                 del session.session_list[i]
                 break
-        self.set_cookie = 'Set-Cookie: session_id=' + self.session_id + '; max-age=0; path=/ \r\n'
+        self.set_cookie = f'Set-Cookie: session_id={self.session_id}; max-age=0; path=/ \r\n'
 
     def get_user(self):
         user = None
@@ -168,10 +168,10 @@ class web_handle(asyncio.Protocol):
         if not self.response_code is None: response_code = self.response_code
         if not self.response_location is None: response_location = self.response_location
         http_status = app_vars.http_codes[response_code] + '\r\n'  
-        content_type = 'Content-Type: ' + app_vars.content_type[self.extension] + ' \r\n'
-        server_date = 'Date: ' + str(datetime.datetime.now()) + '\r\n'
-        server_name = 'Server: ' + app_vars.server_name + '\r\n'
-        content_length = 'Content-Length: ' + self.response_length + '\r\n'
+        content_type = f'Content-Type: {app_vars.content_type[self.extension]}\r\n'
+        server_date = f'Date: {str(datetime.datetime.now())}\r\n'
+        server_name = f'Server: {app_vars.server_name}\r\n'
+        content_length = f'Content-Length: {self.response_length}\r\n'
         accept_range = ''
         # Process images or text files 
         if 'image' in app_vars.content_type[self.extension]: 
@@ -208,10 +208,10 @@ class web_handle(asyncio.Protocol):
                     self.arguments = args
                     func = getattr(self.controller, i)
                     proc = None
-                    '''try:
+                    try:
                         if args: proc = func(self, *args)
                         else: proc = func(self)
-                    except: proc = self.error_404()'''
+                    except: proc = self.error_404()
                     if args: proc = func(self, *args)
                     else: proc = func(self)
 
