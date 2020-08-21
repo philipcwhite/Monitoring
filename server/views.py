@@ -40,7 +40,7 @@ class controller(object):
     def event_change(self, id, status):
         user = self.get_auth()
         WD = Data() 
-        WD.web_code_change_event_status(id, status)
+        WD.change_event_status(id, status)
         self.redirect('/events')
 
     def devices(self, name=None, monitor=None):
@@ -93,7 +93,7 @@ class controller(object):
         if notify_name is None and notify_email is None and agent_name is None and agent_monitor is None and agent_status is None and agent_severity is None and notify_enabled is None:
             return render('base.html', user = user, breadcrumbs = WebCode.breadcrumbs('settings'), body = render('basic.html', title = 'Add Notification Rule', content = WebCode.notify_add()))
         else:
-            WD.web_code_insert_notifyrules(notify_name, notify_email, agent_name, agent_monitor, agent_status, agent_severity, notify_enabled)
+            WD.insert_notifyrules(notify_name, notify_email, agent_name, agent_monitor, agent_status, agent_severity, notify_enabled)
             self.redirect('/notify')
 
     def notify_edit(self, id, notify_name = None, notify_email = None, agent_name = None, agent_monitor = None, agent_status = None, agent_severity = None, notify_enabled = None):
@@ -102,13 +102,13 @@ class controller(object):
             return render('base.html', user = user, breadcrumbs = WebCode.breadcrumbs('settings'), body = render('basic.html', title = 'Edit Notification Rule', content = WebCode.notify_edit(id)))
         else:
             WD = Data() 
-            WD.web_code_update_notifyrules(id, notify_name, notify_email, agent_name, agent_monitor, agent_status, agent_severity, notify_enabled)
+            WD.update_notifyrules(id, notify_name, notify_email, agent_name, agent_monitor, agent_status, agent_severity, notify_enabled)
             self.redirect('/notify')
 
     def notify_delete(self, id):
         user=WebAuth.check_auth()
         WD = Data() 
-        WD.web_code_delete_notify_rule(id)
+        WD.delete_notify_rule(id)
         self.redirect('/notify')
 
     def users(self):
@@ -130,7 +130,7 @@ class controller(object):
         else:
             encryptpw = WebAuth.set_password(pass1, pass2)
             if not encryptpw is None:
-                WD.web_code_edit_user_password(str(id), encryptpw)
+                WD.edit_user_password(str(id), encryptpw)
                 self.redirect('/users')
             else: self.redirect('/error')
 
@@ -138,11 +138,11 @@ class controller(object):
         user = self.get_auth()
         if role == None: 
             WD = Data() 
-            roleid = WD.web_code_select_user(id)
+            roleid = WD.select_user(id)
             return render('base.html', user = user, breadcrumbs = WebCode.breadcrumbs('settings'), body = render('basic.html', title = 'Users', content = WebCode.load_user_edit_role(roleid['role'])))
         else:
             WD = Data() 
-            WD.web_code_edit_user_role(id, role)
+            WD.edit_user_role(id, role)
             self.redirect('/users')
 
     def user_delete(self, id):
@@ -151,7 +151,7 @@ class controller(object):
 
     def user_delete_confirm(self, id):
         WD = Data()
-        WD.web_code_delete_user(id)
+        WD.delete_user(id)
         self.redirect('/users')
 
     def help(self):
