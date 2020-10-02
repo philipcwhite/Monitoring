@@ -12,7 +12,6 @@ cp -R server $directory
 # Install pymysql
 python3 -m pip install --target=$directory/server/ pymysql
 
-#chown -R monitoring $directory
 chmod -R 755 $directory/server
 
 sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/web/server.py
