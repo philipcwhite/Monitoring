@@ -10,9 +10,9 @@ mkdir -p $directory
 cp -R server $directory
 
 # Install pymysql
-python3.8 -m pip install --target=$directory/server/ pymysql
+python3 -m pip install --target=$directory/server/ pymysql
 
-chown -R monitoring $directory
+#chown -R monitoring $directory
 chmod -R 755 $directory/server
 
 sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/web/server.py
@@ -31,7 +31,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3.8 /opt/monitoring/server/collect.py
+ExecStart=/usr/bin/python3 /opt/monitoring/server/collect.py
 
 [Install]
 WantedBy=multi-user.target
@@ -44,7 +44,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3.8 /opt/monitoring/server/event.py
+ExecStart=/usr/bin/python3 /opt/monitoring/server/event.py
 
 [Install]
 WantedBy=multi-user.target
@@ -58,7 +58,7 @@ After=multi-user.target
 [Service]
 WorkingDirectory=/opt/monitoring/server/
 Type=simple
-ExecStart=/usr/bin/python3.8 /opt/monitoring/server/start.py
+ExecStart=/usr/bin/python3 /opt/monitoring/server/start.py
 Restart=always
 
 [Install]
