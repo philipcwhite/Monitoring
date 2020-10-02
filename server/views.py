@@ -176,7 +176,7 @@ class controller(object):
         return render('base.html', user = user, breadcrumbs = WebCode.breadcrumbs('settings'),  body = render('basic.html', title = 'Error', content = 'Error'))
 
 def start_server():
-    #WebCode.user_initialize() # Comment out to prevent the admin user from being created.
+    WebCode.user_initialize() # Comment out to prevent the admin user from being created.
     app.start(controller)
 
 #start_server()
