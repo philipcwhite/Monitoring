@@ -49,16 +49,16 @@ class CollectData:
         self.cursor.execute(sql, (name))
         result = self.cursor.fetchone()
         qname = ""            
-        if not result is None:
+        if result != None:
             qname = result['name']
             if name == qname:
                 sql = "UPDATE agentsystem SET timestamp=%s, domain=%s, ipaddress=%s, platform=%s, build=%s, architecture=%s, processors=%s, memory=%s WHERE name=%s"
                 self.cursor.execute(sql, (timestamp, domain, ipaddress, platform, build, architecture, processors, memory, name))
                 self.con.commit()
-            else:
-                sql = "INSERT INTO agentsystem (timestamp, name, domain, ipaddress, platform, build, architecture, processors, memory) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-                self.cursor.execute(sql, (timestamp, name, domain, ipaddress, platform, build, architecture, processors, memory))
-                self.con.commit()
+        else:
+            sql = "INSERT INTO agentsystem (timestamp, name, domain, ipaddress, platform, build, architecture, processors, memory) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+            self.cursor.execute(sql, (timestamp, name, domain, ipaddress, platform, build, architecture, processors, memory))
+            self.con.commit()
 
     def agent_data(self, timestamp, name, monitor, value):
         sql = "INSERT INTO agentdata (timestamp, name, monitor, value) VALUES(%s,%s,%s,%s)"
