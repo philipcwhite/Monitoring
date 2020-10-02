@@ -357,7 +357,7 @@ class WebCode:
                 color = '#D9534F'
                 sev_text = 'Critical'
             html += f'<tr><td style="text-align:left;padding-left:10px">{date}</td>'
-            html += f'<td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:{color}" /></svg> {sev_text}</td><td><a href="/device/{i["name"]}">{i["name"]}</a></td><td>{i["message"]}</td>'
+            html += f'<td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:{color}" /></svg> {sev_text}</td><td><a href="/devices/{i["name"]}">{i["name"]}</a></td><td>{i["message"]}</td>'
             html += f'<td style="text-align:right;padding-right:12px"><input type="button" onclick="window.location.href=\'/event_change/{str(i["id"])}/{str(change_status)}\'" class="action-button" value="{change_status_text}" /></td>'
             html += '</tr>'
         html += '</table></div></td></tr></table>'
