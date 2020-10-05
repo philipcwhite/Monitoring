@@ -4,13 +4,13 @@
 
 # Set variables
 directory='/opt/monitoring'
-
+py_ver='python3.8'
 # Create program directory
 mkdir -p $directory
 cp -R server $directory
 
 # Install pymysql
-python3 -m pip install --target=$directory/server/ pymysql
+$py_ver -m pip install --target=$directory/server/ pymysql
 
 chmod -R 755 $directory/server
 
@@ -30,7 +30,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /opt/monitoring/server/collect.py
+ExecStart=/usr/bin/$py_ver /opt/monitoring/server/collect.py
 
 [Install]
 WantedBy=multi-user.target
@@ -43,7 +43,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /opt/monitoring/server/event.py
+ExecStart=/usr/bin/$py_ver /opt/monitoring/server/event.py
 
 [Install]
 WantedBy=multi-user.target
@@ -57,7 +57,7 @@ After=multi-user.target
 [Service]
 WorkingDirectory=/opt/monitoring/server/
 Type=simple
-ExecStart=/usr/bin/python3 /opt/monitoring/server/start.py
+ExecStart=/usr/bin/$py_ver /opt/monitoring/server/start.py
 Restart=always
 
 [Install]
