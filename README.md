@@ -25,7 +25,9 @@ Device View
 Graph View
 
 ## Updates
-10/1/2020-  I made some changes to the structure of the app in Github and corrected a few errors.  I am no longer going to code/support the Windows server install.  The Linux files for the server component should work in Windows with a few minor changes.  I'm making this decision so I have more time to work on the app and less time on porting changes between platforms.  
+11/24/2020 - I am in the process of switching the web server over to using Flask.  While the current web server works fine, I feel this will improve the security and stability of the platform.      
+
+10/1/2020 -  I made some changes to the structure of the app in Github and corrected a few errors.  I am no longer going to code/support the Windows server install.  The Linux files for the server component should work in Windows with a few minor changes.  I'm making this decision so I have more time to work on the app and less time on porting changes between platforms.  
 
 8/21/2020 - Lots of code updates today.  I'm mostly doing code cleanup.  I removed about 40 lines of code and changed some of my string concatenations.  If all goes well, release 0.4b should be ready in the next month.  I have a few more bug fixes, and then I have to test/fix for Windows.  
 
