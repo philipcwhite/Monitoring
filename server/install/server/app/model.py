@@ -253,8 +253,8 @@ class Code:
         max_value = 0
         graph_time = datetime.datetime.now() - datetime.timedelta(minutes=60)
         for i in range(61):
-            agent_data = Graph(time=graph_time.strftime('%H:%M'),dvalue=0)
-            data_list.append(agent_data)
+            data_point = [graph_time.strftime('%H:%M'), 0]
+            data_list.append(data_point)
             graph_time = graph_time + datetime.timedelta(minutes=1)
         for i in device_data:
             if float(i['value']) > max_value:max_value = float(i['value'])          
@@ -262,20 +262,20 @@ class Code:
             device_value = float(i['value'])
             time_short = datetime.datetime.fromtimestamp(int(i['timestamp'])).strftime('%H:%M')
             for i in data_list:
-                if i.time == time_short:
-                    if device_value == 0: i.dvalue = 0
-                    else: i.dvalue = (device_value / max_value)*100
+                if i[0] == time_short:
+                    if device_value == 0: i[1] = 0
+                    else: i[1] = (device_value / max_value)*100
         device_polyline = ''
         device_polyline_data = ''
         device_time = ''
         xvalue = 55
         time_x = 0
         for i in data_list:
-            dvalue = str(round(110 - i.dvalue))
+            dvalue = str(round(110 - i[1]))
             device_polyline_data += str(xvalue) + ',' + dvalue + ' '
             time_x += 1
             if time_x == 1:
-                device_time += f'<text x="{str(xvalue)}" y="130" fill="#8E8C84" text-anchor="middle">{str(i.time)}</text>'
+                device_time += f'<text x="{str(xvalue)}" y="130" fill="#8E8C84" text-anchor="middle">{str(i[0])}</text>'
             if time_x == 5:
                 time_x = 0            
             xvalue += 14 
@@ -445,8 +445,3 @@ class Data:
         self.cursor.execute(sql, (name, monitor))
         result = self.cursor.fetchall()
         return result
-
-class Graph:
-    def __init__(self, time, dvalue):
-        self.time=time
-        self.dvalue=dvalue
