@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+11/25/2020 - I'm about 80% converted to Flask on my test site.  I'm going to start uploading changes.  These will break alot of things so do not try to run from source.  I'm testing the site in a subdirectory call monitoring and lot of the links will be broken.  All of this should be fixed in a few days.  The install code will have to be updated as well however it shouldn't be too bad to fix.  This conversion has been a ton of work but overall this has given me a chance to fix a lot of bad code.  There is still quite a bit in there but I'm slowly improving things.  Current db structure remains the same.
+
 11/24/2020 - I am in the process of switching the web server over to using Flask.  While the current web server works fine, I feel this will improve the security and stability of the platform.      
 
 10/1/2020 -  I made some changes to the structure of the app in Github and corrected a few errors.  I am no longer going to code/support the Windows server install.  The Linux files for the server component should work in Windows with a few minor changes.  I'm making this decision so I have more time to work on the app and less time on porting changes between platforms.  
