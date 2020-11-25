@@ -1,5 +1,0 @@
-<div id="refresh"></div>
-<script>
-    function refresh() {$.ajax({url: '{% url %}', success: function(data) {$('#refresh').html(data);}});setTimeout(refresh, 60000);}    
-    $(function(){refresh();});
-</script>
