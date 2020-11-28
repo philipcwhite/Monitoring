@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<svg class="bread-font" viewBox="0 0 512 512"><path fill="currentColor" d="M444.788 291.1l42.616 24.599c4.867 2.809 7.126 8.618 5.459 13.985-11.07 35.642-29.97 67.842-54.689 94.586a12.016 12.016 0 0 1-14.832 2.254l-42.584-24.595a191.577 191.577 0 0 1-60.759 35.13v49.182a12.01 12.01 0 0 1-9.377 11.718c-34.956 7.85-72.499 8.256-109.219.007-5.49-1.233-9.403-6.096-9.403-11.723v-49.184a191.555 191.555 0 0 1-60.759-35.13l-42.584 24.595a12.016 12.016 0 0 1-14.832-2.254c-24.718-26.744-43.619-58.944-54.689-94.586-1.667-5.366.592-11.175 5.459-13.985L67.212 291.1a193.48 193.48 0 0 1 0-70.199l-42.616-24.599c-4.867-2.809-7.126-8.618-5.459-13.985 11.07-35.642 29.97-67.842 54.689-94.586a12.016 12.016 0 0 1 14.832-2.254l42.584 24.595a191.577 191.577 0 0 1 60.759-35.13V25.759a12.01 12.01 0 0 1 9.377-11.718c34.956-7.85 72.499-8.256 109.219-.007 5.49 1.233 9.403 6.096 9.403 11.723v49.184a191.555 191.555 0 0 1 60.759 35.13l42.584-24.595a12.016 12.016 0 0 1 14.832 2.254c24.718 26.744 43.619 58.944 54.689 94.586 1.667 5.366-.592 11.175-5.459 13.985L444.788 220.9a193.485 193.485 0 0 1 0 70.2zM336 256c0-44.112-35.888-80-80-80s-80 35.888-80 80 35.888 80 80 80 80-35.888 80-80z"></path></svg>&nbsp;&nbsp;Settings&nbsp; | &nbsp;
+{% endblock %}
+{% block user %}
+{{user}}
+{% endblock %} 
+{% block body%} 
+      
+<div class="card-div">
+  <div class="card-header">Add Notification Rule</div>
+    <table style="width:100%;">
+      <tr>
+        <td style="padding-left:10px">
+          <form action='' method='POST'>
+            <table>
+              <tr>
+                <td>Rule Name</td>
+                <td><input type='text' name='notify_name' value='{{notify_name}}' /></td>
+              </tr>
+              <tr>
+                <td>Email Address</td>
+                <td><input type='text' name='notify_email' value='{{notify_email}}' /></td>
+              </tr>
+              <tr>
+                <td>Agent Name</td>
+                <td>
+                  <select name='agent_name'><option value='%_%'>All</option>
+                  {% for i in device_names %}
+                  {% if agent_name in i.name %}
+                  <option value='{{i.name}}' selected>{{i.name}}</option>
+                  {% else %}
+                  <option value='{{i.name}}'>{{i.name}}</option>
+                  {% endif%}
+                  {% endfor %}
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>Monitor</td>
+                <td><input type='text' name='agent_monitor' value='{{agent_monitor}}' /></td>
+              </tr>
+              <tr>
+                <td>Status</td>
+                {% if agent_status == 1 %}
+                <td><input type='radio' name='agent_status' value='1' checked /> Open <input type='radio' name='agent_status' value='0' /> Closed</td>
+                {% else %}
+                <td><input type='radio' name='agent_status' value='1' /> Open <input type='radio' name='agent_status' value='0' checked /> Closed</td>
+                {% endif %}
+              </tr>
+              <tr>
+                <td>Severity</td>
+                {% if agent_severity == '4' %}
+                <td><select name='agent_severity'><option value='4' selected>Information</option><option value='3'>Warning</option><option value='2'>Major</option><option value='1'>Critical</option></select></td>
+                {% elif agent_severity == '3' %}
+                <td><select name='agent_severity'><option value='4'>Information</option><option value='3' selected>Warning</option><option value='2'>Major</option><option value='1'>Critical</option></select></td>
+                {% elif agent_severity == '2' %}
+                <td><select name='agent_severity'><option value='4'>Information</option><option value='3'>Warning</option><option value='2' selected>Major</option><option value='1'>Critical</option></select></td>
+                {% elif agent_severity == '1' %}
+                <td><select name='agent_severity'><option value='4'>Information</option><option value='3'>Warning</option><option value='2'>Major</option><option value='1' selected>Critical</option></select></td>
+                {% endif %}
+              </tr>
+              <tr>
+                <td>Enabled</td>
+                {% if notify_enabled == 1 %}
+                <td><input type='radio' name='notify_enabled' value='1' checked /> True <input type='radio' name='notify_enabled' value='0' /> False</td>
+                {% else %}
+                <td><input type='radio' name='notify_enabled' value='1' /> True <input type='radio' name='notify_enabled' value='0' checked /> False</td>
+                {% endif %}
+              </tr>
+              <tr>
+                <td></td>
+                <td style='text-align:right'><input type='submit' class='action-button' value='submit' /></td>
+              </tr>
+            </table>
+          </form>
+        </td>
+      </tr>
+    </table> 
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+<table style="width:100%;">
+    <tr>
+        <td colspan="4" style="padding-bottom:4px;text-align:left">
+            <div class="card-div" style="height:45px">
+                <div class="card-header">System Information</div>
+                <div style="padding-left: 10px;padding-top: 2px;">
+                    <table style="width:100%">
+                        <tr>
+                            <td><b>Name:</b> {{name}}</td>
+                            <td><b>IP Address:</b> {{ipaddress}}</td>
+                            <td><b>Domain:</b> {{domain}}</td>
+                            <td><b>Platform:</b> {{platform}} ({{architecture}})</td>
+                            <td><b>Build:</b> {{build}}</td>
+                            <td><b>Processors:</b> {{processors}}</td>
+                            <td><b>Memory:</b> {{memory}} MB</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding:4px 4px 4px 0px;text-align:center;width:25%">
+            <div class="card-div" style="height:70px">
+                <div class="card-header">Processor (% used)</div>
+                <div  class="device-stats"><a class="device-stats" href="../graph/{{name}}/perf.processor.percent.used">{{cpu_perc}}</a></div>
+            </div>
+        </td>
+        <td style="padding:4px;text-align:center;width:25%">
+            <div class="card-div" style="height:70px">
+                <div class="card-header">Memory (% used)</div>
+                <span class="device-stats"><a class="device-stats" href="../graph/{{name}}/perf.memory.percent.used">{{mem_perc}}</a></span>
+            </div>
+        </td>
+        <td style="padding:4px;text-align:center;width:25%">
+            <div class="card-div" style="height:70px">
+                <div class="card-header">Pagefile (% used)</div>
+                <span class="device-stats"><a class="device-stats" href="../graph/{{name}}/perf.pagefile.percent.used">{{pagefile_perc}}</a></span>
+            </div>
+        </td>
+        <td style="padding:4px 0px 4px 4px;text-align:center;width:25%">
+            <div class="card-div" style="height:70px">
+                <div class="card-header">Uptime (days)</div>
+                <span class="device-stats"><a class="device-stats" href="../graph/{{name}}/perf.system.uptime.seconds">{{uptime_days}}</a></span>
+            </div>
+        </td>
+    </tr>
+</table>
+<table style="width:100%">
+    <tr>
+        <td style="text-align:left;width:50%;vertical-align:top;padding-right:4px">
+            <div class="card-div">
+                <div class="card-header">Filesystem Monitors</div>
+                <div>
+                  <table style="width:100%">
+                   {% for i in filesystem %}
+                   <tr>
+                       <td style="width:50%;padding-left: 10px;">{{i[0]}}</td>
+                       <td style="width:50%"><a href="../graph/{{name}}/perf.filesystem.{{i[0]}}.percent.used">{{i[1]}}%</a></td>
+                  </tr> 
+                  {% endfor %}   
+                  </table>
+                  
+                    </div>
+                </div>
+            </td>
+        <td style="text-align:left;width:50%;vertical-align:top;padding-left:4px">
+            <div class="card-div">
+                <div class="card-header">Network Monitors</div>
+                <div>
+                    <table style="width:100%">
+                        <tr>
+                            <td style="width:50%;padding-left: 10px;">Total Network Traffic</td>
+                            <td style="width:50%"><a href="../graph/{{name}}/perf.network.bytes.sent">Bytes Sent: {{net_bs}}</a></td>
+                        </tr>
+                        <tr>
+                            <td style="width:50%"></td>
+                            <td style="width:50%"><a href="../graph/{{name}}/perf.network.bytes.received">Bytes Received: {{net_br}}</a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </td>
+        
+        </tr>
+    </table>
