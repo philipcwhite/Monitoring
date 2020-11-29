@@ -25,7 +25,7 @@ class Web:
             password = request.form['password']
             A = Auth()
             auth = A.verify(user,password)
-            if auth == 'admin':
+            if auth == user:
                 session['user'] = user
                 session['auth'] = True
                 return redirect(url_for('index'))
