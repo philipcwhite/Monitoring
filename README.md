@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+11/28/2020 - I updated the mserver install file for flask/gunicorn.  I'll update directions soon.  Thanks.
+
 11/27/2020 - I finished converting the website to Flask.  There is still a little clean up left to do.  I did make one minor change to the database changing the username field in users to user.  After I do a little cleanup I'm rewrite the mserver install script and post a download. I know this is more of a stability release rather than a feature set but I think it was worth it.  Also I'm debating jumping on the open telemetry project.  Not sure if I'll integrate it in or build a seperate app for it.  Probably too much work for one dev.  :)
 
 11/25/2020 - I'm about 80% converted to Flask on my test site.  I'm going to start uploading changes.  These will break alot of things so do not try to run from source.  I'm testing the site in a subdirectory call monitoring and lot of the links will be broken.  All of this should be fixed in a few days.  The install code will have to be updated as well however it shouldn't be too bad to fix.  This conversion has been a ton of work but overall this has given me a chance to fix a lot of bad code.  There is still quite a bit in there but I'm slowly improving things.  Current db structure remains the same.
