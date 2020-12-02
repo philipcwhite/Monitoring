@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+12/1/2020 - I started updating the appearance of the site.  I think it looks a bit more professional.  I'll update screenshots when done as they are very dated.  I still need to do a lot of cleanup especially with the html templates.  I tend to be old school and overuse tables.  
+
 11/28/2020 - I updated the mserver install file for flask/gunicorn.  I'll update directions soon.  Thanks.
 
 11/27/2020 - I finished converting the website to Flask.  There is still a little clean up left to do.  I did make one minor change to the database changing the username field in users to user.  After I do a little cleanup I'm rewrite the mserver install script and post a download. I know this is more of a stability release rather than a feature set but I think it was worth it.  Also I'm debating jumping on the open telemetry project.  Not sure if I'll integrate it in or build a seperate app for it.  Probably too much work for one dev.  :)
