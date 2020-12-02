@@ -71,7 +71,7 @@ class Web:
             return redirect(url_for('index'))
             
     @app.route('/search')
-    #@app.authenticate
+    @authenticate
     def search():
         user = session.get('user')
         device = None
