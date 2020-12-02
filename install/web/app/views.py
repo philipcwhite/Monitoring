@@ -126,7 +126,7 @@ class Web:
     @authenticate
     def device(name):
         user = session.get('user')
-        return render_template('device.html', user = user, device_content='../device_content/' + name)
+        return render_template('device.html', user = user, name = name, device_content='../device_content/' + name)
 
     @app.route('/device_content/<name>')
     @authenticate
