@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+12/2/2020 - I deployed the monitoring server to a hosted VPS today.  I did a full deploy with an agent, collector, event engine, DB, and two websites.  Worked like a charm on a 1 CPU, 1 GB Ram server.  This was a good test because now I see some mobile browser issues that need some TLC.  The Flask UI is also missing role based permissions.  These are coming.  
+
 12/1/2020 - I started updating the appearance of the site.  I think it looks a bit more professional.  I'll update screenshots when done as they are very dated.  I still need to do a lot of cleanup especially with the html templates.  I tend to be old school and overuse tables.  
 
 11/28/2020 - I updated the mserver install file for flask/gunicorn.  I'll update directions soon.  Thanks.
