@@ -17,6 +17,10 @@ body{margin:0px;padding:0px;height:100%;width:100%;font:12px "Segoe UI", "Helvet
 .device-stats a:hover {font-size:40px;font-weight:bold;color:#29ABE0 !important;text-decoration:none}
 .device-stats a:visited {font-size:40px;font-weight:bold;color:#29ABE0 !important;text-decoration:none}
 
+.index-table {display: table; width: 100%;}
+.index-row {display: table-row}
+.index-cell {display: table-cell; padding:5px}
+
 .mon-container{padding-left:70px;padding-top:50px;padding-right:20px}
 .mon-container a:link {color:#8E8C84;text-decoration:none}
 .mon-container a:active{color:#8E8C84;text-decoration:none}
@@ -26,16 +30,16 @@ body{margin:0px;padding:0px;height:100%;width:100%;font:12px "Segoe UI", "Helvet
 .nav-sidebar{height:100%; width:50px; background-color:#325D88; position:fixed!important;}
 .nav-button{display: block; cursor: pointer; height: 48px; background-size: 18px; background-repeat: no-repeat; background-position: center;}
 .nav-button:hover{background-color: #EEEEEE!important; background-size: 18px; background-repeat: no-repeat; background-position: center;}
-.nav-home{background-image: url(svg/nav_home.svg);}
-.nav-home:hover{background-image: url(svg/nav_home_hover.svg);}
-.nav-events{background-image: url(svg/nav_events.svg);}
-.nav-events:hover{background-image: url(svg/nav_events_hover.svg);}
-.nav-devices{background-image: url(svg/nav_device.svg);}
-.nav-devices:hover{background-image: url(svg/nav_device_hover.svg);}
-.nav-reports{background-image: url(svg/nav_chart.svg);}
-.nav-reports:hover{background-image: url(svg/nav_chart_hover.svg);}
-.nav-settings{background-image: url(svg/nav_settings.svg);}
-.nav-settings:hover{background-image: url(svg/nav_settings_hover.svg);}
+.nav-home{background-image: url(/static/svg/nav_home.svg);}
+.nav-home:hover{background-image: url(/static/svg/nav_home_hover.svg);}
+.nav-events{background-image: url(/static/svg/nav_events.svg);}
+.nav-events:hover{background-image: url(/static/svg/nav_events_hover.svg);}
+.nav-devices{background-image: url(/static/svg/nav_device.svg);}
+.nav-devices:hover{background-image: url(s/static/vg/nav_device_hover.svg);}
+.nav-reports{background-image: url(/static/svg/nav_chart.svg);}
+.nav-reports:hover{background-image: url(/static/svg/nav_chart_hover.svg);}
+.nav-settings{background-image: url(/static/svg/nav_settings.svg);}
+.nav-settings:hover{background-image: url(/static/svg/nav_settings_hover.svg);}
 
 .search-div{float:right;width:200px;padding-top:8px}
 .search-svg{color:#8E8C84;height:16px;width:16px;line-height:16px;vertical-align: text-top}
