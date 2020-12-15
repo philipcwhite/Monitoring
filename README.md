@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+12/15/2020 - I removed all tables from the index display page.  Now it is running with divs/css.  I also changed the host list display to iterate through a dict in jinja2.  I still have quite a bit of clean up to do but it's coming along.
+
 12/7/2020 - I'm updating how I'm displaying the SVG icons as part of the CSS refresh.   
 
 12/2/2020 - I deployed the monitoring server to a hosted VPS today.  I did a full deploy with an agent, collector, event engine, DB, and two websites.  Worked like a charm on a 1 CPU, 1 GB Ram server.  This was a good test because now I see some mobile browser issues that need some TLC.  The Flask UI is also missing role based permissions.  These are coming.  
