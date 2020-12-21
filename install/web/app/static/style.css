@@ -8,8 +8,8 @@ body{margin:0px;padding:0px;height:100%;width:100%;font:12px "Segoe UI", "Helvet
 
 .bread-font{color:#8E8C84;height:14px;width:14px;}
 
-.card-div{background-color:#FFF;border:1px solid #DFD7CA;border-radius:3px;min-width:100px;}
-.card-header {padding:3px;margin-bottom: 0;background-color:#F8F5F0;border-bottom: 1px solid rgba(223, 215, 202, 0.75);font-weight: bold;}
+.card-div{background-color: #FFFFFF; border: 1px solid #DFD7CA; border-radius: 3px; min-width: 100px;}
+.card-header {padding:3px;margin-bottom: 0;background-color:#F8F5F0;border-bottom: 1px solid #DFD7CA;font-weight: bold; font-size:11pt;}
 
 .device-stats {font-size:40px;font-weight:bold;color:#29ABE0 !important;height:50px;line-height:50px}
 .device-stats a:link {font-size:40px;font-weight:bold;columns: #29abe0 !important;text-decoration:none}
