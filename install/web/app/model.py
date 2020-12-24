@@ -52,7 +52,6 @@ class Code:
         index_dict={}
         D = Data()
         uptime_check = 300
-        
         # Block 1
         ok = down = 0
         total = ok + down
@@ -70,7 +69,6 @@ class Code:
         index_dict['avail_ok'] = str(ok)
         index_dict['avail_down'] = str(down) 
         index_dict['avail_total'] = str(total_perc)
-
         # Block 2
         info = warn = majr = crit = 0
         agentevents = D.index_event_totals(1)
@@ -87,7 +85,6 @@ class Code:
         warn_perc = (warn / total) * 100
         majr_perc = (majr / total) * 100
         crit_perc = (crit / total) * 100
-
         index_dict['event_info'] = str(info)
         index_dict['event_warn'] = str(warn)
         index_dict['event_majr'] = str(majr)
@@ -99,7 +96,6 @@ class Code:
         index_dict['event_warn_offset'] = str(100 - info_perc + 25)
         index_dict['event_majr_offset'] = str(100 - info_perc - warn_perc + 25)
         index_dict['event_crit_offset'] = str(100 - info_perc - warn_perc - majr_perc + 25)
-
         # Block 3
         name = socket.gethostname().lower()
         currenttime = time.time()
@@ -118,8 +114,7 @@ class Code:
             if i['monitor'] == 'perf.memory.percent.used' : mem_perc = float(i['value']) #[:-2]
         if cpu_perc >= 90 : cpu_color = 'D9534F'
         if mem_perc >= 90: mem_color = 'D9534F'
-        if (agent_timestamp + uptime_check) < currenttime: online_color = 'D9534F'
-        
+        if (agent_timestamp + uptime_check) < currenttime: online_color = 'D9534F'        
         index_dict['agent_name'] = name
         index_dict['agent_processors'] = agent_processors
         index_dict['agent_memory'] = agent_memory
@@ -130,7 +125,6 @@ class Code:
         index_dict['agent_cpu_color'] = cpu_color
         index_dict['agent_memory_color'] = mem_color
         index_dict['agent_online_color'] = online_color        
-
         # Block 4
         page_start = (int(page) * 100) - 100
         page_end = page_start + 100
@@ -146,16 +140,15 @@ class Code:
             icon = f'<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#{color}" /></svg>'
             rows = f'<tr><td style="padding-left:20px">{icon} &nbsp;<a href="device/{str(i["name"])}">{str(i["name"])}</a></td><td>IP Address: {str(i["ipaddress"])}</td><td>Domain: {str(i["domain"]).lower()}</td><td>Platform: {str(i["platform"])} ({str(i["architecture"])})</td><td>{date}</td></tr>'
         index_dict['host_summary'] = rows
-
         # Pager
         pager = ''
         agent_count = D.index_device_count()
         page_count = int(math.ceil(int(agent_count['total']) / 100))
         if page_count > 1:
             for i in range(1,page_count + 1):
-                if i == page: pager += f'<td style="width:10px">{str(i)}</td>'
-                elif i == 1: pager += f'<td style="width:10px"><a href="/">{str(i)}</a></td>'
-                else: pager += f'<td style="width:10px"><a href="/{str(i)}">{str(i)}</a></td>'
+                if i == page: pager += str(i)
+                elif i == 1: pager += f'<a href="/">{str(i)}</a>'
+                else: pager += f'<a href="/{str(i)}">{str(i)}</a>&nbsp;'
         index_dict['pager'] = pager
         return index_dict
 
@@ -181,7 +174,6 @@ class Code:
         else:
             status_text = 'Closed Events'
             change_status_text = 'Open Events'
-
         events_dict['info'] = str(info)
         events_dict['warn'] = str(warn)
         events_dict['majr'] = str(majr)
@@ -190,35 +182,36 @@ class Code:
         events_dict['status'] = str(change_status)
         events_dict['status_text'] = status_text
         events_dict['change_text'] = change_status_text
-
-        events = ''
         agentevents = D.events_status(status)
         color = '#CCCCCC'
         change_status = abs(int(status) - 1)
         change_status_text = ""
         if change_status == 0: change_status_text = 'Close Event'
         else: change_status_text = 'Open Event'
+        events_dict['change_status'] = change_status
+        events_dict['change_status_text'] = change_status_text
+        rows = []
         for i in agentevents:
-            date = str(datetime.datetime.fromtimestamp(int(i['timestamp'])))
+            row = {}
+            row['date'] = str(datetime.datetime.fromtimestamp(int(i['timestamp'])))
+            row['name'] = i['name']
+            row['message'] = i['message']
+            row['id'] = str(i['id'])
             sev_text = ''
             if int(i['severity']) == 4:
-                color = '#29ABE0'
-                sev_text = 'Information'
+                row['color'] = '#29ABE0'
+                row['severity'] = 'Information'
             elif int(i['severity']) == 3:
-                color = '#FFC107'
-                sev_text = 'Warning'
+                row['color']  = '#FFC107'
+                row['severity'] = 'Warning'
             elif int(i['severity']) == 2:
-                color = '#F47C3C'
-                sev_text = 'Major'
+                row['color']  = '#F47C3C'
+                row['severity'] = 'Major'
             elif int(i['severity']) == 1:
-                color = '#D9534F'
-                sev_text = 'Critical'
-            events += f'<tr><td style="text-align:left;padding-left:10px">{date}</td>'
-            events += f'<td style="text-align:left"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:{color}" /></svg> {sev_text}</td><td><a href="device/{i["name"]}">{i["name"]}</a></td><td>{i["message"]}</td>'
-            events += f'<td style="text-align:right;padding-right:12px"><input type="button" onclick="window.location.href=\'event_change/{str(i["id"])}/{str(change_status)}\'" class="action-button" value="{change_status_text}" /></td>'
-            events += '</tr>'
-        events_dict['event_list'] = events
-        
+                row['color']  = '#D9534F'
+                row['severity'] = 'Critical'
+            rows.append(row)
+        events_dict['event_list'] = rows
         return events_dict
 
     def devices(self):    
@@ -524,4 +517,3 @@ class Data:
         self.cursor.execute(sql)
         result = self.cursor.fetchall()
         return result
-        
