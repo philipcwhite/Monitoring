@@ -1,31 +1,31 @@
 
 <div class="card-div" style="width: 100%;">
-        <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Event Summary</span><br />
-          <div style="display: table; width: 100%; padding: 5px">
-            <div style="display: table-row;">
-              <div style="display: table-cell;text-align:left; padding-left:10px;">{{status_text}}</div>
-              <div style="display: table-cell;"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#CCCCCC" /></svg>&nbsp; {{total}}&nbsp;  Total</div>
-              <div style="display: table-cell;"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#29ABE0" /></svg>&nbsp;  {{info}}&nbsp;  Information</div>
-              <div style="display: table-cell;"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#FFC107" /></svg>&nbsp;  {{warn}}&nbsp;  Warning</div>
-              <div style="display: table-cell;"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#F47C3C" /></svg>&nbsp;  {{majr}}&nbsp;  Major</div>
-              <div style="display: table-cell;"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#D9534F" /></svg>&nbsp;  {{crit}}&nbsp;  Critical</div>
-              <div style="display: table-cell;text-align:right;padding-right:12px;"><input type="button" onclick="window.location.href='events?status={{status}}'" class="action-button" value="{{change_text}}" /></div>
-            </div>
-          </div>
-        </div>
+  <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Event Summary</span><br />
+    <div style="display: table; width: 100%; padding: 5px">
+      <div style="display: table-row;">
+        <div style="display: table-cell;text-align:left; padding-left:10px;">{{status_text}}</div>
+        <div style="display: table-cell;"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#CCCCCC" /></svg>&nbsp; {{total}}&nbsp;  Total</div>
+        <div style="display: table-cell;"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#29ABE0" /></svg>&nbsp;  {{info}}&nbsp;  Information</div>
+        <div style="display: table-cell;"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#FFC107" /></svg>&nbsp;  {{warn}}&nbsp;  Warning</div>
+        <div style="display: table-cell;"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#F47C3C" /></svg>&nbsp;  {{majr}}&nbsp;  Major</div>
+        <div style="display: table-cell;"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#D9534F" /></svg>&nbsp;  {{crit}}&nbsp;  Critical</div>
+        <div style="display: table-cell;text-align:right;padding-right:12px;"><input type="button" onclick="window.location.href='events?status={{status}}'" class="action-button" value="{{change_text}}" /></div>
+      </div>
+    </div>
+  </div>
 <br />
 <div class="card-div">
   <div class="card-header"></div>
-  <span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Events</span><br />
+    <span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Events</span><br />
     <div style="display: table; width: 100%; padding: 5px">
     {% for i in event_list %}
     <div style="display: table-row;">
-      <div style="display: table-cell; text-align:left; padding-left:10px">{{i.date}}</div>
-      <div style="display: table-cell; text-align:left;"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:{{i.color}}" /></svg> {{i.severity}}</div>
-      <div style="display: table-cell;"><a href="device/{{i.name}}">{{i.name}}</a></div>
-      <div style="display: table-cell;">{{i.message}}</div>
-      <div style="display: table-cell; text-align:right;padding-right:12px;padding-bottom: 5px;"><input type="button" onclick="window.location.href='event_change/{{i.id}}/{{change_status}}'" class="action-button" value="{{change_status_text}}" /></div>
+    <div style="display: table-cell; text-align:left; padding-left:10px">{{i.date}}</div>
+    <div style="display: table-cell; text-align:left;"><svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:{{i.color}}" /></svg> {{i.severity}}</div>
+    <div style="display: table-cell;"><a href="/device/{{i.name}}">{{i.name}}</a></div>
+    <div style="display: table-cell;">{{i.message}}</div>
+    <div style="display: table-cell; text-align:right;padding-right:12px;padding-bottom: 5px;"><input type="button" onclick="window.location.href='event_change/{{i.id}}/{{change_status}}'" class="action-button" value="{{change_status_text}}" /></div>
     </div>
     {% endfor %}
-    </div>
+  </div>
 </div>
