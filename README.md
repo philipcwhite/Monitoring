@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+12/24/2020 - Happy Holidays.  I updated the events template today to divs and moved the HTML code from the backend to the template.  Cleanup is going well.  About 1/3 of the way through removing tables and moving code into templates.  
+
 12/15/2020 - I removed all tables from the index display page.  Now it is running with divs/css.  I also changed the host list display to iterate through a dict in jinja2.  I still have quite a bit of clean up to do but it's coming along.
 
 12/7/2020 - I'm updating how I'm displaying the SVG icons as part of the CSS refresh.   
