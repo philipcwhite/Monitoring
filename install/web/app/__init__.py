@@ -1,11 +1,10 @@
 from flask import Flask
-import os
 
 # Initialize Flask
 app = Flask(__name__, instance_relative_config=True)
 
 # Add secret key for authentication
-app.secret_key = os.urandom(12)
+app.secret_key = 'changeme'
 
 # Import views
 from app import views
