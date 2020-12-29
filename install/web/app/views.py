@@ -203,7 +203,7 @@ class Web:
         if request.method == 'GET':
             D = Data()
             device_names = D.notify_device_names()
-            return render_template('notify_form.html', device_names = device_names)
+            return render_template('notify_add.html', device_names = device_names)
         if request.method == 'POST':
             notify_name = request.form['notify_name']
             notify_email = request.form['notify_email']
@@ -224,7 +224,7 @@ class Web:
             D = Data()
             device_names = D.notify_device_names()
             notify_rule = D.notify_rule(id)
-            return render_template('notify_form.html', device_names = device_names, **notify_rule)
+            return render_template('notify_edit.html', device_names = device_names, **notify_rule)
         if request.method == 'POST':
             notify_name = request.form['notify_name']
             notify_email = request.form['notify_email']
