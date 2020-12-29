@@ -19,7 +19,7 @@ cp -R database $directory
 cp -R certificates $directory
 cp -R agents $directory
 
-chmod -R 755 $directory/server
+chmod -R 755 $directory
 
 #sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/web/server.py
 #sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/collect.py
