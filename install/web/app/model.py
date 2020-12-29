@@ -131,14 +131,19 @@ class Code:
         agentsystem = D.index_device_list(page_start, page_end)
         currenttime = time.time()
         icon = ''
-        rows = ''
+        rows = []
         for i in agentsystem:
-            dt = datetime.datetime.fromtimestamp(int(i['timestamp']))
-            date = f'<span style="padding-right:10px">Last Reported: {str(dt)}</span>'
+            row = {}
+            row['date'] = str(datetime.datetime.fromtimestamp(int(i['timestamp'])))
             color = '93C54B'
             if (int(i['timestamp']) + uptime_check) < currenttime : color = 'D9534F'
-            icon = f'<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#{color}" /></svg>'
-            rows = f'<tr><td style="padding-left:20px">{icon} &nbsp;<a href="device/{str(i["name"])}">{str(i["name"])}</a></td><td>IP Address: {str(i["ipaddress"])}</td><td>Domain: {str(i["domain"]).lower()}</td><td>Platform: {str(i["platform"])} ({str(i["architecture"])})</td><td>{date}</td></tr>'
+            row['color'] = color
+            row['name']= name
+            row['ipaddress'] = str(i["ipaddress"])
+            row['domain'] = str(i["domain"]).lower()
+            row['platform'] = i["platform"]
+            row['architecture'] = i["architecture"]
+            rows.append(row)
         index_dict['host_summary'] = rows
         # Pager
         pager = ''
