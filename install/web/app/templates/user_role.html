@@ -10,24 +10,22 @@
 
 <div class="card-div">
   <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Assign role for {{user}}</span><br />
-    <table style="width:100%;">
-      <tr>
-        <td style="padding-left:10px">
-        <form action="" method="POST">
-        <input type="hidden" name="id" value="{{id}}">
-        <table>
-        <tr>
-          <td>Role</td>
+  <div style="padding:10px"> 
+    <form action="" method="POST">
+    <input type="hidden" name="id" value="{{id}}"> 
+    <div style="display:table; width:50%;">
+      <div style="display: table-row;">
+        <div style="display:table-cell">Role</div>
           {% if role == 0 %} 
-          <td><input type='radio' name='role' value='0' checked='checked' /> User<input type='radio' name='role' value='1' /> Admin</td></tr>
+          <div style="display:table-cell"><input type='radio' name='role' value='0' checked='checked' /> User<input type='radio' name='role' value='1' /> Admin</div>
           {% elif role == 1 %}
-          <td><input type='radio' name='role' value='0' /> User<input type='radio' name='role' value='1' checked='checked' /> Admin</td></tr>
+          <div style="display:table-cell"><input type='radio' name='role' value='0' /> User<input type='radio' name='role' value='1' checked='checked' /> Admin</div>
           {% endif %}
-          <tr><td></td><td style="text-align:right"><input type="submit" class="action-button" value="Submit" /></td>
-        </tr>
-      </table>
+        </div>
+        <br />
+        <input type="submit" class="action-button" value="Submit" />
       </form>
-  </td></tr></table> 
+      </div>
 </div>
 </div>
 

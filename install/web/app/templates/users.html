@@ -10,26 +10,22 @@
 
 <div class="card-div">
   <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Users</span><br />
-    <table style="width:100%;">
-      <tr>
-        <td style="padding-left:10px">
-          <table style='width:100%'>
+  <div style="padding:10px">  
+  <div style="display:table; width:100%;">
             {% for i in users %}
-            <tr>
-              <td>{{i.user}}</td>
-              <td style='text-align:right'>
+            <div style="display: table-row;">
+              <div style="display:table-cell">{{i.user}}</div>
+              <div style="display:table-cell; text-align:right">
                 <input type="button" onclick="window.location.href='/user_pass/{{i.user}}'" class="action-button" value="Password" />
                 <input type="button" onclick="window.location.href='/user_role/{{i.id}}'" class="action-button" value="Roles" />
                 <input type="button" onclick="window.location.href='/user_delete/{{i.id}}'" class="action-button" value="Delete" />
-              </td>
-            </tr>
+              </div>
+            </div>
             {% endfor %}
-      </table>
+          </div>
+          <br />
       <input type="button" onclick="window.location.href='/user_add'" class="action-button" value="Add User" />
-    </td>
-  </tr>
-</table> 
 </div>
-</div
+</div>
 
 {% endblock %}
