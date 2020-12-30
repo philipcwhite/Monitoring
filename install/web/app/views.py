@@ -62,7 +62,7 @@ class Web:
     def password():
         user = session.get('user')
         if request.method == 'GET':
-            return render_template('password.html')
+            return render_template('password.html', user=user)
         if request.method == 'POST':
             pass1 = request.form['pass1']
             pass2 = request.form['pass2']
@@ -71,7 +71,7 @@ class Web:
             return redirect(url_for('index'))
             
     @app.route('/search')
-    #@app.authenticate
+    @authenticate
     def search():
         user = session.get('user')
         device = None
@@ -301,4 +301,3 @@ class Web:
         D = Data()
         D.user_delete(id)
         return redirect(url_for('users'))
-    
