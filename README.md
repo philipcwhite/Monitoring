@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+12/31/2020 - I finished my table cleanup on the website.  I plan on updating some of the documentation today and calling it a year.  Next week I'll start on refreshing the agent and backend code.  Have a great new year.
+
 12/30/2020 - I cleaned up the work log and finished removing all of the HTML I needed to remove from the model.  I still have a handful of pages to clean up tables but it should be done soon.  I'm looking forward to updating the agents and backend code.  
 
 12/30/2020 - Still updating templates.  Corrected  issues with user and notification add pages.  I should be done with the UI updates soon.  I'll probably put out a release after I finish the majority of the template work.  I also plan on doing some cleanup in the agent and collection code.  I know this can be improved.
