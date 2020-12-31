@@ -224,12 +224,17 @@ class Code:
         agentsystem = D.devices_select_all()
         uptime_check = 600
         currenttime = time.time()
-        device_list = icon = ''
+        rows = []
         for i in agentsystem:
-            if (i['timestamp'] + uptime_check) >= currenttime: icon = '<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#93C54B" /></svg>'
-            else: icon =  '<svg width="10" height="10"><rect width="10" height="10" rx="2" ry="2" style="fill:#d9534f" /></svg>'
-            device_list += f'<tr><td style="padding-left:10px">{icon}</td><td><a href="device/{str(i["name"])}">{str(i["name"])}</td><td>{str(i["domain"])}</td><td>{str(i["ipaddress"])}</td><td>{str(i["platform"])}</td></tr>'
-        return device_list
+            row = {}
+            if (i['timestamp'] + uptime_check) >= currenttime: row['fill'] = '#93C54B'
+            else: row['fill'] = '#d9534f'
+            row['name'] = i['name']
+            row['domain'] = i['domain']
+            row['ipaddress'] = i['ipaddress']
+            row['platform'] = i['platform']
+            rows.append(row)
+        return rows
 
     def device(self, name): 
         device_dict = {}
