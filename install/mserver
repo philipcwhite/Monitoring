@@ -1,15 +1,14 @@
 #!/bin/sh
 
-#This is a work in progress.  It should install the server components and register them correctly.  
+# This should install the server components and register them correctly.  
+# You will still have to run the create database sql script in mysql or mariadb
+# To use this file run: 
+# chmod 755 mserver
+# sudo ./mserver
 
 # Set variables
 directory='/opt/monitoring'
 py_ver='python3.8'
-
-# Set up Python
-$py_ver -m venv $directory/env
-$directory/env/bin/$py_ver -m pip install pymysql flask gunicorn
-
 
 # Create program directory
 mkdir -p $directory
@@ -19,14 +18,9 @@ cp -R database $directory
 cp -R certificates $directory
 cp -R agents $directory
 
-chmod -R 755 $directory
-
-#sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/web/server.py
-#sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/collect.py
-#sed -i "s,app_path = './',app_path = '/opt/monitoring/server/',g" $directory/server/event.py
-#sed -i "s,cert_path = './certificates/',cert_path = '/opt/monitoring/server/certificates/',g" $directory/server/collect.py
-#sed -i "s,cert_path = './certificates/',cert_path = '/opt/monitoring/server/certificates/',g" $directory/server/web/server.py
-
+# Set up Python
+$py_ver -m venv $directory/env
+$directory/env/bin/$py_ver -m pip install pymysql flask gunicorn
 
 # Write systemd service files
 
