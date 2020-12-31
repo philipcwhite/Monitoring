@@ -9,16 +9,12 @@
       
 <div class="card-div">
   <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Search Results</span><br />
-    <table style="width:100%;">
-      <tr>
-        <td style="padding-left:10px">
+  <div style="padding:10px"> 
           Host names containing: {{device}}<br />
           {% for i in devices %}
           <a href="/device/{{i.name}}/">{{i.name}}</a></br />
           {% endfor %}
-        </td>
-      </tr>
-    </table> 
+  </div> 
   </div>
 </div>
 

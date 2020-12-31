@@ -9,9 +9,7 @@
       
 <div class="card-div">
   <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Help</span><br />
-  <table style="width:100%;">
-  <tr>
-  <td style="padding-left:10px">
+  <div style="padding: 10px;">
   <h2 id='top'>Table of Contents</h2>
 <b><a href='#intro'>Introduction</a></b><br />
 <b><a href='#agent'>Agent</a></b><br />
@@ -82,7 +80,7 @@ Although the agent is fixed as to its default monitors, it would be very easy to
 <b><a href='#top'>top</a></b></br />
 
 <h2 id='server'>Server</h2>
-There are three major server components: the web server, collect engine, and event engine.  The web server is a simple micro-framework for asynchronously handling python web code.  The collect engine listens for agent traffic and processes it into the database.  And the event engine handles simple agent events and maintenance tasks.  While these three components run separately, they all use the same configuration file (settings.ini) and certificates.
+There are three major server components: the web server, collect engine, and event engine.  The web server uses the Flask framework and runs by default as a gunicorn service.  The collect engine listens for agent traffic and processes it into the database.  And the event engine handles simple agent events and maintenance tasks.  While these three components run separately, they all use the same configuration file (settings.ini) and certificates.
 <br /><br />
 <h3 id='server_settings'>Settings</h3>
 Like the agent, all setting for the server components are handled using a settings.ini file.  Here is a breakdown of the sections and their variables.<br /><br />
@@ -140,10 +138,8 @@ wildcards.  To use a wildcard simple type %_%.  Email notifications have to also
 To send out all critical events on all systems, you can create a rule with your email address, '%_%' for hostname and monitor, 
 select status open, severity Critical, and set enabled to True.<br />
 <br /><b><a href='#top'>top</a></b></br />
-
-  </td></tr></table> 
-  </div></td></tr>
-</table>
+  </div>
+  </div>
       </div>
       </div>
 
