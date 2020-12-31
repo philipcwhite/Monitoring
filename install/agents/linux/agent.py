@@ -1,4 +1,4 @@
-# Copyright (C) 2018-2020 Phil White - All Rights Reserved
+# Copyright (C) 2018-2021 Phil White - All Rights Reserved
 # 
 # You may use, distribute and modify this code under the terms of the Apache 2 license. You should have received a 
 # copy of the Apache 2 license with this file. If not, please visit:  https://github.com/philipcwhite/monitoring
@@ -37,9 +37,10 @@ class AgentSQL():
 
     def delete_data_events(self):
         agent_time = str(time.time()-604800).split('.')[0]
-        sql = "DELETE FROM AgentData WHERE time<" + agent_time + ';'
-        sql += "DELETE FROM AgentEvents WHERE status=0 AND sent=1;"
-        self.cursor.executescript(sql)
+        sql = "DELETE FROM AgentData WHERE time<?;"
+        self.cursor.execute(sql, [agent_time])
+        sql = "DELETE FROM AgentEvents WHERE status=0 AND sent=1;"
+        self.cursor.execute(sql)
         self.con.commit()
 
     def delete_thresholds(self):
@@ -53,19 +54,17 @@ class AgentSQL():
         self.con.commit()
 
     def insert_event(self, monitor, message, severity):
-        sql_update = "UPDATE AgentEvents SET time=?, message=?, severity=?, sent=0 WHERE monitor=? AND ?> (SELECT MAX(severity) FROM AgentEvents WHERE monitor=? AND status=1);"
-        self.cursor.execute(sql_update, (AgentSettings.time, message, severity, monitor, severity, monitor))
-        sql_insert = "INSERT INTO AgentEvents(time, name, monitor, message, status, severity, sent) "
-        sql_insert += "SELECT ?,?,?,?,1,?,0 WHERE NOT EXISTS(SELECT 1 FROM AgentEvents WHERE monitor=? AND status=1);"
-        self.cursor.execute(sql_insert, (AgentSettings.time, AgentSettings.name, monitor, message, severity, monitor))
+        sql = "UPDATE AgentEvents SET time=?, message=?, severity=?, sent=0 WHERE monitor=? AND ?> (SELECT MAX(severity) FROM AgentEvents WHERE monitor=? AND status=1);"
+        self.cursor.execute(sql, (AgentSettings.time, message, severity, monitor, severity, monitor))
+        sql = "INSERT INTO AgentEvents(time, name, monitor, message, status, severity, sent) SELECT ?,?,?,?,1,?,0 WHERE NOT EXISTS(SELECT 1 FROM AgentEvents WHERE monitor=? AND status=1);"
+        self.cursor.execute(sql, (AgentSettings.time, AgentSettings.name, monitor, message, severity, monitor))
         self.con.commit()
 
     def insert_system(self, ipaddress, os, build, architecture, domain, processors, memory):
-        sql_update = "UPDATE AgentSystem SET time=?, name=?, ipaddress=?, platform=?, architecture=?, domain=?, processors=?, memory=? WHERE name=?;" 
-        self.cursor.execute(sql_update, (AgentSettings.time, AgentSettings.name, ipaddress, os, architecture, domain, processors, memory, AgentSettings.name))
-        sql_insert = "INSERT INTO AgentSystem(time, name, ipaddress, platform, build, architecture, domain, processors, memory) "
-        sql_insert += "SELECT ?,?,?,?,?,?,?,?,? WHERE NOT EXISTS(SELECT 1 FROM AgentSystem WHERE name=?);"
-        self.cursor.execute(sql_insert, (AgentSettings.time, AgentSettings.name, ipaddress, os, build, architecture, domain, processors, memory, AgentSettings.name))
+        sql = "UPDATE AgentSystem SET time=?, name=?, ipaddress=?, platform=?, architecture=?, domain=?, processors=?, memory=? WHERE name=?;" 
+        self.cursor.execute(sql, (AgentSettings.time, AgentSettings.name, ipaddress, os, architecture, domain, processors, memory, AgentSettings.name))
+        sql = "INSERT INTO AgentSystem(time, name, ipaddress, platform, build, architecture, domain, processors, memory) SELECT ?,?,?,?,?,?,?,?,? WHERE NOT EXISTS(SELECT 1 FROM AgentSystem WHERE name=?);"
+        self.cursor.execute(sql, (AgentSettings.time, AgentSettings.name, ipaddress, os, build, architecture, domain, processors, memory, AgentSettings.name))
         self.con.commit()
 
     def insert_thresholds(self, monitor, severity, threshold, compare, duration):
@@ -80,14 +79,14 @@ class AgentSQL():
         return rows
     
     def select_data_events(self, time, monitor):
-        sql = "SELECT value FROM AgentData WHERE monitor='" + monitor + "' AND time > " + str(time) + ";"
-        self.cursor.execute(sql)
+        sql = "SELECT value FROM AgentData WHERE monitor=? AND time > ?;"
+        self.cursor.execute(sql, (monitor, str(time)))
         rows = self.cursor.fetchall()
         return rows
 
     def select_event(self, monitor):
-        sql = "SELECT monitor FROM AgentEvents WHERE monitor='" + monitor + "' AND status=1;" 
-        self.cursor.execute(sql)
+        sql = "SELECT monitor FROM AgentEvents WHERE monitor=? AND status=1;" 
+        self.cursor.execute(sql, [monitor])
         row = self.cursor.fetchone()
         return row
 
@@ -110,14 +109,13 @@ class AgentSQL():
         return rows   
     
     def update_close_data_events(self):
-        sql = "UPDATE AgentData SET sent=1 WHERE sent=0;"
-        sql += "UPDATE AgentEvents SET sent=1 WHERE sent=0;"
+        sql = "UPDATE AgentData SET sent=1 WHERE sent=0; UPDATE AgentEvents SET sent=1 WHERE sent=0;"
         self.cursor.executescript(sql)
         self.con.commit()
 
     def update_event(self, monitor, severity):
-        sql =  "UPDATE AgentEvents SET status=0, sent=0 WHERE monitor='" + monitor + "' AND severity=" + str(severity) + ";"
-        self.cursor.execute(sql)
+        sql =  "UPDATE AgentEvents SET status=0, sent=0 WHERE monitor=? AND severity=?;"
+        self.cursor.execute(sql, (monitor, str(severity)))
         self.con.commit()
 
 # Initialize AgentSQL Class
@@ -158,8 +156,6 @@ class AgentLinux():
     def perf_network():
         check_bytes_received = 0
         check_bytes_sent = 0
-        bytes_received = 0
-        bytes_sent = 0
         output = subprocess.run('cat /proc/net/dev | tail -n +3', shell=True, capture_output=True, text=True).stdout.split('\n')
         for i in output:
             if ':' in i and not 'lo:' in i:
