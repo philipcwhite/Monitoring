@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+1/4/2021 - I cleaned up some of the agent, collector, and event engine code today.  
+
 12/31/2020 - I finished my table cleanup on the website.  I plan on updating some of the documentation today and calling it a year.  Next week I'll start on refreshing the agent and backend code.  Have a great new year.
 
 12/30/2020 - I cleaned up the work log and finished removing all of the HTML I needed to remove from the model.  I still have a handful of pages to clean up tables but it should be done soon.  I'm looking forward to updating the agents and backend code.  
