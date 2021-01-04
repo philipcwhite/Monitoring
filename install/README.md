@@ -2,13 +2,13 @@
 
 Installing the server is fairly straight forward.
 
-Install Python
+## Install Python
 sudo apt install software-properties-common
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt update
 sudo apt install python3.8 python3-pip python3.8-dev python3.8-venv
 
-MySQL
+## Installing MySQL
 ```
 sudo apt update
 sudo apt install mysql-server
@@ -29,7 +29,7 @@ GRANT ALL ON monitoring.* TO 'monitoring'@'localhost';
 
 While logged in to mysql run the database/monitoring.sql script to create the database.
 
-# Installing the server
+## Installing the server
 To install the server components
 ```
 chmod 755 mserver
@@ -45,7 +45,7 @@ services/event.py
 
 Passowrds for collect and event.py should be picked up by settings.ini but there may be issues in this early release.
 
-# Installing the agent
+## Installing the agent
 The agent is in the folder agents/linux.
 ```
 sudo chmod 755 magent
