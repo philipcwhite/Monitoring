@@ -1,4 +1,4 @@
-#Readme
+# Readme
 
 Installing the server is fairly straight forward.
 
@@ -25,7 +25,8 @@ GRANT ALL ON monitoring.* TO 'monitoring'@'localhost';
 
 While logged in to mysql run the database/monitoring.sql script to create the database.
 
-To install theserver components
+# Installing the server
+To install the server components
 chmod 755 mserver
 sudo ./mserver
 
@@ -36,7 +37,7 @@ services/event.py
 
 Passowrds for collect and event.py should be picked up by settings.ini but there may be issues in this early release.
 
-#Installing the agent
+# Installing the agent
 The agent is in the folder agents/linux.
 sudo chmod 755 magent
 ./magent
