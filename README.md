@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+1/25/2021 -  I started reimplementing roles in Flask.  The only change at this point is a new session entry and a rule block on the users page for non-admin roles.  
+
 1/4/2021 - I cleaned up some of the agent, collector, and event engine code today.  
 
 12/31/2020 - I finished my table cleanup on the website.  I plan on updating some of the documentation today and calling it a year.  Next week I'll start on refreshing the agent and backend code.  Have a great new year.
