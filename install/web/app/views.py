@@ -25,15 +25,17 @@ class Web:
             password = request.form['password']
             A = Auth()
             auth = A.verify(user,password)
-            if auth == user:
+            if auth['user'] == user:
                 session['user'] = user
                 session['auth'] = True
+                session['role'] = auth['role']
                 return redirect(url_for('index'))
 
     @app.route('/logoff')
     def logoff():
         session['auth'] = None
         session['user'] = None
+        session['role'] = None
         return redirect(url_for('login'))
         
     @app.route('/')
@@ -248,9 +250,13 @@ class Web:
     @authenticate
     def users():
         user = session.get('user')
-        D = Data()
-        users = D.users_select()
-        return render_template('users.html', user = user, users = users)
+        role = session.get('role')
+        if role == 1:
+            D = Data()
+            users = D.users_select()
+            return render_template('users.html', user = user, users = users)
+        else:
+            return redirect(url_for('settings'))
 
     @app.route('/user_add', methods=['GET', 'POST'])
     @authenticate

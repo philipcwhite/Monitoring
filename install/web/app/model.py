@@ -5,9 +5,9 @@ class Auth:
     def verify(self, user, password):
         D = Data()
         encrypt_password = hashlib.sha224(password.encode()).hexdigest()
-        authuser = D.user_auth(user, encrypt_password)
-        if authuser is None: return None
-        else: return authuser
+        auth = D.user_auth(user, encrypt_password)
+        if auth['user'] is None: return None
+        else: return auth
 
     def user_password_change(self, user, pass1, pass2):
         D = Data()
@@ -339,20 +339,14 @@ class Data:
         self.con.close()
 
     # User Queries
-    '''def user_get(self, user, password):
-        sql = 'SELECT id FROM users WHERE user=%s AND password=%s'
-        self.cursor.execute(sql, (user, password))
-        id = self.cursor.fetchone()
-        if not id is None: return True'''
-
     def user_auth(self, user, encrypt_password):
-        sql = "SELECT user, password from users where user=%s AND password=%s"
+        sql = "SELECT user, role from users where user=%s AND password=%s"
         self.cursor.execute(sql, (user, encrypt_password))
         result = self.cursor.fetchone()
         qname = ''
         if not result is None:
-            qname = result['user']
-            return qname
+            #qname = result['user']
+            return result # qname
         
     def user_password_change(self, user, password):
         sql = "UPDATE users SET password=%s WHERE user=%s"
@@ -527,3 +521,4 @@ class Data:
         self.cursor.execute(sql)
         result = self.cursor.fetchall()
         return result
+        
