@@ -6,7 +6,7 @@ Installing the server is fairly straight forward.
 sudo apt install software-properties-common
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt update
-sudo apt install python3.8 python3-pip python3.8-dev python3.8-venv
+sudo apt install python3.9 python3-pip python3.9-dev python3.9-venv
 
 ## Installing MySQL
 ```
