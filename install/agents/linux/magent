@@ -3,7 +3,7 @@
 # Set variables
 user='monitoring'
 directory='/opt/monitoring'
-pythonver='python3'
+pythonver='python3.9'
 
 # Add service account
 #useradd -r -s /bin/false $user
