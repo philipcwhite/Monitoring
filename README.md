@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+2/3/2021 - The app is now working with Python 3.9.1.  
+
 1/25/2021 -  I started reimplementing roles in Flask.  The only change at this point is a new session entry and a rule block on the users page for non-admin roles.  
 
 1/4/2021 - I cleaned up some of the agent, collector, and event engine code today.  
