@@ -8,7 +8,7 @@
 
 # Set variables
 directory='/opt/monitoring'
-py_ver='python3.8'
+py_ver='python3.9'
 
 # Create program directory
 mkdir -p $directory
