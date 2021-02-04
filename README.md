@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+2/4/2021 - I updated a large part of the Linux agent code.  Functionality should be identical but I changed how parameters are stored and cleaned up the network monitoring logic.
+
 2/3/2021 - The app is now working with Python 3.9.1.  
 
 1/25/2021 -  I started reimplementing roles in Flask.  The only change at this point is a new session entry and a rule block on the users page for non-admin roles.  
