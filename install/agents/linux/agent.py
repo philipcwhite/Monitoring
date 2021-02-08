@@ -229,8 +229,6 @@ class AgentProcess():
     def event_process():
         agent_time_int = int(session['time'])
         agent_thresholds = SQL.select_thresholds()
-        a_val = 0
-        b_val = 0
         status = 0
         for i in agent_thresholds:
             monitor = i[0]
@@ -240,25 +238,13 @@ class AgentProcess():
             duration = i[4]
             time_window = agent_time_int - duration
             agent_data = SQL.select_data_events(time_window, monitor)
-            a_val = 0
-            b_val = 0
+            a_val = b_val = 0
             for i in agent_data:
                 value = i[0]
-                if compare == '>':
-                    if value > threshold:
-                        a_val += 1
-                        b_val += 1
-                    else: b_val += 1
-                elif compare == '<':
-                    if value < threshold:
-                        a_val += 1
-                        b_val += 1
-                    else: b_val += 1
-                elif compare == '=':
-                    if value == 0 and threshold == 0:
-                        a_val += 1
-                        b_val += 1
-                    else: b_val += 1
+                if eval(str(value) + compare + str(threshold)) is True:
+                    a_val += 1
+                    b_val += 1
+                else: b_val += 1
             if a_val == b_val and b_val != 0: status = 1                
             AgentProcess.event_create(monitor, severity, threshold, compare, duration, status)
 
