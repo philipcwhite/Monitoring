@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+2/8/2021 - I updated the Linux code handling events.  I am still testing this as it may break thresholds that use equals.  
+
 2/4/2021 - I updated a large part of the Linux agent code.  Functionality should be identical but I changed how parameters are stored and cleaned up the network monitoring logic.
 
 2/3/2021 - The app is now working with Python 3.9.1.  
