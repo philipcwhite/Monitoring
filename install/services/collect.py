@@ -60,10 +60,10 @@ class CollectData:
             self.cursor.execute(sql, (timestamp, name, domain, ipaddress, platform, build, architecture, processors, memory))
             self.con.commit()
 
-    def agent_data(self, timestamp, name, monitor, value):
-        sql = "INSERT INTO agentdata (timestamp, name, monitor, value) VALUES(%s,%s,%s,%s)"
-        self.cursor.execute(sql, (timestamp, name, monitor, value))
-        self.con.commit() 
+    def agent_data(self, values):
+        sql = f"INSERT INTO agentdata (timestamp, name, monitor, value) VALUES {values}"
+        self.cursor.execute(sql)
+        self.con.commit()  
 
     def agent_events_open(self, timestamp, name, monitor, message, status, severity):
         sql = "INSERT INTO agentevents (timestamp, name, monitor, message, status, severity, processed) VALUES(%s,%s,%s,%s,%s,%s,%s)"
@@ -81,6 +81,7 @@ class CollectParse:
         try:
             message = json.loads(message)
             passphrase = message["passphrase"]
+            agentdata = ''
             if CollectSettings.passphrase == passphrase:
                 timestamp = message["time"]
                 name = message["name"]
@@ -93,7 +94,7 @@ class CollectParse:
                 memory = message["memory"] 
                 CD.agent_system(timestamp, name, domain, ipaddress, platform, build, architecture, int(processors), float(memory))
                 for i in message["data"]:
-                    CD.agent_data(i[list(i)[0]], name, list(i)[1], i[list(i)[1]])
+                    agentdata += f"({str(i[list(i)[0]])},'{name}','{list(i)[1]}',{str(i[list(i)[1]])}),"
                 for i in message["events"]:
                     timestamp = i["time"]
                     name = name
@@ -105,6 +106,7 @@ class CollectParse:
                         CD.agent_events_open(timestamp, name, monitor, message, status, severity)
                     elif int(status) == 0:
                         CD.agent_events_close(name, monitor, severity)
+                CD.agent_data(agentdata[:-1])
         except: pass
 
 class EchoServerProtocol(asyncio.Protocol):
