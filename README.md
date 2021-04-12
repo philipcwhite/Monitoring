@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+4/12/2021 - Updated code on the collector to reduce the number of insert statements.
+
 2/8/2021 - I updated the Linux code handling events.  I am still testing this as it may break thresholds that use equals.  
 
 2/4/2021 - I updated a large part of the Linux agent code.  Functionality should be identical but I changed how parameters are stored and cleaned up the network monitoring logic.
