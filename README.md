@@ -25,6 +25,8 @@ Device View
 Graph View
 
 ## Updates
+8/16/2021 - No updates today.  Just wanted to throw out this idea and remind the internet that I'm still writing code.  I have been working with OpenTelemetry for the last year or so and I'm contemplating writing a new application based off this one to process OTEL logs, metrics, and traces.    
+
 4/12/2021 - Updated code on the collector to reduce the number of insert statements.
 
 2/8/2021 - I updated the Linux code handling events.  I am still testing this as it may break thresholds that use equals.  
