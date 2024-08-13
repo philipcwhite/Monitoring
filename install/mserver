@@ -9,6 +9,7 @@
 # Set variables
 directory='/opt/monitoring'
 py_ver='python'
+# py_ver must specify a python 3 executable.  For newer Fedora releases 'python' works fine.  If you have issues on your distro, try 'python3'
 
 # Create program directory
 mkdir -p $directory
