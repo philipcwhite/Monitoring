@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<img src="/static/svg/bread_chart.svg" class="bread-font" />  &nbsp;&nbsp;Reports&nbsp;
+{% endblock %}
+{% block body%} 
+      
+<div class="card-div">
+  <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Report</span><br />
+    <table style="width:100%;">
+      <tr>
+        <td style="padding-left:10px">
+          <table style='width:100%'>
+            <tr>
+              <td>
+                {{ output|safe }}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table> 
+  </div>
+</div>
+
+{% endblock %}

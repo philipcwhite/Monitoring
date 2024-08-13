@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<img src="/static/svg/bread_settings.svg" class="bread-font" />  &nbsp;&nbsp;Settings&nbsp;
+{% endblock %}
+{% block body%} 
+
+
+<div class="card-div">
+  <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Users</span><br />
+  <div style="padding:10px">  
+  <div style="display:table; width:100%;">
+            {% for i in users %}
+            <div style="display: table-row;">
+              <div style="display:table-cell">{{i[1]}}</div>
+              <div style="display:table-cell; text-align:right">
+                <input type="button" onclick="window.location.href='/user_pass/{{i[1]}}'" class="action-button" value="Password" />
+                <input type="button" onclick="window.location.href='/user_role/{{i[0]}}'" class="action-button" value="Roles" />
+                <input type="button" onclick="window.location.href='/user_delete/{{i[0]}}'" class="action-button" value="Delete" />
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <br />
+      <input type="button" onclick="window.location.href='/user_add'" class="action-button" value="Add User" />
+</div>
+</div>
+
+{% endblock %}

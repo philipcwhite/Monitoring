@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<img src="/static/svg/bread_settings.svg" class="bread-font" />  &nbsp;&nbsp;Settings&nbsp;
+{% endblock %}
+{% block body%} 
+      
+<div class="card-div">
+  <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Notify</span><br />
+    <table style="width:100%;">
+      <tr>
+        <td style="padding-left:10px">
+          <table style='width:100%'>
+            {% for i in notify %}
+            <tr>
+              <td>{{i.notify_name}}</td>
+              <td style='text-align:right;padding-right:10px'> 
+              <input type="button" onclick="window.location.href='/notify_edit/{{i.id}}'" class="action-button" value="Edit" />
+              <input type="button" onclick="window.location.href='/notify_delete/{{i.id}}'" class="action-button" value="Delete" />
+              </td>
+            </tr>
+            {% endfor %}
+          </table>
+          <br /><input type="button" onclick="window.location.href='/notify_add'" class="action-button" value="Add Notification Rule" />
+        </td>
+      </tr>
+    </table> 
+  </div>
+</div>
+
+{% endblock %}

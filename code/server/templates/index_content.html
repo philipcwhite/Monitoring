@@ -1,0 +1,117 @@
+<div class="index-table">
+  <div class="index-row">
+     <div class="index-cell">
+        <div class="card-div">
+           <div class="card-header"></div>
+           <span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Host Availability</span>
+           <div class="index-table" style="height: 100px">
+              <div class="index-row">
+                 <div style="display: table-cell; text-align: center;">
+                    <svg width="95" height="95" viewBox="0 0 42 42" class="donut">
+                       <circle class="donut-ring" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#d9534f" stroke-width="5"></circle>
+                       <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#93C54B" stroke-width="5" stroke-dasharray="{{avail_total}}" stroke-dashoffset="25"></circle>
+                    </svg>
+                 </div>
+                 <div style="display: table-cell; vertical-align: middle;">
+                    <svg width="10" height="10">
+                       <rect width="10" height="10" rx="2" ry="2" style="fill:#93C54B" />
+                    </svg>
+                    {{avail_ok}} Hosts Up<br />
+                    <svg width="10" height="10">
+                       <rect width="10" height="10" rx="2" ry="2" style="fill:#d9534f" />
+                    </svg>
+                    {{avail_down}} Hosts Down
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+     <div class="index-cell">
+        <div class="card-div">
+           <div class="card-header"></div>
+           <span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Open Events</span>
+           <div class="index-table" style="height: 100px">
+              <div class="index-row">
+                 <div style="display: table-cell; text-align: center;">
+                    <svg width="95" height="95" viewBox="0 0 42 42" class="donut">
+                       <circle class="donut-ring" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#93C54B" stroke-width="5"></circle>
+                       <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#29ABE0" stroke-width="5" stroke-dasharray="{{event_info_pts}}" stroke-dashoffset="25"></circle>
+                       <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#ffc107" stroke-width="5" stroke-dasharray="{{event_warn_pts}}" stroke-dashoffset="{{event_warn_offset}}"></circle>
+                       <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#F47C3C" stroke-width="5" stroke-dasharray="{{event_majr_pts}}" stroke-dashoffset="{{event_majr_offset}}"></circle>
+                       <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#d9534f" stroke-width="5" stroke-dasharray="{{event_crit_pts}}" stroke-dashoffset="{{event_crit_offset}}"></circle>
+                    </svg>
+                 </div>
+                 <div style="display: table-cell; vertical-align: middle;">
+                    <svg width="10" height="10">
+                       <rect width="10" height="10" rx="2" ry="2" style="fill:#29ABE0" />
+                    </svg>
+                    {{event_info}} Information<br />
+                    <svg width="10" height="10">
+                       <rect width="10" height="10" rx="2" ry="2" style="fill:#ffc107" />
+                    </svg>
+                    {{event_warn}} Warning<br />
+                    <svg width="10" height="10">
+                       <rect width="10" height="10" rx="2" ry="2" style="fill:#F47C3C" />
+                    </svg>
+                    {{event_majr}} Major<br />
+                    <svg width="10" height="10">
+                       <rect width="10" height="10" rx="2" ry="2" style="fill:#d9534f" />
+                    </svg>
+                    {{event_crit}} Critical
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+     <div class="index-cell">
+        <div class="card-div">
+           <div class="card-header"></div>
+           <span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Monitoring Server</span>
+           <div class="index-table" style="height: 100px">
+              <div class="index-row">
+                 <div style="display: table-cell; vertical-align: middle; padding-left: 12px;">
+                    Name: {{agent_name}}<br />Processors: {{agent_processors}}<br />Memory: {{agent_memory}} MB <br />Platform: {{agent_platform}} ({{agent_architecture}})<br />
+                 </div>
+                 <div style="display: table-cell; vertical-align: middle;">
+                    <svg width="10" height="10">
+                       <rect width="10" height="10" rx="2" ry="2" style="fill:#{{agent_cpu_color}}" />
+                    </svg>
+                    {{agent_cpu_percent}}% CPU<br />
+                    <svg width="10" height="10">
+                       <rect width="10" height="10" rx="2" ry="2" style="fill:#{{agent_memory_color}}" />
+                    </svg>
+                    {{agent_memory_percent}}% Memory<br />
+                    <svg width="10" height="10">
+                       <rect width="10" height="10" rx="2" ry="2" style="fill:#{{agent_online_color}}" />
+                    </svg>
+                    Agent Status<br />
+                 </div>
+              </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</div>
+<div style="padding: 5px;">
+  <div class="card-div">
+     <div class="card-header"></div>
+     <span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Host Summary</span>
+     <div class="index-table" style="width: 100%; padding: 5px 0px 5px 10px">
+        {% for i in host_summary %}
+        <div class="index-row">
+           <div style="display: table-cell; padding-left: 5px;">
+              <svg width="10" height="10">
+                 <rect width="10" height="10" rx="2" ry="2" style="fill:#{{i.color}}" />
+              </svg>
+              &nbsp;<a href="/device/{{i.name}}">{{i.name}}</a>
+           </div>
+           <div style="display: table-cell; padding-left: 5px;">&nbsp;IP Address: {{i.ipaddress}}</div>
+           <div style="display: table-cell; padding-left: 5px;">&nbsp;Domain: {{i.domain}}</div>
+           <div style="display: table-cell; padding-left: 5px;">&nbsp;Platform: {{i.platform}} ({{i.architecture}})</div>
+           <div style="display: table-cell; padding-left: 5px;">&nbsp;{{i.date}}</div>
+        </div>
+        {% endfor %}
+     </div>
+     {{pager|safe}}
+  </div>
+</div>

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<img src="/static/svg/bread_settings.svg" class="bread-font" />  &nbsp;&nbsp;Settings&nbsp;
+{% endblock %}
+{% block body%} 
+      
+<div class="card-div">
+  <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Change Password</span><br />
+  <div style="padding:10px"> 
+    <form action="" method="POST">
+    <input type="hidden" name="user" value="{{user}}">
+      <div style="display:table; width:50%;">
+      <div style="display: table-row;">
+        <div style="display:table-cell">Enter New Password</div>
+        <div style="display:table-cell"><input type="password" class="text-input" name="pass1" /></div>
+      </div>
+      <div style="display: table-row;">
+        <div style="display:table-cell">Enter New Password Again</div>
+        <div style="display:table-cell"><input type="password" class="text-input" name="pass2" /></div>
+      </div>
+      </div>
+      <br /><input type="submit" class="action-button" value="Submit" />
+    </form>
+  </div>
+</div>
+
+{% endblock %}

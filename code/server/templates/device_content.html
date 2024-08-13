@@ -1,0 +1,82 @@
+<div class="card-div" style="height:35px">
+    <div class="card-header"></div>
+    <div style="padding-left: 10px;padding-top: 2px;">
+        <div style="display: table; width: 100%">
+          <div style="display: table-row;">
+            <div style="display: table-cell;"><b>Name:</b> {{name}}</div>
+            <div style="display: table-cell;"><b>IP Address:</b> {{ipaddress}}</div>
+            <div style="display: table-cell;"><b>Domain:</b> {{domain}}</div>
+            <div style="display: table-cell;"><b>Platform:</b> {{platform}} ({{architecture}})</div>
+            <div style="display: table-cell;"><b>Build:</b> {{build}}</div>
+            <div style="display: table-cell;"><b>Processors:</b> {{processors}}</div>
+            <div style="display: table-cell;"><b>Memory:</b> {{memory}} MB</div>
+          </div>
+        </div>
+                  </div>
+              </div>
+  <br />
+  <div style="display: table; width: 100%">
+    <div style="display: table-row;">
+      <div style="display: table-cell; width: 25%; text-align: center; padding-right: 10px;">
+      <div class="card-div" style="height:70px">
+      <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Processor (% used)</span><br />
+      <div  class="device-stats"><a class="device-stats" href="../graph/{{name}}/perf.processor.percent.used">{{cpu_perc}}</a></div>
+      </div>
+      </div>
+      <div style="display: table-cell; width: 25%; text-align: center; padding-right: 10px;">
+      <div class="card-div" style="height:70px">
+      <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Memory (% used)</span><br />
+      <span class="device-stats"><a class="device-stats" href="../graph/{{name}}/perf.memory.percent.used">{{mem_perc}}</a></span>
+      </div>
+      </div>
+      <div style="display: table-cell; width: 25%; text-align: center; padding-right: 10px;">
+      <div class="card-div" style="height:70px">
+      <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Pagefile (% used)</span><br />
+      <span class="device-stats"><a class="device-stats" href="../graph/{{name}}/perf.pagefile.percent.used">{{pagefile_perc}}</a></span>
+      </div>
+      </div>
+      <div style="display: table-cell; width: 25%; text-align: center;">
+      <div class="card-div" style="height:70px">
+      <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Uptime (days)</span><br />
+      <span class="device-stats"><a class="device-stats" href="../graph/{{name}}/perf.system.uptime.seconds">{{uptime_days}}</a></span>
+      </div>
+    </div>
+  </div>            
+  
+  </div>
+  <br />
+  <div style="display: table; width: 100%">
+    <div style="display: table-row;">
+      <div style="display: table-cell; width: 50%; padding-right: 10px;">
+      <div class="card-div" style="padding-bottom: 5px;">
+      <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Filesystem Monitors</span><br />
+      <div>
+      <div style="display: table; width: 100%">
+      {% for i in filesystem %}
+      <div style="display: table-row;">
+      <div style="display: table-cell; width:50%; padding-left: 10px;">{{i[0]}}</div>
+      <div style="display: table-cell;width:50%"><a href="../graph/{{name}}/perf.filesystem.{{i[0]}}.percent.used">{{i[1]}}%</a></div>
+      </div> 
+      {% endfor %}   
+      </div>              
+      </div>
+      </div>
+    </div>
+    <div style="display: table-cell; width: 50%;">
+      <div class="card-div" style="padding-bottom: 5px;">
+      <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Network Monitors</span><br />
+      <div>
+      <div style="display: table; width:100%">
+      <div style="display:table-row;">
+      <div style="display: table-cell; width:50%;padding-left: 10px;">Total Network Traffic</div>
+      <div style="display: table-cell; width:50%"><a href="../graph/{{name}}/perf.network.bytes.sent">Bytes Sent: {{net_bs}}</a></div>
+      </div>
+      <div style="display:table-row;">
+      <div style="display: table-cell; width:50%"></div>
+      <div style="display: table-cell; width:50%"><a href="../graph/{{name}}/perf.network.bytes.received">Bytes Received: {{net_br}}</a></div>
+      </div>
+      </div>
+      </div>
+      </div>
+    </div>
+  </div>

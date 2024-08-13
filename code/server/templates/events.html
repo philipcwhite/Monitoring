@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<img src="/static/svg/bread_events.svg" class="bread-font" />  &nbsp;&nbsp;Events&nbsp;
+{% endblock %}
+{% block body%} 
+      
+<div id="refresh"></div>
+<script>
+    function refresh() {$.ajax({url: '{{events_content}}', success: function(data) {$('#refresh').html(data);}});setTimeout(refresh, 60000);}    
+    $(function(){refresh();});
+</script>
+
+
+
+{% endblock %}

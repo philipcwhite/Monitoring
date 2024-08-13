@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<img src="/static/svg/bread_settings.svg" class="bread-font" />  &nbsp;&nbsp;Settings&nbsp;
+{% endblock %}
+{% block body%} 
+      
+<div class="card-div">
+  <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Add Notifcation Rule</span><br />
+    <table style="width:100%;">
+      <tr>
+        <td style="padding-left:10px">
+          <form action='' method='POST'>
+            <table>
+              <tr>
+                <td>Rule Name</td>
+                <td><input type='text' name='notify_name' value='{{notify_name}}' /></td>
+              </tr>
+              <tr>
+                <td>Email Address</td>
+                <td><input type='text' name='notify_email' value='{{notify_email}}' /></td>
+              </tr>
+              <tr>
+                <td>Agent Name</td>
+                <td>
+                  <select name='agent_name'><option value='%_%'>All</option>
+                  {% for i in device_names %}
+                  {% if agent_name in i.name %}
+                  <option value='{{i.name}}' selected>{{i.name}}</option>
+                  {% else %}
+                  <option value='{{i.name}}'>{{i.name}}</option>
+                  {% endif%}
+                  {% endfor %}
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>Monitor</td>
+                <td><input type='text' name='agent_monitor' value='{{agent_monitor}}' /></td>
+              </tr>
+              <tr>
+                <td>Status</td>
+                {% if agent_status == 1 %}
+                <td><input type='radio' name='agent_status' value='1' checked /> Open <input type='radio' name='agent_status' value='0' /> Closed</td>
+                {% else %}
+                <td><input type='radio' name='agent_status' value='1' /> Open <input type='radio' name='agent_status' value='0' checked /> Closed</td>
+                {% endif %}
+              </tr>
+              <tr>
+                <td>Severity</td>
+                {% if agent_severity == '4' %}
+                <td><select name='agent_severity'><option value='4' selected>Information</option><option value='3'>Warning</option><option value='2'>Major</option><option value='1'>Critical</option></select></td>
+                {% elif agent_severity == '3' %}
+                <td><select name='agent_severity'><option value='4'>Information</option><option value='3' selected>Warning</option><option value='2'>Major</option><option value='1'>Critical</option></select></td>
+                {% elif agent_severity == '2' %}
+                <td><select name='agent_severity'><option value='4'>Information</option><option value='3'>Warning</option><option value='2' selected>Major</option><option value='1'>Critical</option></select></td>
+                {% elif agent_severity == '1' %}
+                <td><select name='agent_severity'><option value='4'>Information</option><option value='3'>Warning</option><option value='2'>Major</option><option value='1' selected>Critical</option></select></td>
+                {% endif %}
+              </tr>
+              <tr>
+                <td>Enabled</td>
+                {% if notify_enabled == 1 %}
+                <td><input type='radio' name='notify_enabled' value='1' checked /> True <input type='radio' name='notify_enabled' value='0' /> False</td>
+                {% else %}
+                <td><input type='radio' name='notify_enabled' value='1' /> True <input type='radio' name='notify_enabled' value='0' checked /> False</td>
+                {% endif %}
+              </tr>
+              <tr>
+                <td></td>
+                <td style='text-align:right'><input type='submit' class='action-button' value='submit' /></td>
+              </tr>
+            </table>
+          </form>
+        </td>
+      </tr>
+    </table> 
+  </div>
+</div>
+{% endblock %}

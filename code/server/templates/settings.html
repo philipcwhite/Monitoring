@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<img src="/static/svg/bread_settings.svg" class="bread-font" />  &nbsp;&nbsp;Settings&nbsp;
+{% endblock %}
+{% block body%} 
+      
+<div class="card-div">
+  <div class="card-header"></div><span style="font-weight: bold;padding-left: 5px; padding-top: 3px;">Settings</span><br />
+  <div style="padding:10px"> 
+       <b>Site Settings</b><br />
+        <a href="/notify">Notification Rules</a><br />
+        <br />
+        <b>User and Role Management</b><br />
+        <a href="/users">Manage Users</a><br />
+        <br />
+        <b>Documentation</b><br />
+        <a href='/help'>User Guide</a><br />
+        <a href='/about'>About</a><br />
+        <br /> 
+  </div>
+  </div>
+</div>
+
+{% endblock %}
