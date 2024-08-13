@@ -8,19 +8,15 @@
 
 # Set variables
 directory='/opt/monitoring'
-py_ver='python3.9'
+py_ver='python'
 
 # Create program directory
 mkdir -p $directory
-cp -R web $directory
-cp -R services $directory
-cp -R database $directory
-cp -R certificates $directory
-cp -R agents $directory
+cp -R ../code/server $directory
 
 # Set up Python
 $py_ver -m venv $directory/env
-$directory/env/bin/$py_ver -m pip install pymysql flask gunicorn
+$directory/env/bin/$py_ver -m pip install flask gunicorn
 
 # Write systemd service files
 
@@ -31,7 +27,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=$directory/env/bin/$py_ver /opt/monitoring/services/collect.py
+ExecStart=$directory/env/bin/$py_ver /opt/monitoring/server/services/collect.py
 
 [Install]
 WantedBy=multi-user.target
@@ -44,7 +40,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-ExecStart=$directory/env/bin/$py_ver /opt/monitoring/services/event.py
+ExecStart=$directory/env/bin/$py_ver /opt/monitoring/server/services/event.py
 
 [Install]
 WantedBy=multi-user.target
@@ -56,7 +52,7 @@ Description=Linux Monitoring Web Server Service
 After=multi-user.target
 
 [Service]
-WorkingDirectory=/opt/monitoring/web/
+WorkingDirectory=/opt/monitoring/server/
 Type=simple
 ExecStart=$directory/env/bin/gunicorn app:app
 Restart=always
